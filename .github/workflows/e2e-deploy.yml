@@ -62,7 +62,9 @@ jobs:
             sleep 2
           done
           helm repo add vald https://vald.vdaas.org/charts
+          tag=$(cat versions/VALD_VERSION)
           helm install \
+            --set defaults.image.tag=${tag} \
             --set gateway.minReplicas=1 \
             --set gateway.hpa.enabled=false \
             --set gateway.gateway_config.index_replica=3 \
