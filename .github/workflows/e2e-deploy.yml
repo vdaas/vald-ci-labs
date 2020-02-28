@@ -94,7 +94,7 @@ jobs:
         run: |
           kubectl port-forward deployment/vald-gateway 8081:8081 &
           pid=$!
-          curl -sO https://github.com/rinx/vald-client-clj/releases/download/v0.0.1/valdcli-linux-static.zip
+          curl -OL https://github.com/rinx/vald-client-clj/releases/download/v0.0.1/valdcli-linux-static.zip
           unzip valdcli-linux-static.zip
           chmod a+x valdcli
           sleep 10
