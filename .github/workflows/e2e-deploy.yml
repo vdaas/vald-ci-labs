@@ -54,10 +54,10 @@ jobs:
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
           make k8s/external/mysql/deploy
           make k8s/external/redis/deploy
-          jq_query='.items[] | select( ([ .status.conditions[] | select( .type == "Ready" and .status == "True" ) ] | length ) != 1) | .metadata.namespace + "/" + .metadata.name'
+          jq_query='.items[] | select( ([ .status.conditions[] | select( .type == "Ready" and .status == "True" ) ] | length ) == 1) | .metadata.namespace + "/" + .metadata.name'
           until [ $(kubectl get pod -o json | jq -r "$jq_query" | wc -l) -ge 2 ]
           do
-            echo "waiting for Scylla to be ready..."
+            echo "waiting for databases to be ready..."
             kubectl get pods
             sleep 2
           done
