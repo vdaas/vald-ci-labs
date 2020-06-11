@@ -57,7 +57,7 @@ jobs:
           -H "Content-Type:application/json" \
           -H "Authorization: token ${GITHUB_TOKEN}" \
           --request POST \
-          --data "{\"body\": \"**[CHANGELOG]** Please edit the following lines.\\n${BODY}\\n${CURRENT}\"}" \
+          --data "{\"body\": \"**[CHANGELOG]** Please edit the following lines.\\n${CURRENT}\"}" \
           $API_URL
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
