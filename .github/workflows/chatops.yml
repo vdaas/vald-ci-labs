@@ -50,7 +50,7 @@ jobs:
         run: |
           git checkout master
           PREVIOUS_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
-          BODY=`git log --pretty=format:'- %s' ${PREVIOUS_VERSION}..master | grep "#[[:digit:]]\+" | sed -e "s/\[\(patch\|minor\|major\)\] *//g" | sed -e "s%#\([[:digit:]]\+\)%[&](https://github.com/vdaas/vald-ci-labs/pull/\1)%" | sed ':a;N;$!ba;s/\n/\\\\\\\\\\\\\\\n/g'`
+          BODY=`git log --pretty=format:'- %s' ${PREVIOUS_VERSION}..master | grep "#[[:digit:]]\+" | sed -e "s/\[\(patch\|minor\|major\)\] *//g" | sed -e "s%#\([[:digit:]]\+\)%[&](https://github.com/vdaas/vald-ci-labs/pull/\1)%" | sed ':a;N;$!ba;s/\n/\\\\\\\\n/g'`
           CURRENT="- ${PR_TITLE} ([#${PR_NUM}](https://github.com/vdaas/vald/pull/${PR_NUM}))"
           echo "$BODY"
           curl --include --verbose --fail \
