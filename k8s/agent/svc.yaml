@@ -1,6 +1,6 @@
 ---
 #
-# Copyright (C) 2019-2020 Vdaas.org Vald team ( kpango, rinx, kmrmt )
+# Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vald-agent-ngt
+  labels:
+    app.kubernetes.io/name: vald
+    helm.sh/chart: vald-v1.7.6
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: v1.7.6
+    app.kubernetes.io/component: agent
 spec:
   ports:
     - name: grpc
@@ -28,7 +35,12 @@ spec:
       port: 3001
       targetPort: 3001
       protocol: TCP
+    - name: pprof
+      port: 6060
+      targetPort: 6060
+      protocol: TCP
   selector:
-    app: vald-agent-ngt
+    app.kubernetes.io/name: vald
+    app.kubernetes.io/component: agent
   clusterIP: None
   type: ClusterIP

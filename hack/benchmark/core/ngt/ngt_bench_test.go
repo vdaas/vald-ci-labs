@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2019-2020 Vdaas.org Vald team ( kpango, rinx, kmrmt )
+// Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,172 +14,258 @@
 // limitations under the License.
 //
 
-// Package ngt_test provides implementation of Go API for https://github.com/yahoojapan/NGT
-package ngt_test
+// Package ngt provides benchmark program
+package ngt
 
 import (
+	"context"
 	"flag"
-	"io/ioutil"
-	"os"
-	"strings"
-	"sync"
 	"testing"
 
+	"github.com/vdaas/vald/hack/benchmark/core/benchmark"
+	"github.com/vdaas/vald/hack/benchmark/core/benchmark/strategy"
 	"github.com/vdaas/vald/hack/benchmark/internal/assets"
-	"github.com/vdaas/vald/internal/core/ngt"
+	"github.com/vdaas/vald/hack/benchmark/internal/core/algorithm"
+	"github.com/vdaas/vald/hack/benchmark/internal/core/algorithm/ngt"
 	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/log/logger"
+	"github.com/vdaas/vald/internal/strings"
 )
 
 const (
-	size    = 10
-	epsilon = 0.1
-	radius  = -1
+	size    int     = 1
+	radius  float32 = -1
+	epsilon float32 = 0.1
 )
 
-var (
-	targets    []string
-	datasetVar string
-	once       sync.Once
-)
+var targets []string
 
 func init() {
-	log.Init()
+	testing.Init()
+	log.Init(log.WithLoggerType(logger.NOP.String()))
 
-	flag.StringVar(&datasetVar, "dataset", "", "available dataset(choice with comma)")
+	var dataset string
+	flag.StringVar(&dataset, "dataset", "", "available dataset(choice with comma)")
+	flag.Parse()
+	targets = strings.Split(strings.TrimSpace(dataset), ",")
 }
 
-func parseArgs(tb testing.TB) {
-	once.Do(func() {
-		flag.Parse()
-		targets = strings.Split(strings.TrimSpace(datasetVar), ",")
-	})
+func initCore(ctx context.Context, b *testing.B, dataset assets.Dataset) (algorithm.Bit32, algorithm.Closer, error) {
+	ngt, err := ngt.New(
+		ngt.WithDimension(dataset.Dimension()),
+		ngt.WithObjectType(dataset.ObjectType()),
+	)
+	if err != nil {
+		return nil, nil, err
+	}
+	return ngt, ngt, nil
 }
 
-func BenchmarkNGTSequential(b *testing.B) {
-	parseArgs(b)
-
+func BenchmarkNGTSequential_Insert(b *testing.B) {
+	ctx := context.Background()
 	for _, target := range targets {
-		b.Run(target, func(bb *testing.B) {
-			d := assets.Data(target)(b)
-			tmpdir, err := ioutil.TempDir("", "tmpdir")
-			if err != nil {
-				bb.Error(err)
-			}
-			defer os.RemoveAll(tmpdir)
-
-			n, err := ngt.New(
-				ngt.WithIndexPath(tmpdir),
-				ngt.WithObjectType(ngt.Float),
-				ngt.WithDimension(d.Dimension()),
-			)
-			if err != nil {
-				bb.Error(err)
-			}
-			// defer n.Close()
-
-			bb.Run("Insert", func(sb *testing.B) {
-				train := d.Train()
-				sb.ReportAllocs()
-				sb.ResetTimer()
-				sb.StartTimer()
-				for i := 0; i < sb.N; i++ {
-					_, err = n.Insert(train[i%len(train)])
-					if err != nil {
-						sb.Error(err)
-					}
-				}
-				sb.StopTimer()
-			})
-
-			bb.Run("CreateIndex", func(sb *testing.B) {
-				err := n.CreateIndex(10000)
-				if err != nil {
-					sb.Error(err)
-				}
-			})
-
-			bb.Run("Search", func(sb *testing.B) {
-				query := d.Query()
-				sb.ReportAllocs()
-				sb.ResetTimer()
-				sb.StartTimer()
-				for i := 0; i < sb.N; i++ {
-					_, err := n.Search(query[i%len(query)], size, epsilon, radius)
-					if err != nil {
-						sb.Error(err)
-					}
-				}
-				sb.StopTimer()
-			})
-		})
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewInsert(
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
 	}
 }
 
-func BenchmarkNGTParallel(b *testing.B) {
-	parseArgs(b)
-
+func BenchmarkNGTParallel_Insert(b *testing.B) {
+	ctx := context.Background()
 	for _, target := range targets {
-		d := assets.Data(target)(b)
-		b.Run(target, func(bb *testing.B) {
-			tmpdir, err := ioutil.TempDir("", "tmpdir")
-			if err != nil {
-				bb.Error(err)
-			}
-			defer os.RemoveAll(tmpdir)
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewInsert(
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
 
-			n, err := ngt.New(
-				ngt.WithIndexPath(tmpdir),
-				ngt.WithObjectType(ngt.Float),
-				ngt.WithDimension(d.Dimension()),
-			)
-			if err != nil {
-				bb.Error(err)
-			}
-			// defer n.Close()
+func BenchmarkNGTSequential_BulkInsert(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewBulkInsert(
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
 
-			bb.Run("InsertParallel", func(sb *testing.B) {
-				train := d.Train()
+func BenchmarkNGTParallel_BulkInsert(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewBulkInsert(
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
 
-				sb.ReportAllocs()
-				sb.ResetTimer()
-				sb.StartTimer()
-				sb.RunParallel(func(pb *testing.PB) {
-					i := 0
-					for pb.Next() {
-						_, err = n.Insert(train[i%len(train)])
-						if err != nil {
-							sb.Error(err)
-						}
-						i++
-					}
-				})
-				sb.StopTimer()
-			})
+func BenchmarkNGTSequential_InsertCommit(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewInsertCommit(
+					10,
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
 
-			bb.Run("CreateIndex", func(sb *testing.B) {
-				err := n.CreateIndex(10000)
-				if err != nil {
-					sb.Error(err)
-				}
-			})
+func BenchmarkNGTParallel_InsertCommit(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewInsertCommit(
+					10,
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
 
-			bb.Run("SearchParallel", func(sb *testing.B) {
-				query := d.Query()
-				sb.ReportAllocs()
-				sb.ResetTimer()
-				sb.StartTimer()
-				sb.RunParallel(func(pb *testing.PB) {
-					i := 0
-					for pb.Next() {
-						_, err = n.Search(query[i%len(query)], size, epsilon, radius)
-						if err != nil {
-							sb.Error(err)
-						}
-						i++
-					}
-				})
-				sb.StopTimer()
-			})
-		})
+func BenchmarkNGTSequential_BulkInsertCommit(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewBulkInsertCommit(
+					10,
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTParallel_BulkInsertCommit(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewBulkInsertCommit(
+					10,
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTSequential_Search(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewSearch(
+					size, radius, epsilon,
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTParallel_Search(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewSearch(
+					size, radius, epsilon,
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTSequential_Remove(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewRemove(
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTParallel_Remove(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewRemove(
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTSequential_GetVector(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewGetVector(
+					strategy.WithBit32(initCore),
+				),
+			),
+		).Run(ctx, b)
+	}
+}
+
+func BenchmarkNGTParallel_GetVector(b *testing.B) {
+	ctx := context.Background()
+	for _, target := range targets {
+		benchmark.New(b,
+			benchmark.WithName(target),
+			benchmark.WithStrategy(
+				strategy.NewGetVector(
+					strategy.WithBit32(initCore),
+					strategy.WithParallel(),
+				),
+			),
+		).Run(ctx, b)
 	}
 }
