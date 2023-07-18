@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2020 Vdaas.org Vald team ( kpango, rinx, kmrmt )
+# Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,17 +17,10 @@
 ## install KinD
 kind/install: $(BINDIR)/kind
 
-ifeq ($(UNAME),Darwin)
 $(BINDIR)/kind:
 	mkdir -p $(BINDIR)
-	curl -L https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_VERSION)/kind-darwin-amd64 -o $(BINDIR)/kind
+	curl -L https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_VERSION)/kind-$(shell echo $(UNAME) | tr '[:upper:]' '[:lower:]')-$(subst x86_64,amd64,$(shell echo $(ARCH) | tr '[:upper:]' '[:lower:]')) -o $(BINDIR)/kind
 	chmod a+x $(BINDIR)/kind
-else
-$(BINDIR)/kind:
-	mkdir -p $(BINDIR)
-	curl -L https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_VERSION)/kind-linux-amd64 -o $(BINDIR)/kind
-	chmod a+x $(BINDIR)/kind
-endif
 
 .PHONY: kind/start
 ## start kind (kubernetes in docker) cluster
@@ -45,12 +38,20 @@ kind/login:
 kind/stop:
 	kind delete cluster --name $(NAME)
 
+.PHONY: kind/restart
+## restart kind (kubernetes in docker) cluster
+kind/restart: \
+	kind/stop \
+	kind/start
+
 
 .PHONY: kind/cluster/start
 ## start kind (kubernetes in docker) multi node cluster
 kind/cluster/start:
+	sudo sysctl net/netfilter/nf_conntrack_max=524288
 	kind create cluster --name $(NAME)-cluster --config $(ROOTDIR)/k8s/debug/kind/config.yaml
-	@make kind/login
+	kubectl apply -f https://projectcontour.io/quickstart/operator.yaml
+	kubectl apply -f https://projectcontour.io/quickstart/contour-custom-resource.yaml
 
 
 .PHONY: kind/cluster/stop
@@ -63,3 +64,8 @@ kind/cluster/stop:
 kind/cluster/login:
 	kubectl cluster-info --context kind-$(NAME)-cluster
 
+.PHONY: kind/cluster/restart
+## restart kind (kubernetes in docker) multi node cluster
+kind/cluster/restart: \
+	kind/cluster/stop \
+	kind/cluster/start
