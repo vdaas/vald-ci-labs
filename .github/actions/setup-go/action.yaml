@@ -12,13 +12,11 @@ runs:
       id: golang_version
       shell: bash
       run: |
-        echo ${GIVEN_GO_VERSION}
-
-        GO_VERSION=${GIVEN_GO_VERSION:-`make version/go`}
+        GO_VERSION=${GO_VERSION:-`make version/go`}
 
         echo "version=${GO_VERSION}" >> $GITHUB_OUTPUT
       env:
-        GIVEN_GO_VERSION: ${{ inputs.go-version }}
+        GO_VERSION: ${{ inputs.go-version }}
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ steps.golang_version.outputs.version }}
