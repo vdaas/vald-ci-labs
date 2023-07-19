@@ -1,0 +1,22 @@
+name: "Setup Go environment"
+description: "Setup Go environment"
+inputs:
+  go-version:
+    description: "The Go version to use"
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: "Fetch golang version"
+      id: golang_version
+      shell: bash
+      run:
+        GO_VERSION=${{ inputs.go-version }}
+        if [ -z  $GO_VERSION ]; then
+          GO_VERSION=`make version/go`
+        fi
+        echo "version=${GO_VERSION}" >> $GITHUB_OUTPUT
+    - uses: actions/setup-go@v3
+      with:
+        go-version: ${{ steps.golang_version.outputs.version }}

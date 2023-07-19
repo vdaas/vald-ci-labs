@@ -26,15 +26,17 @@ jobs:
           fetch-depth: 10
           path: ${{ github.workspace }}
           set-safe-directory: true
-      - name: "Fetch golang version"
-        id: golang_version
+      - uses: ./.github/actions/setup-go
+      - name: check
         run: |
-          GO_VERSION=`make version/go`
-          echo "version=${GO_VERSION}" >> $GITHUB_OUTPUT
-      - uses: actions/setup-go@v3
-        with:
-          go-version: ${{ steps.golang_version.outputs.version }}
-      # TODO: delete it later
-      - name: Build and zip
-        run: |
-          NAME=vald-ci-labs make binary/build/zip
+          go version
+
+      # TODO: uncomment the following steps
+      # - name: Build and zip
+      #   run: |
+      #     make binary/build/zip
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: artifacts-linux
+      #     path: ./artifacts/
