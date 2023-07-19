@@ -2,7 +2,7 @@ name: "Setup Go environment"
 description: "Setup Go environment"
 inputs:
   go-version:
-    description: "The Go version to use"
+    description: "The Go version to use. The default version is `versions/GO_VERSION`"
     required: false
     default: ""
 runs:
