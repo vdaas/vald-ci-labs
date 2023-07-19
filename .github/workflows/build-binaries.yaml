@@ -27,9 +27,6 @@ jobs:
           path: ${{ github.workspace }}
           set-safe-directory: true
       - uses: ./.github/actions/setup-go
-      - name: check
-        run: |
-          go version
 
       # TODO: uncomment the following steps
       # - name: Build and zip
