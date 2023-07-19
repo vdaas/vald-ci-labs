@@ -34,6 +34,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ steps.golang_version.outputs.version }}
+      # TODO: delete it later
       - name: Build and zip
         run: |
-          make binary/build/zip
+          NAME=vald-ci-labs make binary/build/zip
