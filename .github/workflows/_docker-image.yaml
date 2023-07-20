@@ -49,5 +49,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/notify-slack
         with:
-          slack_webhook_url: aaaaaaaaa
+          author_name: "helm-operator image build"
+          slack_webhook_url: dummy
           status: ${{ env.WORKFLOW_CONCLUSION }}
