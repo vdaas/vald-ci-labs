@@ -13,8 +13,7 @@ inputs:
     required: true
   status:
     description: "Specify success or failure or cancelled or custom."
-    default: ${{ env.WORKFLOW_CONCLUSION }}
-    required: false
+    required: true
 
 runs:
   using: "composite"
