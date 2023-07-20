@@ -10,3 +10,5 @@ jobs:
   build:
     # Resuable workflow from my repo
     uses: ./.github/workflows/docker-image.yaml
+    with:
+      target: operator/helm
