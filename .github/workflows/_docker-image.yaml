@@ -51,4 +51,3 @@ jobs:
         with:
           author_name: "helm-operator image build"
           slack_webhook_url: dummy
-          status: ${{ env.WORKFLOW_CONCLUSION }}
