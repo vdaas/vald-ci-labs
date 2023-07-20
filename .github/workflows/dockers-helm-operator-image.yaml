@@ -9,6 +9,6 @@ on:
 jobs:
   build:
     # Resuable workflow from my repo
-    uses: ./.github/workflows/docker-image.yaml
+    uses: ./.github/workflows/_docker-image.yaml
     with:
       target: operator/helm
