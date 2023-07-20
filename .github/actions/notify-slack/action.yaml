@@ -13,7 +13,7 @@ inputs:
     required: true
   status:
     description: "Specify success or failure or cancelled or custom."
-    required: true
+    required: false
 
 runs:
   using: "composite"
@@ -24,7 +24,7 @@ runs:
     - uses: 8398a7/action-slack@v3
       with:
         author_name: ${{ inputs.author_name }}
-        status: ${{ inputs.status }}
+        status: ${{ inputs.status != '' && inputs.status | env.WORKFLOW_CONCLUSION }}
         token: ${{ inputs.token }}
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
