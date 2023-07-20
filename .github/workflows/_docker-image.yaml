@@ -46,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/notify-slack
         with:
           slack_webhook_url: aaaaaaaaa
