@@ -1,5 +1,6 @@
 name: "Dump context to log"
 description: "Dump context to log"
+
 runs:
   using: "composite"
   steps:

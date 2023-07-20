@@ -1,5 +1,6 @@
 name: "Build Docker images"
 description: "Build Docker images and publish them"
+
 inputs:
   target:
     description: "build target"
@@ -29,6 +30,7 @@ outputs:
   EXTRA_TAGS:
     description: "extra tags"
     value: ${{ steps.add_extra_tags.outputs.EXTRA_TAGS }}
+
 runs:
   using: "composite"
   steps:

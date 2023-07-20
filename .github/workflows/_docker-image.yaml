@@ -1,4 +1,5 @@
 name: "Build docker image"
+
 on:
   workflow_call:
     inputs:
@@ -50,4 +51,4 @@ jobs:
       - uses: ./.github/actions/notify-slack
         with:
           author_name: "helm-operator image build"
-          slack_webhook_url: dummy
+          slack_notify_webhook_url: ${{ secrets.SLACK_NOTIFY_WEBHOOK_URL }}

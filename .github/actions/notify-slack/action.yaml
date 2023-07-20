@@ -1,5 +1,6 @@
 name: "Notify Slack"
 description: "Notify Slack"
+
 inputs:
   author_name:
     description: "User name for slack notification"
@@ -8,8 +9,8 @@ inputs:
     description: "Github Token"
     default: ${{ github.token }}
     required: false
-  slack_webhook_url:
-    description: "Slack Webhook URL"
+  slack_notify_webhook_url:
+    description: "Slack Notify Webhook URL"
     required: true
   status:
     description: "Specify success or failure or cancelled or custom."
@@ -27,4 +28,4 @@ runs:
         status: ${{ inputs.status != '' && inputs.status || env.WORKFLOW_CONCLUSION }}
         token: ${{ inputs.token }}
       env:
-        SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
+        SLACK_WEBHOOK_URL: ${{ inputs.slack_notify_webhook_url }}
