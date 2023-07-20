@@ -50,3 +50,4 @@ jobs:
       - uses: ./.github/actions/notify-slack
         with:
           slack_webhook_url: aaaaaaaaa
+          status: ${{ env.WORKFLOW_CONCLUSION }}
