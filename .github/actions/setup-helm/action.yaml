@@ -10,7 +10,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Fetch helm version"
+    - name: Fetch helm version
       id: helm_version
       shell: bash
       run: |
@@ -22,7 +22,7 @@ runs:
     - uses: azure/setup-helm@v3
       with:
         helm-version: ${{ steps.helm_version.outputs.version }}
-    - uses: "Check helm version"
-      shell: bash
+    - uses: Check helm version
+      name: bash
       run: |
         helm version

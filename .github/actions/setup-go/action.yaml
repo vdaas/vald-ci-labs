@@ -10,7 +10,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Fetch go version"
+    - name: Fetch go version
       id: go_version
       shell: bash
       run: |
@@ -22,7 +22,7 @@ runs:
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ steps.go_version.outputs.version }}
-    - uses: "Check go version"
+    - name: Check go version
       shell: bash
       run: |
         go version
