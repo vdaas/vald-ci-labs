@@ -4,6 +4,11 @@ on:
   pull_request:
     types: [opened]
 
+  # TODO: Delete it later.
+  push:
+    branches:
+      - "add-dump-action"
+
 jobs:
   dump_contexts_to_log:
     runs-on: ubuntu-latest
