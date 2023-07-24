@@ -22,7 +22,7 @@ runs:
     - uses: azure/setup-helm@v3
       with:
         helm-version: ${{ steps.helm_version.outputs.version }}
-    - uses: Check helm version
-      name: bash
+    - name: Check helm version
+      shell: bash
       run: |
         helm version
