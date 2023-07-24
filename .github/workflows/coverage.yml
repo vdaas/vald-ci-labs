@@ -22,6 +22,7 @@ jobs:
           fetch-depth: 10
           path: ${{ github.workspace }}
           set-safe-directory: true
+      - uses: ./.github/actions/setup-go
       - name: Run coverage
         continue-on-error: true
         run: |
