@@ -19,9 +19,6 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: ${{ github.workspace }}
-          set-safe-directory: true
       - uses: ./.github/actions/setup-go
       - uses: ./.github/actions/setup-helm
       - uses: rinx/setup-k3d@v0.0.4
