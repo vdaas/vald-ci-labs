@@ -23,5 +23,6 @@ runs:
       with:
         go-version: ${{ steps.golang_version.outputs.version }}
     - uses: "Check go version"
+      shell: bash
       run: |
         go version
