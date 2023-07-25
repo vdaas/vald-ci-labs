@@ -66,3 +66,8 @@ runs:
         name: vald
         agents: 3
         options: "--image docker.io/rancher/k3s:latest"
+
+    - name: Check kubernetes cluster
+      shell: bash
+      run: |
+        kubectl cluster-info
