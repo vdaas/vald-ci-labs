@@ -26,13 +26,11 @@ runs:
   using: "composite"
   steps:
     - name: Install libhdf5
-      if: ${{ inputs.require_libhdf5 == "true" }}
+      if: ${{ inputs.require_libhdf5 == 'true' }}
       shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install -y libhdf5-dev
-      env:
-        REQUIRE_LIBHDF5: ${{ inputs.require_libhdf5 }}
 
     - name: Setup Go environment
       uses: ./.github/actions/setup-go
