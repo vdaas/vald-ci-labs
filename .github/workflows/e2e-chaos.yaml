@@ -19,15 +19,26 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-go
-      - uses: ./.github/actions/setup-helm
-      - uses: rinx/setup-k3d@v0.0.4
-        with:
-          version: latest
-          name: vald
-          agents: 3
-          options: "--image docker.io/rancher/k3s:latest"
+
+      - name: Set up e2e environment
+        uses: ./.github/actions/setup-e2e
+
       - name: Deploy Chaos Mesh
         uses: ./.github/actions/deploy-chaos-mesh
         with:
           helm_extra_options: "--set podChaos.failure.enabled=true"
+  
+  random-pod-failure:
+    name: "E2E chaos test (random Pod failure: to test redundancy)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up e2e environment
+        uses: ./.github/actions/setup-e2e
+
+      - name: Deploy Chaos Mesh
+        uses: ./.github/actions/deploy-chaos-mesh
+        with:
+          helm_extra_options: "--set podChaos.kill.enabled=true"

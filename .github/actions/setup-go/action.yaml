@@ -10,12 +10,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Test
-      shell: bash
-      run: |
-        echo ${{ github.ref }}
-        echo ${{ github.event.action }}
-        echo ${{ github }}
     - name: Fetch go version
       id: go_version
       shell: bash
