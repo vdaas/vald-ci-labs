@@ -8,6 +8,13 @@ on:
       - "add-dump-action"
 
 jobs:
+  debug_concurrency_group:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: |
+          echo ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref != 'refs/heads/main' && github.ref || github.sha }}-${{ github.event_name }}
+
   build:
     # Resuable workflow from my repo
     uses: ./.github/workflows/_docker-image.yaml
