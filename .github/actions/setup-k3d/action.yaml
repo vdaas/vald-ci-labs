@@ -1,0 +1,43 @@
+name: "Setup k3d environment"
+description: "GitHub Action for setting up k3d (k3s in Docker). It's lighter than KinD (Kubernetes in Docker)"
+
+inputs:
+  version:
+    description: 'k3d version'
+    required: false
+    default: 'latest'
+  name:
+    description: 'cluster name'
+    required: false
+    default: 'vald'
+  agents:
+    description: 'number of agents'
+    required: false
+    default: '3'
+
+runs:
+  using: "composite"
+  steps:
+    # - name: Fetch k3d version tag
+    #   id: k3d_version_tag
+    #   shell: bash
+    #   run: |
+    #     if [ "$K3D_VERSION" != "latest" ]; then
+    #
+    #     fi
+    #   env:
+    #     K3D_VERSION: ${{ inputs.version }}
+
+    # - name: Install k3d
+    #   shell: bash
+    #   run: |
+    #     curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v${{ steps.k3d_version.outputs.version }} bash
+    - name: Install k3d
+      shell: bash
+      run: |
+        curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+    - name: Check k3d version
+      shell: bash
+      run: |
+        k3d version

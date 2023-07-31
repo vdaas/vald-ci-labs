@@ -1,7 +1,7 @@
 name: "Coverage"
 
 on:
-  
+
   # TODO: Delete it later.
   push:
     branches:
@@ -22,20 +22,25 @@ jobs:
           fetch-depth: 10
           path: ${{ github.workspace }}
           set-safe-directory: true
-      - uses: ./.github/actions/setup-go
-      - name: Run coverage
-        continue-on-error: true
-        run: |
-          make coverage
-      - name: "Upload coverage report to Codecov"
-        uses: codecov/codecov-action@v3
+
+      - uses: ./.github/actions/setup-k3d
         with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          file: ./coverage.out
-      - name: Upload coverage report to deepsource
-        run: |
-          mv ./coverage.out ./cover.out
-          curl https://deepsource.io/cli | sh
-          ./bin/deepsource report --analyzer test-coverage --key go --value-file ./cover.out
-        env:
-          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+          agents: 3
+
+      # - uses: ./.github/actions/setup-go
+      # - name: Run coverage
+      #   continue-on-error: true
+      #   run: |
+      #     make coverage
+      # - name: "Upload coverage report to Codecov"
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{secrets.CODECOV_TOKEN}}
+      #     file: ./coverage.out
+      # - name: Upload coverage report to deepsource
+      #   run: |
+      #     mv ./coverage.out ./cover.out
+      #     curl https://deepsource.io/cli | sh
+      #     ./bin/deepsource report --analyzer test-coverage --key go --value-file ./cover.out
+      #   env:
+      #     DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
