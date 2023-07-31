@@ -22,8 +22,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Fetch k3d version tag
-      id: k3d_version_tag
+    - name: Detect k3d version
+      id: k3d_version
       shell: bash
       run: |
         if [ "${K3D_VERSION}" != "latest" ]; then
@@ -36,7 +36,7 @@ runs:
     - name: Install k3d
       shell: bash
       run: |
-        curl -s ${REPO_URL} | ${{ steps.k3d_version_tag.outputs.tag }} bash
+        curl -s ${REPO_URL} | ${{ steps.k3d_version.outputs.tag }} bash
       env:
         REPO_URL: "https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh"
 
@@ -61,3 +61,9 @@ runs:
       shell: bash
       run: |
         k3d cluster create ${{ inputs.name }} ${{ steps.k3d_options.outputs.options }}
+
+    # Delete it later
+    - name: Check k8s cluster
+      shell: bash
+      run: |
+        kubectl cluster-info
