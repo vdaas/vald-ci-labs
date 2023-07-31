@@ -55,6 +55,11 @@ jobs:
           path: ${{ github.workspace }}
           set-safe-directory: true
 
+      # The problem is caused by set-safe-directory: true in actions/checkout not being passed on to the container.
+      - name: Set git safe directory
+        run: |
+          git config --global --add safe.directory $PWD
+
       - name: Install Proto dependencies
         run: |
           make proto/deps
