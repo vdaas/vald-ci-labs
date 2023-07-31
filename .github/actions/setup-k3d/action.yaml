@@ -14,6 +14,10 @@ inputs:
     description: 'number of agents'
     required: false
     default: '3'
+  options:
+    description: 'options for k3d cluster create command'
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -22,17 +26,17 @@ runs:
       id: k3d_version_tag
       shell: bash
       run: |
-        if [ "$K3D_VERSION" != "latest" ]; then
-          TAG="TAG=v$K3D_VERSION"
+        if [ "${K3D_VERSION}" != "latest" ]; then
+          TAG="TAG=v${K3D_VERSION}"
         fi
-        echo "tag=$TAG" >> $GITHUB_OUTPUT
+        echo "tag=${TAG}" >> $GITHUB_OUTPUT
       env:
         K3D_VERSION: ${{ inputs.version }}
 
     - name: Install k3d
       shell: bash
       run: |
-        curl -s $REPO_URL | ${{ steps.k3d_version_tag.outputs.tag }} bash
+        curl -s ${REPO_URL} | ${{ steps.k3d_version_tag.outputs.tag }} bash
       env:
         REPO_URL: "https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh"
 
@@ -40,3 +44,20 @@ runs:
       shell: bash
       run: |
         k3d version
+
+    - name: Setup k3d options
+      shell: bash
+      id: k3d_options
+      run: |
+        if [ "${AGENTS}" != 0 ]; then
+          OPTIONS="${OPTIONS} --agents ${AGENTS}"
+        fi
+        echo "options=${OPTIONS}" >> $GITHUB_OUTPUT
+      env:
+        AGENTS: ${{ inputs.agents }}
+        OPTIONS: ${{ inputs.options }}
+
+    - name: Create k8s cluster
+      shell: bash
+      run: |
+        k3d cluster create ${{ inputs.name }} ${{ steps.k3d_options.outputs.options }}
