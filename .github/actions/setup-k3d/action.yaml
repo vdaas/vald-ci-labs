@@ -18,24 +18,23 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # - name: Fetch k3d version tag
-    #   id: k3d_version_tag
-    #   shell: bash
-    #   run: |
-    #     if [ "$K3D_VERSION" != "latest" ]; then
-    #
-    #     fi
-    #   env:
-    #     K3D_VERSION: ${{ inputs.version }}
+    - name: Fetch k3d version tag
+      id: k3d_version_tag
+      shell: bash
+      run: |
+        if [ "$K3D_VERSION" != "latest" ]; then
+          TAG="TAG=v$K3D_VERSION"
+        fi
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
+      env:
+        K3D_VERSION: ${{ inputs.version }}
 
-    # - name: Install k3d
-    #   shell: bash
-    #   run: |
-    #     curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v${{ steps.k3d_version.outputs.version }} bash
     - name: Install k3d
       shell: bash
       run: |
-        curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+        curl -s $REPO_URL | ${{ steps.k3d_version_tag.outputs.tag }} bash
+      env:
+        REPO_URL: "https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh"
 
     - name: Check k3d version
       shell: bash
