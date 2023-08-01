@@ -506,7 +506,7 @@ version/helm:
 
 .PHONY: version/yq
 version/yq:
-	@echo $(YQ_VERSION
+	@echo $(YQ_VERSION)
 
 .PHONY: version/valdcli
 version/valdcli:
