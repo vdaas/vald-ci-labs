@@ -29,6 +29,12 @@ jobs:
           set-safe-directory: true
       - uses: ./.github/actions/setup-go
 
+      - uses: ./.github/actions/setup-yq
+
+      - name: Check
+        run: |
+          yq version
+
       # TODO: uncomment the following steps
       # - name: Build and zip
       #   run: |
