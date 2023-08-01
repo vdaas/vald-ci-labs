@@ -31,4 +31,4 @@ runs:
     - name: Check yq version
       shell: bash
       run: |
-        yq version
+        yq --version
