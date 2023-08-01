@@ -34,7 +34,7 @@ jobs:
 
       - name: Check
         run: |
-          yq version
+          yq --version
 
       # TODO: uncomment the following steps
       # - name: Build and zip
