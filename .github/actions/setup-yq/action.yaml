@@ -1,0 +1,31 @@
+name: "Setup yq environment"
+description: "GitHub Action for setting up yq"
+
+inputs:
+  yq_version:
+    description: "The yq version to use. The default version is `versions/YQ_VERSION`"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Fetch yq version
+      id: yq_version
+      shell: bash
+      run: |
+        YQ_VERSION=${YQ_VERSION:-`make version/yq`}
+
+        echo "version=${YQ_VERSION}" >> $GITHUB_OUTPUT
+      env:
+        YQ_VERSION: ${{ inputs.yq_version }}
+
+    - name: Install yq
+      shell: bash
+      run: |
+        YQ_VERSION=${{ steps.yq_version.outputs.version }} make yq/install
+
+    - name: Check yq version
+      shell: bash
+      run: |
+        yq version
