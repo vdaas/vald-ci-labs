@@ -29,9 +29,7 @@ jobs:
     steps:
       - name: Dispatch
         run: |
-          curl --fail -u "${USER}:${TOKEN}" -X POST https://api.github.com/repos/vdaas/${REPO}/dispatches -H 'Accept: application/vnd.github.everest-preview+json' --data '{"event_type": "update-protobuf"}'
+          echo ${REPO}
         env:
           REPO: ${{ inputs.repo }}
-          USER: ${{ secrets.DISPATCH_USER }}
-          TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
