@@ -15,8 +15,11 @@
 #
 name: "Update protobuf"
 on:
+
   workflow_dispatch:
   push:
+    branches:
+      - "add-dump-action"
     tags:
       - "*.*.*"
       - "v*.*.*"
