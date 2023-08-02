@@ -76,6 +76,9 @@ jobs:
       #     platforms: ${{ inputs.platforms }}
       #     builder: ${{ steps.buildx.outputs.name }}
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+
       - name: Scan the Docker image
         uses: ./.github/actions/scan-docker-image
         with:
