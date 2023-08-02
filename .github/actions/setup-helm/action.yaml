@@ -2,7 +2,7 @@ name: "Setup Helm environment"
 description: "Setup Helm environment"
 
 inputs:
-  helm-version:
+  helm_version:
     description: "The Helm version to use. The default version is `versions/HELM_VERSION`"
     required: false
     default: ""
@@ -10,7 +10,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Fetch helm version
+    - name: Fetch Helm version
       id: helm_version
       shell: bash
       run: |
@@ -18,11 +18,13 @@ runs:
 
         echo "version=${HELM_VERSION}" >> $GITHUB_OUTPUT
       env:
-        HELM_VERSION: ${{ inputs.helm-version }}
+        HELM_VERSION: ${{ inputs.helm_version }}
+
     - uses: azure/setup-helm@v3
       with:
-        helm-version: ${{ steps.helm_version.outputs.version }}
-    - name: Check helm version
+        version: ${{ steps.helm_version.outputs.version }}
+
+    - name: Check Helm version
       shell: bash
       run: |
         helm version

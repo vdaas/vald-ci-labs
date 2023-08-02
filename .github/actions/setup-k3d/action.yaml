@@ -61,9 +61,3 @@ runs:
       shell: bash
       run: |
         k3d cluster create ${{ inputs.name }} ${{ steps.k3d_options.outputs.options }}
-
-    # Delete it later
-    - name: Check k8s cluster
-      shell: bash
-      run: |
-        kubectl cluster-info

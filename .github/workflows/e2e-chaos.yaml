@@ -27,7 +27,7 @@ jobs:
         uses: ./.github/actions/deploy-chaos-mesh
         with:
           helm_extra_options: "--set podChaos.failure.enabled=true"
-  
+
   random-pod-failure:
     name: "E2E chaos test (random Pod failure: to test redundancy)"
     runs-on: ubuntu-latest
