@@ -16,11 +16,12 @@
 name: "Protobuf update dispatch"
 on:
   workflow_call:
-    repo:
-      type: string
-      description: "Dispatch target repository"
-      required: true
-      default: ""
+    inputs:
+      repo:
+        type: string
+        description: "Dispatch target repository"
+        required: true
+        default: ""
 
 jobs:
   dump-contexts-to-log:
