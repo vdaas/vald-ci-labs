@@ -34,4 +34,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
           API_URL: ${{ github.event.pull_request.comments_url }}
           PR_NUM: ${{ github.event.issue.number }}
-

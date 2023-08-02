@@ -2,7 +2,7 @@ name: "Deploy Chaos Mesh"
 description: "Deploy Chaos Mesh"
 
 inputs:
-  chaos-mesh-version:
+  chaos_mesh_version:
     description: "The Chaos Mesh version to use. The default version is `versions/CHAOS_MESH_VERSION`"
     required: false
     default: ""
@@ -15,23 +15,26 @@ runs:
   using: "composite"
   steps:
     - name: Fetch Chaos Mesh version
-      id: chaos-mesh-version
+      id: chaos_mesh_version
       shell: bash
       run: |
         CHAOS_MESH_VERSION=${CHAOS_MESH_VERSION:-`cat versions/CHAOS_MESH_VERSION`}
 
         echo "version=${CHAOS_MESH_VERSION}" >> $GITHUB_OUTPUT
       env:
-        CHAOS_MESH_VERSION: ${{ inputs.chaos-mesh-version }}
+        CHAOS_MESH_VERSION: ${{ inputs.chaos_mesh_version }}
+
     - name: Check k3d
       shell: bash
       id: check_k3d
       run: |
         kubectl cluster-info
+
     - name: Check Helm
       shell: bash
       run: |
         helm version
+
     - name: Deploy Chaos Mesh
       shell: bash
       run: |
@@ -44,4 +47,4 @@ runs:
             vald-chaos-test tests/chaos/chart
       env:
         HELM_EXTRA_OPTIONS: ${{ inputs.helm_extra_options }}
-        CHAOS_MESH_VERSION: ${{ steps.chaos-mesh-version.outputs.version }}
+        CHAOS_MESH_VERSION: ${{ steps.chaos_mesh_version.outputs.version }}
