@@ -73,7 +73,7 @@ runs:
       id: deploy_vald_helm_operator_local
       if: ${{ inputs.use_local_charts == 'true' }}
       run: |
-        make k8s/vald-helm-operator/deploy
+        make k8s/vald-helm-operator/deploy VERSION=nightly
         sleep 3
 
     - name: Deploy vald
