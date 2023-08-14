@@ -17,14 +17,14 @@ name: "Setting E2E test environment"
 description: "A workflow to set E2E test environment"
 
 inputs:
-  require_libhdf5:
-    description: "If libhdf5 is required, set this to true."
-    required: false
-    default: "false"
   require_minio:
     description: "If Minio is required, set this to true."
     required: false
     default: "false"
+  helm_extra_options:
+    description: "extra options for operator that passed to Helm command."
+    required: false
+    default: ""
   valdrelease:
     description: "path to the valdrelease.yaml that apply to cluster."
     required: true
@@ -56,6 +56,11 @@ runs:
       run: |
         make K8S_SLEEP_DURATION_FOR_WAIT_COMMAND=10 k8s/external/minio/deploy
 
+    - name: Output valdrelease
+      shell: bash
+      run: |
+        cat ${{ inputs.valdrelease }}
+
     - name: Deploy vald helm operator from remote charts
       shell: bash
       id: deploy_vald_helm_operator_remote
@@ -63,17 +68,22 @@ runs:
       run: |
         helm install vald-helm-operator \
           --set image.tag=nightly \
+          ${HELM_EXTRA_OPTIONS} \
           charts/vald-helm-operator/.
 
         sleep 3
+      env:
+        HELM_EXTRA_OPTIONS: ${{ inputs.helm_extra_options }}
 
     - name: Deploy vald helm operator from local charts
       shell: bash
       id: deploy_vald_helm_operator_local
       if: ${{ inputs.use_local_charts == 'true' }}
       run: |
-        make k8s/vald-helm-operator/deploy
+        make k8s/vald-helm-operator/deploy VERSION=nightly HELM_EXTRA_OPTIONS="${HELM_EXTRA_OPTIONS}"
         sleep 3
+      env:
+        HELM_EXTRA_OPTIONS: ${{ inputs.helm_extra_options }}
 
     - name: Deploy vald
       shell: bash
