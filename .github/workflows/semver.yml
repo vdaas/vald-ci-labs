@@ -56,7 +56,7 @@ jobs:
 
       - name: Get latest gitwerk
         run: |
-          wget https://github.com/rinx/gitwerk/releases/latest/download/gitwerk-linux-amd64.zip && unzip gitwerk-linux-amd64.zip
+          curl -fLO https://github.com/rinx/gitwerk/releases/latest/download/gitwerk-linux-amd64.zip && unzip gitwerk-linux-amd64.zip
 
       - name: Run gitwerk semver-auto
         id: semver
