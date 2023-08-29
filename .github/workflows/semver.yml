@@ -46,20 +46,17 @@ jobs:
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
-      - uses: crazy-max/ghaction-import-gpg@v4
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
+      # <--- TODO
+      # - uses: crazy-max/ghaction-import-gpg@v4
+      #   with:
+      #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+      #     git_user_signingkey: true
+      #     git_commit_gpgsign: true
+      # TODO --->
 
       - name: Get latest gitwerk
         run: |
-          curl -fsSLO \
-            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            https://github.com/rinx/gitwerk/releases/latest/download/gitwerk-linux-amd64.zip
-          unzip gitwerk-linux-amd64.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          wget https://github.com/rinx/gitwerk/releases/latest/download/gitwerk-linux-amd64.zip && unzip gitwerk-linux-amd64.zip
 
       - name: Run gitwerk semver-auto
         id: semver
