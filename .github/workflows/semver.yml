@@ -18,6 +18,7 @@ on:
   push:
     branches:
       - "release/v*.*"
+      - "!release/v*.*.*"
 
 jobs:
   dump-contexts-to-log:
@@ -25,10 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/dump-context
-      - run: |
-          echo ${{ github.ref }}
-          echo ${{ github.event.head_commit.message }}
-          echo ${$GITHUB_WORKSPACE}
 
   semver-auto:
     name: Run semver-auto
@@ -43,3 +40,8 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
+      - name: Dump Github context
+        run: |
+          echo ${{ github.ref }}
+          echo ${{ github.event.head_commit.message }}
