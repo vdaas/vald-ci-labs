@@ -43,5 +43,7 @@ jobs:
 
       - name: Dump Github context
         run: |
+          tag_name=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
           echo '${{ github.ref }}'
+          echo ${tag_name}
           echo '${{ github.event.head_commit.message }}'
