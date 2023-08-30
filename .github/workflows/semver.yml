@@ -43,5 +43,5 @@ jobs:
 
       - name: Dump Github context
         run: |
-          echo ${{ github.ref }}
-          echo ${{ github.event.head_commit.message }}
+          echo '${{ github.ref }}'
+          echo '${{ github.event.head_commit.message }}'
