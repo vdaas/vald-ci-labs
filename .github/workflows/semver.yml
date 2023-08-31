@@ -41,9 +41,16 @@ jobs:
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
-      - name: Dump Github context
+      - name: Set context
+        id: set_context
         run: |
-          tag_name=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
+          release_branch_name=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'` # e.g) vx.x
+          branch_latest_tag=`git tag | grep ${release_branch_name} | tail -n 1`
+
+          echo "RELEASE_BRANCH_NAME=${release_branch_name}" >> $GITHUB_OUTPUT
+          echo "BRANCH_LATES_TAG=${branch_latest_tag}"      >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
+
           echo '${{ github.ref }}'
-          echo ${tag_name}
+          echo '${release_branch_name}'
+          echo '${branch_latest_tag}'
           echo '${{ github.event.head_commit.message }}'
