@@ -36,15 +36,13 @@ jobs:
         id: set_context
         run: |
           RELEASE_BRANCH_NAME=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
-          BRANCH_LATEST_TAG=`git tag | grep ${release_branch_name} | tail -n 1`
+          BRANCH_LATEST_TAG=`git tag | grep ${RELEASE_BRANCH_NAME} | tail -n 1`
           RELEASE_KIND=`echo "${{ github.event.head_commit.message }}" | sed -n -E 's:^\[(major|minor|patch)\].*:\1:p'`
 
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT # e.g) vx.x
-          echo "BRANCH_LATEST_TAG=${BRANCH_LATEST_TAG}"       >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
+          echo "BRANCH_LATEST_TAG=${BRANCH_LATEST_TAG}"     >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
           echo "RELEASE_KIND=${RELEASE_KIND}"               >> $GITHUB_OUTPUT # e.g) major or minor or patch or empty
 
-          echo "${{ github.ref }}"
-          echo "${{ github.event.head_commit.message }}"
           echo "${RELEASE_BRANCH_NAME}"
           echo "${BRANCH_LATEST_TAG}"
           echo "${RELEASE_KIND}"
