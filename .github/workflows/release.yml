@@ -51,7 +51,6 @@ jobs:
           echo "aaaa"
 
   release:
-    name: Run semver-auto
     needs: [semver-auto]
     if: ${{ needs.semver-auto.outputs.DO_RELEASE == 'true' }}
     runs-on: ubuntu-latest
