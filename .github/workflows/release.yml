@@ -67,7 +67,7 @@ jobs:
               *) echo "not supported semver kind"; exit 1; ;;
               esac
           fi
-          echo "RELEASE_TAG=$RELEASE_TAG" >>> $GITHUB_OUTPUT # e.g) vx.x.x
+          echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_OUTPUT # e.g) vx.x.x
           echo "${RELEASE_TAG}"
 
   release:
