@@ -28,7 +28,32 @@ jobs:
       - uses: ./.github/actions/dump-context
 
   semver-auto:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Github context
+        id: set_github_context
+        run: |
+          release_branch_name=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
+          branch_latest_tag=`git tag | grep ${release_branch_name} | tail -n 1`
+
+          echo "RELEASE_BRANCH_NAME=${release_branch_name}" >> $GITHUB_OUTPUT # e.g) vx.x
+          echo "BRANCH_LATES_TAG=${branch_latest_tag}"      >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
+
+          echo "${{ github.ref }}"
+          echo "${release_branch_name}"
+          echo "${branch_latest_tag}"
+          echo "${{ github.event.head_commit.message }}"
+
+      - name: Upgrade semver
+        run: |
+          echo "aaaa"
+
+  release:
     name: Run semver-auto
+    needs: [semver-auto]
+    if: ${{ needs.semver-auto.outputs.DO_RELEASE == 'true' }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/vdaas/vald/vald-ci-container:nightly
@@ -40,17 +65,3 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-
-      - name: Set context
-        id: set_context
-        run: |
-          release_branch_name=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'` # e.g) vx.x
-          branch_latest_tag=`git tag | grep ${release_branch_name} | tail -n 1`
-
-          echo "RELEASE_BRANCH_NAME=${release_branch_name}" >> $GITHUB_OUTPUT
-          echo "BRANCH_LATES_TAG=${branch_latest_tag}"      >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
-
-          echo "${{ github.ref }}"
-          echo "${release_branch_name}"
-          echo "${branch_latest_tag}"
-          echo "${{ github.event.head_commit.message }}"
