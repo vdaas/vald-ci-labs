@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set context
+      - name: Set Github context
         id: set_context
         run: |
           RELEASE_BRANCH_NAME=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
@@ -49,12 +49,29 @@ jobs:
 
       - name: Upgrade semver
         if: ${{ steps.set_context.outputs.RELEASE_KIND != '' }}
+        env:
+          RELEASE_BRANCH_NAME: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME }}
+          BRANCH_LATEST_TAG: ${{ steps.set_context.outputs.BRANCH_LATEST_TAG }}
+          RELEASE_KIND: ${{ steps.set_context.outputs.RELEASE_KIND }}
         run: |
-          echo "aaaa"
+          if [ -z "${BRANCH_LATEST_TAG}" ]; then
+              case ${RELEASE_KIND} in
+              major | minor) RELEASE_TAG="${RELEASE_BRANCH_NAME}.0"; ;;
+              *) echo "not supported semver kind"; exit 1; ;;
+              esac
+          else
+              IFS=. read -r version minor patch <<< "${BRANCH_LATEST_TAG}"
+
+              case ${RELEASE_KIND} in
+              patch) $RELEASE_TAG="$version.$minor.$((patch+1))"; ;;
+              *) echo "not supported semver kind"; exit 1; ;;
+              esac
+          fi
+          echo "RELEASE_TAG=$RELEASE_TAG" >>> $GITHUB_OUTPUT # e.g) vx.x.x
+          echo "${RELEASE_TAG}"
 
   release:
     needs: [semver-auto]
-    if: ${{ needs.semver-auto.outputs.DO_RELEASE == 'true' }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/vdaas/vald/vald-ci-container:nightly
