@@ -32,21 +32,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set Github context
-        id: set_github_context
+      - name: Set context
+        id: set_context
         run: |
-          release_branch_name=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
-          branch_latest_tag=`git tag | grep ${release_branch_name} | tail -n 1`
+          RELEASE_BRANCH_NAME=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
+          BRANCH_LATEST_TAG=`git tag | grep ${release_branch_name} | tail -n 1`
+          RELEASE_KIND=`echo "${{ github.event.head_commit.message }}" | sed -n -E 's:^\[(major|minor|patch)\].*:\1:p'`
 
-          echo "RELEASE_BRANCH_NAME=${release_branch_name}" >> $GITHUB_OUTPUT # e.g) vx.x
-          echo "BRANCH_LATES_TAG=${branch_latest_tag}"      >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
+          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT # e.g) vx.x
+          echo "BRANCH_LATEST_TAG=${BRANCH_LATEST_TAG}"       >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
+          echo "RELEASE_KIND=${RELEASE_KIND}"               >> $GITHUB_OUTPUT # e.g) major or minor or patch or empty
 
           echo "${{ github.ref }}"
-          echo "${release_branch_name}"
-          echo "${branch_latest_tag}"
           echo "${{ github.event.head_commit.message }}"
+          echo "${RELEASE_BRANCH_NAME}"
+          echo "${BRANCH_LATEST_TAG}"
+          echo "${RELEASE_KIND}"
 
       - name: Upgrade semver
+        if: ${{ steps.set_context.outputs.RELEASE_KIND != '' }}
         run: |
           echo "aaaa"
 
