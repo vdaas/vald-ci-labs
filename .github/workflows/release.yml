@@ -58,17 +58,22 @@ jobs:
           RELEASE_KIND: ${{ steps.set_context.outputs.RELEASE_KIND }}
         run: |
           if [ -z "${BRANCH_LATEST_TAG}" ]; then
-              case ${RELEASE_KIND} in
-              major | minor) RELEASE_TAG="${RELEASE_BRANCH_NAME}.0"; ;;
-              *) echo "not supported semver kind"; exit 1; ;;
-              esac
+            case ${RELEASE_KIND} in
+            major | minor) RELEASE_TAG="${RELEASE_BRANCH_NAME}.0"; ;;
+            *) echo "not supported semver kind"; exit 1; ;;
+            esac
           else
-              IFS=. read -r version minor patch <<< "${BRANCH_LATEST_TAG}"
+            IFS=. read -r version minor patch <<< "${BRANCH_LATEST_TAG}"
 
-              case ${RELEASE_KIND} in
-              patch) RELEASE_TAG="$version.$minor.$((patch+1))"; ;;
-              *) echo "not supported semver kind"; exit 1; ;;
-              esac
+            case ${RELEASE_KIND} in
+            patch) RELEASE_TAG="$version.$minor.$((patch+1))"; ;;
+            *) echo "not supported semver kind"; exit 1; ;;
+            esac
+          fi
+
+          if [ `git tag | grep "${RELEASE_TAG}"` ]; then
+            echo "release tag already exists: ${RELEASE_TAG}"
+            exit 1
           fi
 
           echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_OUTPUT # e.g) vx.x.x
