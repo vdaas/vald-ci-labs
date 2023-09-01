@@ -92,3 +92,20 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
+      - name: Update for new release
+        run: |
+          git branch
+
+          LAST_COMMIT_MESSAGE=`git log --pretty=format:%s -1`
+          PR_NUM=`echo "${LAST_COMMIT_MESSAGE}" | grep -o "#[[:digit:]]\+" | sed -e 's/#//' | head -1`
+
+          PREVIOUS_VERSION=`cat versions/VALD_VERSION`
+
+          echo "${GITWERK_RESULT}" > versions/VALD_VERSION
+
+          # TODO
+          cat ${PR_NUM}
+          cat ${LAST_COMMIT_MESSAGE}
+          cat ${PREVIOUS_VERSION}
+          cat versions/VALD_VERSION
