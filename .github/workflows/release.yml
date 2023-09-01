@@ -71,8 +71,8 @@ jobs:
             esac
           fi
 
-          if [ `git tag | grep "${RELEASE_TAG}"` ]; then
-            echo "release tag already exists: ${RELEASE_TAG}"
+          if [ `git tag | grep "${RELEASE_TAG}"` ] || [ `cat versions/VALD_VERSION` = "${RELEASE_TAG}" ]; then
+            echo "release already exists: ${RELEASE_TAG}"
             exit 1
           fi
 
