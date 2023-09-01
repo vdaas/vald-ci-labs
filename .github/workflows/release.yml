@@ -105,7 +105,7 @@ jobs:
           echo "${GITWERK_RESULT}" > versions/VALD_VERSION
 
           # TODO
-          cat ${PR_NUM}
-          cat ${LAST_COMMIT_MESSAGE}
-          cat ${PREVIOUS_VERSION}
+          echo "${PR_NUM}"
+          echo "${LAST_COMMIT_MESSAGE}"
+          echo "${PREVIOUS_VERSION}"
           cat versions/VALD_VERSION
