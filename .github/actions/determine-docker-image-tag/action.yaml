@@ -22,7 +22,7 @@ outputs:
     value: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
   DEFAULT_TAG:
     description: "default tag. Tag to be used if the primary tag does not exist"
-    value: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
+    value: ${{ steps.determine_tag_name.outputs.DEFAULT_IMAGE_TAG }}
 
 runs:
   using: "composite"
@@ -31,6 +31,7 @@ runs:
       shell: bash
       run: |
         echo "GITHUB_REF $GITHUB_REF"
+        echo "GITHUB_BASE_REF $GITHUB_BASE_REF"
         echo "GITHUB_EVENT_PATH $GITHUB_EVENT_PATH"
         echo "GITHUB_EVENT_NAME ${{ github.event_name }}"
         echo "GITHUB_EVENT_NUMBER  ${{ github.event.number }}"
@@ -66,7 +67,7 @@ runs:
           default_tag="${tag_name}"
         else
           primary_tag="unknown"
-          default_tag
+          default_tag="unknown"
         fi
 
         echo "PRIMARY_TAG is determined: ${primary_tag}"
