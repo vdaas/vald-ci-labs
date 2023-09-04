@@ -50,6 +50,10 @@ runs:
         elif [ "$GITHUB_REF" = "refs/heads/main" ]; then
           echo "nightly" > versions/VALD_VERSION
           primary_tag="nightly"
+        elif [[ "$GITHUB_REF" =~ ^refs/heads/release/v([0-9]+)\.([0-9]+)$ ]]; then
+          tag_name=`echo $GITHUB_REF | sed -e 's:^refs/heads/release/::'`
+          echo "${tag_name}" > versions/VALD_VERSION
+          primary_tag="${tag_name}"
         else
           primary_tag="unknown"
         fi
