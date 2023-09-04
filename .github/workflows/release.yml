@@ -34,7 +34,6 @@ jobs:
         with:
           fetch-depth: 0
 
-
       - name: Set Github context
         id: set_context
         run: |
