@@ -103,20 +103,20 @@ runs:
         ALTER_IMAGE_NAME: ${{ steps.image_name.outputs.ALTER_IMAGE_NAME }}
         PRIMARY_TAG: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
 
-    - name: Build and Push
-      shell: bash
-      id: build_and_push
-      run: |
-        make \
-          DOCKER="docker buildx" \
-          DOCKER_OPTS="--platform ${PLATFORMS} --builder ${BUILDER} ${LABEL_OPTS} ${EXTRA_TAGS} --push" \
-          TAG="${PRIMARY_TAG}" \
-          docker/build/${TARGET}
-      env:
-        TARGET: ${{ inputs.target }}
-        DOCKER_BUILDKIT: "1"
-        PLATFORMS: ${{ steps.determine_platforms.outputs.PLATFORMS }}
-        BUILDER: ${{ inputs.builder }}
-        LABEL_OPTS: "--label org.opencontainers.image.url=${{ github.event.repository.html_url }} --label org.opencontainers.image.source=${{ github.event.repository.html_url }} --label org.opencontainers.image.revision=${{ github.sha }}"
-        EXTRA_TAGS: ${{ steps.add_extra_tags.outputs.EXTRA_TAGS }}
-        PRIMARY_TAG: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
+    # - name: Build and Push
+    #   shell: bash
+    #   id: build_and_push
+    #   run: |
+    #     make \
+    #       DOCKER="docker buildx" \
+    #       DOCKER_OPTS="--platform ${PLATFORMS} --builder ${BUILDER} ${LABEL_OPTS} ${EXTRA_TAGS} --push" \
+    #       TAG="${PRIMARY_TAG}" \
+    #       docker/build/${TARGET}
+    #   env:
+    #     TARGET: ${{ inputs.target }}
+    #     DOCKER_BUILDKIT: "1"
+    #     PLATFORMS: ${{ steps.determine_platforms.outputs.PLATFORMS }}
+    #     BUILDER: ${{ inputs.builder }}
+    #     LABEL_OPTS: "--label org.opencontainers.image.url=${{ github.event.repository.html_url }} --label org.opencontainers.image.source=${{ github.event.repository.html_url }} --label org.opencontainers.image.revision=${{ github.sha }}"
+    #     EXTRA_TAGS: ${{ steps.add_extra_tags.outputs.EXTRA_TAGS }}
+    #     PRIMARY_TAG: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
