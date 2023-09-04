@@ -92,7 +92,7 @@ jobs:
 
       - name: Merge Docker image tag
         run: |
-          yq e ".spec.defaults.image.tag=${{ steps.setup_e2e.outputs.DEFAULT_IMAGE_TAG }}" -i ./.github/valdrelease/valdrelease.yaml
+          yq e ".spec.defaults.image.tag=\"${{ steps.setup_e2e.outputs.DEFAULT_IMAGE_TAG }}\"" -i ./.github/valdrelease/valdrelease.yaml
           IMAGE_TAGS=(${{ steps.setup_e2e.outputs.IMAGE_TAGS }})
 
           for IMAGE_TAG in "${IMAGE_TAGS[@]}"
