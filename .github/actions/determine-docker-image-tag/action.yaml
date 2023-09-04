@@ -38,6 +38,7 @@ runs:
       run: |
         if [[ "$GITHUB_REF" =~ ^refs/tags/.* ]]; then
           tag_name=`echo $GITHUB_REF | sed -e 's:^refs/tags/::'`
+          echo "${tag_name}" > versions/VALD_VERSION
           primary_tag="${tag_name}"
         elif [ "${{ github.event_name }}" = "pull_request" ]; then
           pr_num=`cat $GITHUB_EVENT_PATH | jq -r ".number"`
