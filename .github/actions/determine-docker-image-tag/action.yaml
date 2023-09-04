@@ -22,7 +22,7 @@ outputs:
     value: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
   DEFAULT_TAG:
     description: "default tag. Tag to be used if the primary tag does not exist"
-    value: ${{ steps.determine_tag_name.outputs.DEFAULT_IMAGE_TAG }}
+    value: ${{ steps.determine_tag_name.outputs.DEFAULT_TAG }}
 
 runs:
   using: "composite"
