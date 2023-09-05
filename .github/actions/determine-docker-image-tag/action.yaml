@@ -52,8 +52,9 @@ runs:
           default_tag="nightly"
 
           # For pull request to the release branch, use the release branch latest tag as the default tag (vx.x).
-          if [[ "$GITHUB_BASE_REF" =~ ^refs/heads/release/v([0-9]+)\.([0-9]+)$ ]]; then
-            tag_name=`echo $GITHUB_REF | sed -e 's:^refs/heads/release/::'`
+          # This is only set if the event that triggers the workflow execution is pull_request or pull_request_target.
+          if [[ "$GITHUB_BASE_REF" =~ ^release/v([0-9]+)\.([0-9]+)$ ]]; then
+            tag_name=`echo $GITHUB_REF | sed -e 's:^release/::'`
             default_tag="${tag_name}"
           fi
         elif [ "$GITHUB_REF" = "refs/heads/main" ]; then
