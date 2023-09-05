@@ -11,7 +11,7 @@ env:
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
-    if: github.event.action == 'labeled' && startsWith( env.HOOKED_LABEL_NAME, env.TARGET_LABEL_NAME_PREFIX ) # e.g.) actions/backport/v1.7
+    if: ${{ github.event.action == 'labeled' && startsWith( env.HOOKED_LABEL_NAME, env.TARGET_LABEL_NAME_PREFIX ) }} # e.g.) actions/backport/v1.7
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/dump-context
