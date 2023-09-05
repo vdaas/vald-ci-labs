@@ -1,0 +1,51 @@
+name: "Build docker image: ci-container"
+on:
+  push:
+    branches:
+      - "main"
+      - "release/v*.*"
+      - "!release/v*.*.*"
+    tags:
+      - "*.*.*"
+      - "v*.*.*"
+      - "*.*.*-*"
+      - "v*.*.*-*"
+    paths:
+      - ".github/actions/docker-build/actions.yaml"
+      - ".github/workflows/_docker-image.yaml"
+      - ".github/workflows/dockers-ci-container-image.yml"
+      - "dockers/ci/**"
+      - "Makefile"
+      - "Makefile.d/**"
+      - "versions/GO_VERSION"
+      - "versions/NGT_VERSION"
+  pull_request:
+    paths:
+      - ".github/actions/docker-build/actions.yaml"
+      - ".github/workflows/_docker-image.yaml"
+      - ".github/workflows/dockers-ci-container-image.yml"
+      - "dockers/ci/**"
+      - "Makefile"
+      - "Makefile.d/**"
+      - "versions/GO_VERSION"
+      - "versions/NGT_VERSION"
+  pull_request_target:
+    paths:
+      - ".github/actions/docker-build/actions.yaml"
+      - ".github/workflows/_docker-image.yaml"
+      - ".github/workflows/dockers-ci-container-image.yml"
+      - "dockers/ci/**"
+      - "Makefile"
+      - "Makefile.d/**"
+      - "versions/GO_VERSION"
+      - "versions/NGT_VERSION"
+  schedule:
+    - cron: "0 1 * * *"
+
+jobs:
+  build:
+    uses: ./.github/workflows/_docker-image.yaml
+    with:
+      target: ci-container
+      platforms: linux/amd64
+    secrets: inherit
