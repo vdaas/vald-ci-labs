@@ -44,6 +44,7 @@ jobs:
 
       - name: Create PR
         run: |
+          git branch
           gh pr create --base ${RELEASE_BRANCH_NAME} --head ${BACKPORT_BRANCH_NAME} --title "Backport to release/${RELEASE_BASE}" --body ""
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
