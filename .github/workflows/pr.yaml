@@ -44,9 +44,9 @@ jobs:
 
       - name: Create PR
         run: |
-          echo hello
-          # gh pr create --base master --head develop --title "Fix bug" --body ""
+          gh pr create --base ${RELEASE_BRANCH_NAME} --head ${BACKPORT_BRANCH_NAME} --title "Backport to release/${RELEASE_BASE}" --body ""
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BASE: ${{ steps.set_context.outputs.RELEASE_BASE }}
           RELEASE_BRANCH_NAME: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME }}
           BACKPORT_BRANCH_NAME: ${{ steps.set_context.outputs.BACKPORT_BRANCH_NAME }}
