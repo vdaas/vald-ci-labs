@@ -4,14 +4,10 @@ on:
     types:
       - "labeled"
 
-env:
-  TARGET_LABEL_NAME_PREFIX: 'actions/backport/'
-  HOOKED_LABEL_NAME: ${{ github.event.label.name }}
-
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
-    if: ${{ github.event.action == 'labeled' && startsWith( env.HOOKED_LABEL_NAME, env.TARGET_LABEL_NAME_PREFIX ) }} # e.g.) actions/backport/v1.7
+    if: ${{ github.event.action == 'labeled' && startsWith( github.event.label.name, 'actions/backport/' ) }} # e.g.) actions/backport/v1.7
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/dump-context
@@ -31,7 +27,7 @@ jobs:
       - name: Set Github context
         id: set_context
         run: |
-          RELEASE_BASE=`echo "$HOOKED_LABEL_NAME" | sed -e "s:^$TARGET_LABEL_NAME_PREFIX::"` # e.g) vx.x
+          RELEASE_BASE=`echo "${HOOKED_LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"` # e.g) vx.x
           RELEASE_BRANCH_NAME=release/${RELEASE_BASE}                                        # e.g) release/vx.x
           BACKPORT_BRANCH_NAME=backport/${RELEASE_BASE}/${GITHUB_HEAD_REF}                   # e.g) backport/vx.x/{current branch name}
 
@@ -43,6 +39,7 @@ jobs:
           echo "${RELEASE_BRANCH_NAME}"
           echo "${BACKPORT_BRANCH_NAME}"
         env:
+          TARGET_LABEL_NAME_PREFIX: 'actions/backport/'
           HOOKED_LABEL_NAME: ${{ github.event.label.name }}
 
       - name: Create PR
