@@ -45,7 +45,7 @@ jobs:
       - name: Create PR
         run: |
           git branch
-          gh pr checkout -b ${BACKPORT_BRANCH_NAME}
+          gh pr checkout ${BACKPORT_BRANCH_NAME} --detach
           git branch
           gh pr create --base ${RELEASE_BRANCH_NAME} \
                        --head ${BACKPORT_BRANCH_NAME} \
