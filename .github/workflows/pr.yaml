@@ -44,14 +44,13 @@ jobs:
 
       - name: Create PR
         run: |
-          git branch
-          gh pr checkout ${BACKPORT_BRANCH_NAME} --detach
-          git branch
+          git checkout -b ${BACKPORT_BRANCH_NAME}
+          git push origin ${BACKPORT_BRANCH_NAME}
           gh pr create --base ${RELEASE_BRANCH_NAME} \
-                       --head ${BACKPORT_BRANCH_NAME} \
                        --title "Backport to release/${RELEASE_BASE}" \
                        --body "" \
                        --draft
+                       # --head ${BACKPORT_BRANCH_NAME} \
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BASE: ${{ steps.set_context.outputs.RELEASE_BASE }}
