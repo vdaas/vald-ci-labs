@@ -28,3 +28,21 @@ jobs:
         with:
           images: ${{ env.TARGET_IMAGE }}
           tag_name: ${{ steps.determine_tag_name.outputs.DEFAULT_TAG }}
+
+      - name: Merge Docker image tag detection results
+        run: |
+          TAG_NAME="nightly"
+
+          if [ -n "${DEFAULT_TAG}" ]; then
+            # TODO
+          fi
+
+          if [ -n "${PRIMARY_TAG}" ]; then
+            # TODO
+          fi
+
+          echo "TAG_NAME=${TAG_NAME}"
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
+        env:
+          PRIMARY_TAG: ${{ steps.detect_primary_tag_name.outputs.IMAGE_TAGS }}
+          DEFAULT_TAG: ${{ steps.detect_default_tag_name.outputs.IMAGE_TAGS }}
