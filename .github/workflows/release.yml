@@ -27,6 +27,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/dump-context
 
+  detect-ci-container:
+    uses: ./.github/workflows/_detect-ci-container.yml
+    secrets: inherit
+
   semver-auto:
     runs-on: ubuntu-latest
     steps:
@@ -79,10 +83,12 @@ jobs:
           echo "${RELEASE_TAG}"
 
   release:
-    needs: [semver-auto]
+    needs:
+      - detect-ci-container
+      - semver-auto
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/vdaas/vald/vald-ci-container:nightly
+      image: ghcr.io/vdaas/vald/vald-ci-container:${{ needs.detect-ci-container.outputs.TAG_NAME }}
     steps:
       - uses: actions/checkout@v3
         with:
