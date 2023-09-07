@@ -1,6 +1,10 @@
 name: "Detect CI container image tag"
 on:
   workflow_call:
+    outputs:
+      TAG_NAME:
+        description: "The docker image tag name"
+        value: ${{ jobs.detect.outputs.TAG_NAME }}
 
 env:
   TARGET_IMAGE: vdaas/vald-ci-container
@@ -8,6 +12,8 @@ env:
 jobs:
   detect:
     runs-on: ubuntu-latest
+    outputs:
+      TAG_NAME: ${{ steps.merge_detection_results.outputs.TAG_NAME }}
     steps:
       - uses: actions/checkout@v3
 
@@ -22,7 +28,7 @@ jobs:
           images: ${{ env.TARGET_IMAGE }}
           tag_name: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
 
-      - name: Detect Docker image tag for secondary
+      - name: Detect Docker image tag for default
         id: detect_default_tag_name
         uses: ./.github/actions/detect-docker-image-tags
         with:
@@ -30,15 +36,16 @@ jobs:
           tag_name: ${{ steps.determine_tag_name.outputs.DEFAULT_TAG }}
 
       - name: Merge Docker image tag detection results
+        id: merge_detection_results
         run: |
           TAG_NAME="nightly"
 
           if [ -n "${DEFAULT_TAG_RESULT}" ]; then
-            TAG_NAME=${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
+            TAG_NAME=${{ steps.determine_tag_name.outputs.DEFAULT_TAG }}
           fi
 
           if [ -n "${PRIMARY_TAG_RESULT}" ]; then
-            TAG_NAME=${{ steps.determine_tag_name.outputs.DEFAULT_TAG }}
+            TAG_NAME=${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
           fi
 
           echo "TAG_NAME=${TAG_NAME}"
