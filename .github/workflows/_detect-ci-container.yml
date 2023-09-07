@@ -33,16 +33,16 @@ jobs:
         run: |
           TAG_NAME="nightly"
 
-          if [ -n "${DEFAULT_TAG}" ]; then
-            # TODO
+          if [ -n "${DEFAULT_TAG_RESULT}" ]; then
+            TAG_NAME=${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
           fi
 
-          if [ -n "${PRIMARY_TAG}" ]; then
-            # TODO
+          if [ -n "${PRIMARY_TAG_RESULT}" ]; then
+            TAG_NAME=${{ steps.determine_tag_name.outputs.DEFAULT_TAG }}
           fi
 
           echo "TAG_NAME=${TAG_NAME}"
           echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
         env:
-          PRIMARY_TAG: ${{ steps.detect_primary_tag_name.outputs.IMAGE_TAGS }}
-          DEFAULT_TAG: ${{ steps.detect_default_tag_name.outputs.IMAGE_TAGS }}
+          PRIMARY_TAG_RESULT: ${{ steps.detect_primary_tag_name.outputs.IMAGE_TAGS }}
+          DEFAULT_TAG_RESULT: ${{ steps.detect_default_tag_name.outputs.IMAGE_TAGS }}
