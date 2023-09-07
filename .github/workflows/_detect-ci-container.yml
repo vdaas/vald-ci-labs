@@ -16,14 +16,14 @@ jobs:
         uses: ./.github/actions/determine-docker-image-tag
 
       - name: Detect Docker image tag for primary
-        id: detect_tag_name
+        id: detect_primary_tag_name
         uses: ./.github/actions/detect-docker-image-tags
         with:
           images: ${{ env.TARGET_IMAGE }}
           tag_name: ${{ steps.determine_tag_name.outputs.PRIMARY_TAG }}
 
       - name: Detect Docker image tag for secondary
-        id: detect_tag_name
+        id: detect_default_tag_name
         uses: ./.github/actions/detect-docker-image-tags
         with:
           images: ${{ env.TARGET_IMAGE }}
