@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/vdaas/vald/internal/test/data/strings"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/strings"
 )
 
 var (

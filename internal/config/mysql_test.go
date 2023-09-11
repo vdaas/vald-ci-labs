@@ -24,10 +24,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/db/rdb/mysql"
-	"github.com/vdaas/vald/internal/errors"
-	testdata "github.com/vdaas/vald/internal/test"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/db/rdb/mysql"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	testdata "github.com/vdaas/vald-ci-labs/internal/test"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestMySQL_Bind(t *testing.T) {

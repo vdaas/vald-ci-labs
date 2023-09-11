@@ -23,10 +23,10 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/vdaas/vald/internal/core/algorithm"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/test/comparator"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/core/algorithm"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestWithInMemoryMode(t *testing.T) {

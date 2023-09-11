@@ -17,12 +17,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log/format"
-	"github.com/vdaas/vald/internal/log/level"
-	"github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/log/mock"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log/format"
+	"github.com/vdaas/vald-ci-labs/internal/log/level"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/log/mock"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestWithLogger(t *testing.T) {

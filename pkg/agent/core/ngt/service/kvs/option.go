@@ -19,7 +19,7 @@ package kvs
 import (
 	"runtime"
 
-	"github.com/vdaas/vald/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
 )
 
 // Option represents the functional option for bidi.

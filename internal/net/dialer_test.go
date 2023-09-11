@@ -31,14 +31,14 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/vdaas/vald/internal/cache"
-	"github.com/vdaas/vald/internal/cache/cacher"
-	"github.com/vdaas/vald/internal/cache/gache"
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/cache"
+	"github.com/vdaas/vald-ci-labs/internal/cache/cacher"
+	"github.com/vdaas/vald-ci-labs/internal/cache/gache"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 func Test_dialerCache_IP(t *testing.T) {

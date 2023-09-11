@@ -18,10 +18,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/observability/attribute"
-	"github.com/vdaas/vald/internal/observability/metrics"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/observability/attribute"
+	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 	"go.opentelemetry.io/otel/sdk/metric/aggregation"
 	"go.opentelemetry.io/otel/sdk/metric/view"
 )

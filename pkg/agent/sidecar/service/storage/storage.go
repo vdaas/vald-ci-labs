@@ -21,16 +21,16 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/vdaas/vald/internal/compress"
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/db/storage/blob"
-	"github.com/vdaas/vald/internal/db/storage/blob/cloudstorage"
-	"github.com/vdaas/vald/internal/db/storage/blob/cloudstorage/urlopener"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/session"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/compress"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/cloudstorage"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/cloudstorage/urlopener"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/session"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 type Storage interface {

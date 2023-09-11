@@ -25,10 +25,10 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/vdaas/vald/internal/db/rdb/mysql/dbr"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/db/rdb/mysql/dbr"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net"
 )
 
 const (

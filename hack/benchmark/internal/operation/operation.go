@@ -17,10 +17,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/hack/benchmark/internal/assets"
-	"github.com/vdaas/vald/internal/client/v1/client"
-	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/assets"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
 	"google.golang.org/grpc/codes"
 )
 

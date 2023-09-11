@@ -1,1 +1,2 @@
-../common/results.tmpl
+{{define "results"}}{{- if .OnlyReturnsError }}err{{ else }}{{range $i, $el := .Results}}{{if $i}}, {{end}}{{Got .}}{{end}}{{if .ReturnsError}}, err{{end}}
+{{- end }}{{end}}

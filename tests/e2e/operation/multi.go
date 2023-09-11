@@ -20,7 +20,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 )
 
 func (c *client) MultiSearch(t *testing.T, ctx context.Context, ds Dataset) error {

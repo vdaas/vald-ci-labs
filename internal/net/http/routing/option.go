@@ -17,7 +17,7 @@
 // Package routing provides implementation of Go API for routing http Handler wrapped by rest.Func
 package routing
 
-import "github.com/vdaas/vald/internal/net/http/middleware"
+import "github.com/vdaas/vald-ci-labs/internal/net/http/middleware"
 
 type Option func(*router)
 

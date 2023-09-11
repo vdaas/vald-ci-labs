@@ -16,7 +16,7 @@ package io
 import (
 	"context"
 
-	io "github.com/vdaas/vald/internal/io"
+	io "github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 // IO represents an interface to create object for io.

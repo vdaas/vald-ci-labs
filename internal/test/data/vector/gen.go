@@ -18,8 +18,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	irand "github.com/vdaas/vald/internal/rand"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	irand "github.com/vdaas/vald-ci-labs/internal/rand"
 )
 
 type (

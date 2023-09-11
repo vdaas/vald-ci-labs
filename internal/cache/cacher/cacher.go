@@ -20,7 +20,7 @@ package cacher
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 // Cache represent the cache interface to store cache.

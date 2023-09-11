@@ -21,11 +21,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/compress/zstd"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/test/comparator"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/compress/zstd"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 var zstdCompressorComparatorOptions = []comparator.Option{

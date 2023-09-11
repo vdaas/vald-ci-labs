@@ -21,8 +21,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/vdaas/vald/hack/benchmark/internal/assets"
-	"github.com/vdaas/vald/hack/benchmark/internal/core/algorithm"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/assets"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/core/algorithm"
 )
 
 type StrategyOption func(*strategy) error

@@ -24,10 +24,10 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/slices"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/slices"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 // Info represents an interface to get the runtime information.
@@ -37,7 +37,7 @@ type Info interface {
 }
 
 type info struct {
-	baseURL  string // e.g https://github.com/vdaas/vald/tree/main
+	baseURL  string // e.g https://github.com/vdaas/vald-ci-labs/tree/main
 	detail   Detail
 	prepOnce sync.Once
 

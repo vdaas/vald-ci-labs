@@ -21,16 +21,16 @@ import (
 	"context"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/test/data/request"
-	"github.com/vdaas/vald/internal/test/data/vector"
-	"github.com/vdaas/vald/internal/test/goleak"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/request"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/vector"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
 )
 
 func TestMain(m *testing.M) {

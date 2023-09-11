@@ -16,7 +16,7 @@ package safety
 import (
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 func BenchmarkRecoverFunc(b *testing.B) {

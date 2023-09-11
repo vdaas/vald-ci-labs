@@ -17,7 +17,7 @@
 // Package config providers configuration type and load configuration logic
 package config
 
-import "github.com/vdaas/vald/internal/tls"
+import "github.com/vdaas/vald-ci-labs/internal/tls"
 
 // TLS represent the TLS configuration for server.
 type TLS struct {

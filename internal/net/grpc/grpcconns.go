@@ -22,8 +22,8 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/grpc/pool"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/pool"
 )
 
 type grpcConns struct {

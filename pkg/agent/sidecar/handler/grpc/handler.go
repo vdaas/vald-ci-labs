@@ -18,8 +18,8 @@
 package grpc
 
 import (
-	"github.com/vdaas/vald/apis/grpc/v1/agent/sidecar"
-	"github.com/vdaas/vald/pkg/agent/sidecar/service/observer"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/sidecar"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/observer"
 )
 
 type server struct {

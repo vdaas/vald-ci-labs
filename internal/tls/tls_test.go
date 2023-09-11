@@ -24,11 +24,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/file"
-	testdata "github.com/vdaas/vald/internal/test"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	testdata "github.com/vdaas/vald-ci-labs/internal/test"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 var goleakIgnoreOptions = []goleak.Option{

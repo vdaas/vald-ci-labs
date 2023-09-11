@@ -20,11 +20,11 @@ import (
 	"testing"
 
 	"github.com/kpango/glg"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log/format"
-	"github.com/vdaas/vald/internal/log/level"
-	"github.com/vdaas/vald/internal/log/mock"
-	"github.com/vdaas/vald/internal/log/retry"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log/format"
+	"github.com/vdaas/vald-ci-labs/internal/log/level"
+	"github.com/vdaas/vald-ci-labs/internal/log/mock"
+	"github.com/vdaas/vald-ci-labs/internal/log/retry"
 )
 
 func TestNew(t *testing.T) {

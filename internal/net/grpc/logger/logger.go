@@ -18,7 +18,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 	glog "google.golang.org/grpc/grpclog"
 )
 

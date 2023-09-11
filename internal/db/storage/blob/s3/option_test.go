@@ -22,12 +22,12 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/google/go-cmp/cmp"
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/reader"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/writer"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/reader"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/writer"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestWithErrGroup(t *testing.T) {

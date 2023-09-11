@@ -18,7 +18,7 @@
 package router
 
 import (
-	"github.com/vdaas/vald/pkg/agent/sidecar/handler/rest"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/handler/rest"
 )
 
 type Option func(*router)

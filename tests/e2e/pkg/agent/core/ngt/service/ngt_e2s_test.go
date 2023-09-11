@@ -24,9 +24,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
 )
 
 var cfg = &config.NGT{

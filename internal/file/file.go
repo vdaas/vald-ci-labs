@@ -26,13 +26,13 @@ import (
 	"time"
 
 	"github.com/kpango/fastime"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/safety"
-	"github.com/vdaas/vald/internal/slices"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/slices"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 // Open opens the file with the given path, flag and permission.

@@ -20,10 +20,10 @@ package grpc
 import (
 	"context"
 
-	"github.com/vdaas/vald/apis/grpc/v1/manager/index"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/pkg/manager/index/service"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/manager/index"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/pkg/manager/index/service"
 )
 
 type server struct {

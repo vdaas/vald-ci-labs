@@ -18,9 +18,9 @@
 package config
 
 import (
-	"github.com/vdaas/vald/internal/db/nosql/cassandra"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/db/nosql/cassandra"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 // Cassandra represents the configuration for the internal cassandra package.

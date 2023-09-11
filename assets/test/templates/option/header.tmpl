@@ -1,1 +1,11 @@
-../common/header.tmpl
+{{define "header"}}
+{{range .Comments}}{{.}}
+{{end -}}
+package {{.Package}}
+
+import (
+    "github.com/vdaas/vald-ci-labs-ci-labs/internal/test/goleak"
+{{range .Imports}}{{.Name}} {{.Path}}
+{{end}}
+)
+{{end}}

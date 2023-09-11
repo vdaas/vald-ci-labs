@@ -16,7 +16,7 @@ package info
 import (
 	"runtime"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 // Option represent the functional option for info.

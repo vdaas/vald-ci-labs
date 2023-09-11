@@ -13,7 +13,7 @@
 // limitations under the License.
 package routing
 
-import "github.com/vdaas/vald/internal/net/http/rest"
+import "github.com/vdaas/vald-ci-labs/internal/net/http/rest"
 
 type middlewareMock struct {
 	WrapFunc func(rest.Func) rest.Func

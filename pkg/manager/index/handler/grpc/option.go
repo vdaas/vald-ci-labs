@@ -18,7 +18,7 @@
 package grpc
 
 import (
-	"github.com/vdaas/vald/pkg/manager/index/service"
+	"github.com/vdaas/vald-ci-labs/pkg/manager/index/service"
 )
 
 type Option func(*server)

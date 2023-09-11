@@ -16,7 +16,7 @@ package gob
 import (
 	"encoding/gob"
 
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 // Encoder represents an interface for Encoder of gob.

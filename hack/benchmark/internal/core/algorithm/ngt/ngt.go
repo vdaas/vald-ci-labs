@@ -21,9 +21,9 @@ import (
 	"context"
 	"os"
 
-	c "github.com/vdaas/vald/hack/benchmark/internal/core/algorithm"
-	"github.com/vdaas/vald/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald/internal/file"
+	c "github.com/vdaas/vald-ci-labs/hack/benchmark/internal/core/algorithm"
+	"github.com/vdaas/vald-ci-labs/internal/core/algorithm/ngt"
+	"github.com/vdaas/vald-ci-labs/internal/file"
 )
 
 type ObjectType int

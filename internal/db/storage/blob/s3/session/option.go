@@ -19,7 +19,7 @@ package session
 import (
 	"net/http"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 // Option represents the functional option for session.

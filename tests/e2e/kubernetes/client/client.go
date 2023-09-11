@@ -24,9 +24,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/tests/e2e/kubernetes/portforward"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/tests/e2e/kubernetes/portforward"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"

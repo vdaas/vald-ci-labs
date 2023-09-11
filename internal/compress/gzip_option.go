@@ -18,8 +18,8 @@
 package compress
 
 import (
-	"github.com/vdaas/vald/internal/compress/gzip"
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/compress/gzip"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 // GzipOption represents the functional option for gzipCompressor.

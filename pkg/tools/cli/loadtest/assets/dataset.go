@@ -18,10 +18,10 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/vdaas/vald/hack/benchmark/assets/x1b"
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/assets/x1b"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 var ErrOutOfBounds = x1b.ErrOutOfBounds

@@ -20,10 +20,10 @@ package router
 import (
 	"net/http"
 
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/net/http/middleware"
-	"github.com/vdaas/vald/internal/net/http/routing"
-	"github.com/vdaas/vald/pkg/discoverer/k8s/handler/rest"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/middleware"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/routing"
+	"github.com/vdaas/vald-ci-labs/pkg/discoverer/k8s/handler/rest"
 )
 
 type router struct {

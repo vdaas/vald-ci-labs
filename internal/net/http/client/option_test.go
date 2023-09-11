@@ -23,10 +23,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/test/comparator"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
 )
 
 func TestWithProxy(t *testing.T) {

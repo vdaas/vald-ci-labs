@@ -26,8 +26,8 @@ Run the following command to install the chart,
 
 Please upgrade the CRDs first because Helm doesn't have a support to upgrade CRDs.
 
-    $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/v1.7.6/charts/vald-helm-operator/crds/valdrelease.yaml
-    $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/v1.7.6/charts/vald-helm-operator/crds/valdhelmoperatorrelease.yaml
+    $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald-ci-labs/v1.7.6/charts/vald-helm-operator/crds/valdrelease.yaml
+    $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald-ci-labs/v1.7.6/charts/vald-helm-operator/crds/valdhelmoperatorrelease.yaml
 
 After upgrading CRDs, you can upgrade the operator.
 If you're using `valdhelmoperatorrelease` (or `vhor`) resource, please update the `spec.image.tag` field of it.
@@ -78,7 +78,7 @@ spec: {}
 | enableMetrics                      | bool   | `true`                                                                                                                                                                         | enable metrics endpoint                                                                                                          |
 | healthPort                         | int    | `8081`                                                                                                                                                                         | port of health endpoint                                                                                                          |
 | image.pullPolicy                   | string | `"Always"`                                                                                                                                                                     | image pull policy                                                                                                                |
-| image.repository                   | string | `"vdaas/vald-helm-operator"`                                                                                                                                                   | image repository                                                                                                                 |
+| image.repository                   | string | `"vdaas/vald-ci-labs-helm-operator"`                                                                                                                                                   | image repository                                                                                                                 |
 | image.tag                          | string | `"v1.7.6"`                                                                                                                                                                     | image tag                                                                                                                        |
 | leaderElectionID                   | string | `"vald-helm-operator"`                                                                                                                                                         | name of the configmap that is used for holding the leader lock.                                                                  |
 | livenessProbe.enabled              | bool   | `true`                                                                                                                                                                         | enable liveness probe.                                                                                                           |

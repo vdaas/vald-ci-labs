@@ -21,9 +21,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald/internal/k8s"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/k8s"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
