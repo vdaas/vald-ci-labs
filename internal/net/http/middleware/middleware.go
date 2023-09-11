@@ -17,7 +17,7 @@
 // Package middleware provides rest.Func Middleware
 package middleware
 
-import "github.com/vdaas/vald/internal/net/http/rest"
+import "github.com/vdaas/vald-ci-labs/internal/net/http/rest"
 
 type Wrapper interface {
 	Wrap(rest.Func) rest.Func

@@ -20,7 +20,7 @@ package dump
 import (
 	"net/http"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 func Request(values, body map[string]interface{}, r *http.Request) (res interface{}, err error) {

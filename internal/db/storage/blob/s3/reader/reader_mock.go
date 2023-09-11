@@ -23,9 +23,9 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/sdk/s3"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/sdk/s3/s3iface"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/sdk/s3"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/sdk/s3/s3iface"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 // MockS3API represents mock for s3iface.MMockS3API.

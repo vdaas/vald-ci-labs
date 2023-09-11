@@ -22,8 +22,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/file"
 )
 
 // Data is an interface to get the configuration path and flag.

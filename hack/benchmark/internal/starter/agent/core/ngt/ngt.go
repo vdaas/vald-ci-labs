@@ -23,12 +23,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/hack/benchmark/internal/starter"
-	"github.com/vdaas/vald/internal/client/v1/client/vald"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/runner"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/config"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/usecase"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/starter"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/vald"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/runner"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/config"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/usecase"
 )
 
 const name = "agent-ngt"

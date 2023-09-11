@@ -13,7 +13,7 @@
 // limitations under the License.
 package operation
 
-import "github.com/vdaas/vald/internal/client/v1/client"
+import "github.com/vdaas/vald-ci-labs/internal/client/v1/client"
 
 type Option func(*operation)
 

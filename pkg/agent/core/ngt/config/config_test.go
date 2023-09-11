@@ -25,12 +25,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/test/comparator"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestNewConfig(t *testing.T) {

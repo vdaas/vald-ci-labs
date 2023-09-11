@@ -22,12 +22,12 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/vdaas/vald/internal/encoding/json"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net/grpc/proto"
-	"github.com/vdaas/vald/internal/net/grpc/types"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/encoding/json"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/proto"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/types"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	spb "google.golang.org/genproto/googleapis/rpc/status"
 	"google.golang.org/grpc/status"
@@ -52,7 +52,7 @@ type (
 
 const (
 	ValdResourceOwner          = "vdaas.org vald team <vald@vdaas.org>"
-	ValdGRPCResourceTypePrefix = "github.com/vdaas/vald/apis/grpc/v1"
+	ValdGRPCResourceTypePrefix = "github.com/vdaas/vald-ci-labs/apis/grpc/v1"
 
 	typePrefix = "type.googleapis.com/google.rpc."
 )

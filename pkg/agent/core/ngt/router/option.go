@@ -18,8 +18,8 @@
 package router
 
 import (
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/handler/rest"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/handler/rest"
 )
 
 // Option represents the functional option for router.

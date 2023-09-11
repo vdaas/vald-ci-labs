@@ -29,6 +29,6 @@ func TestRules(t *testing.T) {
 		t,
 		os.Getenv("GOPATH"),
 		analyzer.Analyzer,
-		"github.com/vdaas/vald/hack/gorules/testdata",
+		"github.com/vdaas/vald-ci-labs/hack/gorules/testdata",
 	)
 }

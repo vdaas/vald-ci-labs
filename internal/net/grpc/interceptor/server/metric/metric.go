@@ -17,12 +17,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/net/grpc/codes"
-	"github.com/vdaas/vald/internal/net/grpc/status"
-	"github.com/vdaas/vald/internal/observability/attribute"
-	"github.com/vdaas/vald/internal/observability/metrics"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/internal/observability/attribute"
+	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
 )
 
 const (

@@ -69,8 +69,8 @@ These will help you to implement your original filter component.
 
 Please refer to:
 
-- [Vald ONNX Ingress Filter](https://github.com/vdaas/vald-onnx-ingress-filter)
-- [Vald Tensorflow Ingress Filter](https://github.com/vdaas/vald-tensorflow-ingress-filter)
+- [Vald ONNX Ingress Filter](https://github.com/vdaas/vald-ci-labs-onnx-ingress-filter)
+- [Vald Tensorflow Ingress Filter](https://github.com/vdaas/vald-ci-labs-tensorflow-ingress-filter)
 
 ## Configuration
 
@@ -133,9 +133,9 @@ package main
 import (
 	"context"
 
-	"github.com/vdaas/vald-client-go/v1/payload"
-	"github.com/vdaas/vald-client-go/v1/vald"
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs-client-go/v1/payload"
+	"github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 	"google.golang.org/grpc"
 )
 

@@ -17,14 +17,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net/grpc/codes"
-	"github.com/vdaas/vald/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald/internal/net/grpc/status"
-	"github.com/vdaas/vald/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
 )
 
 func (s *server) CreateIndex(ctx context.Context, c *payload.Control_CreateIndexRequest) (res *payload.Empty, err error) {

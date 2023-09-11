@@ -22,9 +22,9 @@ import (
 	"os"
 
 	"github.com/lucasb-eyer/go-colorful"
-	"github.com/vdaas/vald/hack/benchmark/metrics"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/slices"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/metrics"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/slices"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"

@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/compress/gzip"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/compress/gzip"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 func TestNewGzip(t *testing.T) {

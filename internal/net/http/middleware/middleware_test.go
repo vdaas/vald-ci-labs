@@ -16,7 +16,7 @@ package middleware
 import (
 	"testing"
 
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestMain(m *testing.M) {

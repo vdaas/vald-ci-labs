@@ -13,7 +13,7 @@
 // limitations under the License.
 package compress
 
-import "github.com/vdaas/vald/internal/io"
+import "github.com/vdaas/vald-ci-labs/internal/io"
 
 // MockCompressor represents mock of Compressor.
 type MockCompressor struct {

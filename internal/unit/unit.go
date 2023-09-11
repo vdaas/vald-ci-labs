@@ -18,7 +18,7 @@ package unit
 
 import (
 	"code.cloudfoundry.org/bytefmt"
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 // ParseBytes parses string to uint64.

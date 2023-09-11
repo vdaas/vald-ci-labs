@@ -24,12 +24,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/internal/rand"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/internal/rand"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 // NOTE: This variable is for observability package.

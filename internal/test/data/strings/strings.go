@@ -16,7 +16,7 @@ package strings
 import (
 	"unsafe"
 
-	"github.com/vdaas/vald/internal/rand"
+	"github.com/vdaas/vald-ci-labs/internal/rand"
 )
 
 const (

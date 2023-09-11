@@ -22,7 +22,7 @@ import (
 	"time"
 
 	gache "github.com/kpango/gache/v2"
-	"github.com/vdaas/vald/internal/cache/cacher"
+	"github.com/vdaas/vald-ci-labs/internal/cache/cacher"
 )
 
 type cache[V any] struct {

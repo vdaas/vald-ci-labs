@@ -20,11 +20,11 @@ import (
 	"encoding/json"
 
 	"github.com/kpango/glg"
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/log/format"
-	"github.com/vdaas/vald/internal/log/level"
-	log "github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/log/retry"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/log/format"
+	"github.com/vdaas/vald-ci-labs/internal/log/level"
+	log "github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/log/retry"
 )
 
 const (

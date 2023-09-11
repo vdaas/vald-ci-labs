@@ -22,11 +22,11 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/go-cmp/cmp"
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/sdk/s3/s3iface"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/sdk/s3/s3iface"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 // Goroutine leak is detected by `fastime`, but it should be ignored in the test because it is an external package.

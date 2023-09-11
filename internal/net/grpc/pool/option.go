@@ -18,9 +18,9 @@
 package pool
 
 import (
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 type Option func(*pool)

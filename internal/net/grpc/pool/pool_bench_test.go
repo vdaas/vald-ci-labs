@@ -22,12 +22,12 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/v1/discoverer"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/log/level"
-	"github.com/vdaas/vald/internal/net"
-	valdsync "github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/discoverer"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log/level"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

@@ -21,9 +21,9 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/safety"
-	valdsync "github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
 	"github.com/zeebo/xxh3"
 )
 

@@ -18,7 +18,7 @@
 package types
 
 import (
-	"github.com/vdaas/vald/internal/net/grpc/proto"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 

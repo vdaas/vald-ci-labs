@@ -21,7 +21,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/vdaas/vald/hack/benchmark/internal/starter"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/starter"
 )
 
 type server struct { // cfg *config.Data

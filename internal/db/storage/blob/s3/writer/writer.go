@@ -22,13 +22,13 @@ import (
 	"sync"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/sdk/s3/s3iface"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/sdk/s3/s3manager"
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/sdk/s3/s3iface"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/sdk/s3/s3manager"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
 )
 
 type writer struct {

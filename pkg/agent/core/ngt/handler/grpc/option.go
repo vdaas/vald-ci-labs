@@ -21,11 +21,11 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/vdaas/vald/internal/errgroup"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
+	"github.com/vdaas/vald-ci-labs/internal/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
 )
 
 // Option represents the functional option for server.

@@ -20,8 +20,8 @@ package core
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/client/v1/client/vald"
-	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/vald"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
 )
 
 // Option is agentClient configure.

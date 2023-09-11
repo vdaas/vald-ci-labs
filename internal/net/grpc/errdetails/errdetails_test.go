@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/net/grpc/proto"
-	"github.com/vdaas/vald/internal/net/grpc/types"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/proto"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/types"
 )
 
 func Test_decodeDetails(t *testing.T) {

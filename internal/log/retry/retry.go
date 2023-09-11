@@ -16,7 +16,7 @@ package retry
 import (
 	"reflect"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 type Retry interface {

@@ -22,8 +22,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 func TestWithRoundTripper(t *testing.T) {

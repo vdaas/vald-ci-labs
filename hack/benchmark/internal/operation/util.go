@@ -16,8 +16,8 @@ package operation
 import (
 	"testing"
 
-	"github.com/vdaas/vald/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
 )
 
 func grpcError(tb testing.TB, err error) {

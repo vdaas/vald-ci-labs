@@ -26,15 +26,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/vdaas/vald/internal/cache"
-	"github.com/vdaas/vald/internal/cache/cacher"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net/control"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/internal/safety"
-	valdsync "github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/cache"
+	"github.com/vdaas/vald-ci-labs/internal/cache/cacher"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net/control"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 // Dialer is an interface to get the dialer instance to connect to an address.

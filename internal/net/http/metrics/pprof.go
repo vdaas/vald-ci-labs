@@ -21,8 +21,8 @@ import (
 	"net/http"
 	"net/http/pprof"
 
-	"github.com/vdaas/vald/internal/net/http/rest"
-	"github.com/vdaas/vald/internal/net/http/routing"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/rest"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/routing"
 )
 
 // NewPProfRoutes returns PProf server route&method information from debug flag.

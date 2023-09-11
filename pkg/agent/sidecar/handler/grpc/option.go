@@ -17,7 +17,7 @@
 // Package grpc provides grpc server logic
 package grpc
 
-import "github.com/vdaas/vald/pkg/agent/sidecar/service/observer"
+import "github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/observer"
 
 type Option func(*server)
 

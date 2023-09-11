@@ -19,7 +19,7 @@ We appreciate your help!
 
 ## Contributing Issue
 
-We use [Github Issues](https://github.com/vdaas/vald/issues) to track issues within this repository.
+We use [Github Issues](https://github.com/vdaas/vald-ci-labs/issues) to track issues within this repository.
 If you can determine the problem you are facing is a bug or issue, you can easily submit the issues.
 
 If you are unsure whether you have found a bug or security-related issues, please consider asking in the [Vald Slack](https://join.slack.com/t/vald-community/shared_invite/zt-db2ky9o4-R_9p2sVp8xRwztVa8gfnPA) first.
@@ -41,7 +41,7 @@ When filing an issue, make sure to answer these five questions:
 4. What did you expect to see?
 5. What did you see instead?
 
-Please submit the bug report [here](https://github.com/vdaas/vald/issues/new?assignees=&labels=type%2Fbug%2C+priority%2Fmedium%2C+team%2Fcore&template=bug_report.md&title=)
+Please submit the bug report [here](https://github.com/vdaas/vald-ci-labs/issues/new?assignees=&labels=type%2Fbug%2C+priority%2Fmedium%2C+team%2Fcore&template=bug_report.md&title=)
 
 ### Proposal
 
@@ -51,7 +51,7 @@ The significant change to the library or the architecture should be discussed fi
 We may ask for detailed documentation before your proposal is accepted.<br>
 Your proposal will be reviewed, discussed, and decided whether it is accepted or declined.
 
-Please submit the proposal [here](https://github.com/vdaas/vald/issues/new?assignees=&labels=type%2Ffeature%2C+priority%2Flow%2C+team%2Fcore&template=feature_request.md&title=)
+Please submit the proposal [here](https://github.com/vdaas/vald-ci-labs/issues/new?assignees=&labels=type%2Ffeature%2C+priority%2Flow%2C+team%2Fcore&template=feature_request.md&title=)
 
 ### Feature Request
 
@@ -64,7 +64,7 @@ Please provide the problem and solution associated with the feature request in a
 
 NOTE: If you’d like to contribute to the new feature which may affect the current Vald architecture or design, you should discuss it with the Vald team first.
 
-Please submit the feature request [here](https://github.com/vdaas/vald/issues/new?assignees=&labels=type%2Ffeature%2C+priority%2Flow%2C+team%2Fcore&template=feature_request.md&title=)
+Please submit the feature request [here](https://github.com/vdaas/vald-ci-labs/issues/new?assignees=&labels=type%2Ffeature%2C+priority%2Flow%2C+team%2Fcore&template=feature_request.md&title=)
 
 ### Security Issue Report
 
@@ -77,7 +77,7 @@ If the security issue is caused by a third-party module, we will contact the mod
 
 We will consider using another third-party module if the vulnerable module is not actively maintained anymore.
 
-Please submit the security issue report [here](https://github.com/vdaas/vald/issues/new?assignees=&labels=type%2Fsecurity%2C+priority%2Fmedium%2C+team%2Fcore%2C+team%2Fsre&template=security_issue_report.md&title=)
+Please submit the security issue report [here](https://github.com/vdaas/vald-ci-labs/issues/new?assignees=&labels=type%2Fsecurity%2C+priority%2Fmedium%2C+team%2Fcore%2C+team%2Fsre&template=security_issue_report.md&title=)
 
 ## Contributing Source Code
 
@@ -87,7 +87,7 @@ Please refer to our [development documentation](./docs/contributing/development.
 
 Follow these steps to make a contribution to any of our open source repositories:
 
-1. Ensure that you have completed our [CLA Agreement](https://cla-assistant.io/vdaas/vald)
+1. Ensure that you have completed our [CLA Agreement](https://cla-assistant.io/vdaas/vald-ci-labs)
 2. Set your name and email (these should match the information on your submitted CLA)
 
    ```bash
@@ -97,7 +97,7 @@ Follow these steps to make a contribution to any of our open source repositories
 
 ### How to contribute source code
 
-1. Fork the repository ( https://github.com/vdaas/vald/fork )
+1. Fork the repository ( https://github.com/vdaas/vald-ci-labs/fork )
 2. Create your feature branch (git checkout -b [`[type]/[area]/[description]`](#Branch-naming-convention))
 3. Commit your changes on your branch (git commit -am 'Add some feature')
 4. Run tests (make test)

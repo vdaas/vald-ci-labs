@@ -22,7 +22,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	valdsync "github.com/vdaas/vald/internal/sync"
+	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 type call[V any] struct {

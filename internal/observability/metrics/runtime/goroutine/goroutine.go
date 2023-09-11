@@ -17,7 +17,7 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/vdaas/vald/internal/observability/metrics"
+	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
 	"go.opentelemetry.io/otel/sdk/metric/aggregation"
 	"go.opentelemetry.io/otel/sdk/metric/view"
 )

@@ -18,10 +18,10 @@
 package config
 
 import (
-	"github.com/vdaas/vald/internal/db/rdb/mysql"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/db/rdb/mysql"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 // MySQL represent the mysql configuration.

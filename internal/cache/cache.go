@@ -21,9 +21,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald/internal/cache/cacher"
-	"github.com/vdaas/vald/internal/cache/gache"
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/cache/cacher"
+	"github.com/vdaas/vald-ci-labs/internal/cache/gache"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 type cache[V any] struct {

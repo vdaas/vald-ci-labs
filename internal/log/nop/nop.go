@@ -14,7 +14,7 @@
 package nop
 
 import (
-	"github.com/vdaas/vald/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
 )
 
 type nopLogger struct{}

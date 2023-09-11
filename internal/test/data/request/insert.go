@@ -16,8 +16,8 @@ package request
 import (
 	"strconv"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/test/data/vector"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/vector"
 )
 
 type ObjectType int

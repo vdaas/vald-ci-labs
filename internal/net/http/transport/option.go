@@ -20,7 +20,7 @@ package transport
 import (
 	"net/http"
 
-	"github.com/vdaas/vald/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
 )
 
 // Option represents the functional option for transport and backoff.

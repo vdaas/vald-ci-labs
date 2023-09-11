@@ -13,7 +13,7 @@
 // limitations under the License.
 package gob
 
-import "github.com/vdaas/vald/internal/io"
+import "github.com/vdaas/vald-ci-labs/internal/io"
 
 // MockEncoder represents mock struct of Encoder.
 type MockEncoder struct {

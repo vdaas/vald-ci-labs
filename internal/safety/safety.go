@@ -21,10 +21,10 @@ import (
 	"runtime"
 	"runtime/debug"
 
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 )
 
 func RecoverFunc(fn func() error) func() error {

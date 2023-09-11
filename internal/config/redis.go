@@ -20,11 +20,11 @@ package config
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/db/kvs/redis"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/db/kvs/redis"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 // Redis represents the configuration for redis cluster.

@@ -18,9 +18,9 @@
 package ngt
 
 import (
-	"github.com/vdaas/vald/internal/client/v1/client/vald"
-	iconfig "github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/config"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/vald"
+	iconfig "github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/config"
 )
 
 type Option func(*server)

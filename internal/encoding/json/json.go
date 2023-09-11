@@ -18,7 +18,7 @@ package json
 
 import (
 	json "github.com/goccy/go-json"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 func Encode(w io.Writer, data interface{}) (err error) {

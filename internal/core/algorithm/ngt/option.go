@@ -27,9 +27,9 @@ import (
 	"strconv"
 
 	"github.com/kpango/fastime"
-	"github.com/vdaas/vald/internal/core/algorithm"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/core/algorithm"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 // Option represents the functional option for NGT.
