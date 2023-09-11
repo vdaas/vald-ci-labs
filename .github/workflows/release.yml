@@ -96,7 +96,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     container:
-      image: ghcr.io/vdaas/vald/vald-ci-container:${{ needs.detect-ci-container.outputs.TAG_NAME }}
+      # image: ghcr.io/vdaas/vald/vald-ci-container:${{ needs.detect-ci-container.outputs.TAG_NAME }}
+      image: ghcr.io/vdaas/vald/vald-ci-container:nightly
     env:
       RELEASE_BRANCH_NAME: release/${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME_PREFIX }}
       RELEASE_TAG: ${{ needs.semver-auto.outputs.RELEASE_TAG }}
