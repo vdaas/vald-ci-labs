@@ -181,7 +181,7 @@ jobs:
           tag_name: ${{ steps.update_for_new_release.outputs.VERSION }}
           name: Release ${{ steps.update_for_new_release.outputs.VERSION }}
           body: |
-            See [CHANGELOG.md](https://github.com/vdaas/vald/blob/${{ steps.update_for_new_release.outputs.VERSION }}/CHANGELOG.md) for details.
+            See [CHANGELOG.md](https://github.com/vdaas/vald-ci-labs/blob/${{ steps.update_for_new_release.outputs.VERSION }}/CHANGELOG.md) for details.
           draft: false
           prerelease: false
 
