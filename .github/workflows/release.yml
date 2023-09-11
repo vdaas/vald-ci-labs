@@ -109,6 +109,12 @@ jobs:
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
+      # - uses: crazy-max/ghaction-import-gpg@v4
+      #   with:
+      #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+      #     git_user_signingkey: true
+      #     git_commit_gpgsign: true
+
       - name: Update for new release
         id: update_for_new_release
         run: |
@@ -178,6 +184,6 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Add the version to goproxy
-        run: |
-          curl "https://proxy.golang.org/github.com/vdaas/vald/@v/${{ steps.update_for_new_release.outputs.VERSION }}.info"
+      # - name: Add the version to goproxy
+      #   run: |
+      #     curl "https://proxy.golang.org/github.com/vdaas/vald/@v/${{ steps.update_for_new_release.outputs.VERSION }}.info"
