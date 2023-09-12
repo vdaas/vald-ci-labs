@@ -184,6 +184,7 @@ func (m *Search_Config) CloneVT() *Search_Config {
 		EgressFilters:        m.EgressFilters.CloneVT(),
 		MinNum:               m.MinNum,
 		AggregationAlgorithm: m.AggregationAlgorithm,
+		TestFlag:             m.TestFlag,
 	}
 	if len(m.unknownFields) > 0 {
 		r.unknownFields = make([]byte, len(m.unknownFields))
@@ -1775,6 +1776,9 @@ func (this *Search_Config) EqualVT(that *Search_Config) bool {
 		return false
 	}
 	if this.AggregationAlgorithm != that.AggregationAlgorithm {
+		return false
+	}
+	if this.TestFlag != that.TestFlag {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -3938,6 +3942,11 @@ func (m *Search_Config) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.TestFlag != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.TestFlag))
+		i--
+		dAtA[i] = 0x50
 	}
 	if m.AggregationAlgorithm != 0 {
 		i = encodeVarint(dAtA, i, uint64(m.AggregationAlgorithm))
@@ -7316,6 +7325,9 @@ func (m *Search_Config) SizeVT() (n int) {
 	if m.AggregationAlgorithm != 0 {
 		n += 1 + sov(uint64(m.AggregationAlgorithm))
 	}
+	if m.TestFlag != 0 {
+		n += 1 + sov(uint64(m.TestFlag))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -9391,6 +9403,25 @@ func (m *Search_Config) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.AggregationAlgorithm |= Search_AggregationAlgorithm(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 10:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TestFlag", wireType)
+			}
+			m.TestFlag = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.TestFlag |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
