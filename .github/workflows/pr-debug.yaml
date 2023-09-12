@@ -1,0 +1,72 @@
+#
+# Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: "Run backport PR creation"
+on:
+  pull_request:
+    branches:
+      - "main"
+    types:
+      - "closed"
+
+jobs:
+  dump-contexts-to-log:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/dump-context
+
+  # create:
+  #   runs-on: ubuntu-latest
+  #   needs: [dump-contexts-to-log]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: Set Git config
+  #       run: |
+  #         git config --global --add safe.directory ${GITHUB_WORKSPACE}
+  #
+  #     - name: Set Github context
+  #       id: set_context
+  #       run: |
+  #         RELEASE_BASE=`echo "${HOOKED_LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"` # e.g) vx.x
+  #         RELEASE_BRANCH_NAME=release/${RELEASE_BASE}                                            # e.g) release/vx.x
+  #         BACKPORT_BRANCH_NAME=backport/${RELEASE_BASE}/${GITHUB_HEAD_REF}                       # e.g) backport/vx.x/{current branch name}
+  #
+  #         echo "RELEASE_BASE=${RELEASE_BASE}"                  >> $GITHUB_OUTPUT
+  #         echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"    >> $GITHUB_OUTPUT
+  #         echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"  >> $GITHUB_OUTPUT
+  #
+  #         echo "${RELEASE_BASE}"
+  #         echo "${RELEASE_BRANCH_NAME}"
+  #         echo "${BACKPORT_BRANCH_NAME}"
+  #       env:
+  #         TARGET_LABEL_NAME_PREFIX: "actions/backport/"
+  #         HOOKED_LABEL_NAME: ${{ github.event.label.name }}
+  #
+  #     - name: Create PR
+  #       run: |
+  #         git checkout -b ${BACKPORT_BRANCH_NAME}
+  #         git push origin ${BACKPORT_BRANCH_NAME}
+  #         gh pr create --base ${RELEASE_BRANCH_NAME} \
+  #                      --title "Backport to release/${RELEASE_BASE}" \
+  #                      --body ""
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         RELEASE_BASE: ${{ steps.set_context.outputs.RELEASE_BASE }}
+  #         RELEASE_BRANCH_NAME: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME }}
+  #         BACKPORT_BRANCH_NAME: ${{ steps.set_context.outputs.BACKPORT_BRANCH_NAME }}
