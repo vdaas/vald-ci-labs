@@ -1,5 +1,70 @@
 # CHANGELOG
 
+## v1.5.0
+
+### Docker images
+
+<table>
+  <tr>
+    <th>component</th>
+    <th>Docker pull</th>
+  </tr>
+  <tr>
+    <td>Agent NGT</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-agent-ngt:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-ngt:v1.5.0</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Agent sidecar</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-agent-sidecar:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-sidecar:v1.5.0</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Discoverers</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-discoverer-k8s:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-discoverer-k8s:v1.5.0</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Gateways</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-lb-gateway:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-lb-gateway:v1.5.0</code><br/>
+      <code>docker pull vdaas/vald-ci-labs-filter-gateway:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-filter-gateway:v1.5.0</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Index Manager</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-manager-index:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-manager-index:v1.5.0</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Helm Operator</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-helm-operator:v1.5.0</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-helm-operator:v1.5.0</code>
+    </td>
+  </tr>
+</table>
+
+### Documents
+
+- [GoDoc](https://pkg.go.dev/github.com/vdaas/vald-ci-labs@v1.5.0)
+- [Helm Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.5.0/charts/vald/README.md)
+- [Helm Operator Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.5.0/charts/vald-helm-operator/README.md)
+
+### Changes
+null
+
+
 ## v1.7.6
 
 ### Docker images
