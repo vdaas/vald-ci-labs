@@ -34,7 +34,7 @@ jobs:
   semver-auto:
     runs-on: ubuntu-latest
     outputs:
-      RELEASE_BRANCH_NAME_PREFIX: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME }}
+      RELEASE_BRANCH_NAME_PREFIX: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME_PREFIX }}
       RELEASE_TAG: ${{ steps.upgrade_semver.outputs.RELEASE_TAG }}
       RELEASE: ${{ steps.upgrade_semver.outputs.RELEASE }}
     steps:
@@ -110,15 +110,17 @@ jobs:
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
-      # - uses: crazy-max/ghaction-import-gpg@v4
-      #   with:
-      #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-      #     git_user_signingkey: true
-      #     git_commit_gpgsign: true
+      - uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       - name: Update for new release
         id: update_for_new_release
         run: |
+          git checkout ${RELEASE_BRANCH_NAME}
+
           LAST_COMMIT_MESSAGE=`git log --pretty=format:%s -1`
           PR_NUM=`echo "${LAST_COMMIT_MESSAGE}" | grep -o "#[[:digit:]]\+" | sed -e 's/#//' | head -1`
 
