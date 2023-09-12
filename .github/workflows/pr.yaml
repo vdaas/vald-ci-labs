@@ -2,7 +2,7 @@
 # Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
@@ -16,13 +16,15 @@
 name: "Run backport PR creation"
 on:
   pull_request:
+    branches:
+      - "main"
     types:
-      - "labeled"
+      - "closed"
 
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
-    if: ${{ github.event.action == 'labeled' && startsWith( github.event.label.name, 'actions/backport/' ) }} # e.g.) actions/backport/v1.7
+    if: ${{ github.event.pull_request.merged == true }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/dump-context
@@ -30,6 +32,8 @@ jobs:
   create:
     runs-on: ubuntu-latest
     needs: [dump-contexts-to-log]
+    env:
+      TARGET_LABEL_NAME_PREFIX: "actions/backport/"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -39,33 +43,45 @@ jobs:
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
 
+      - uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: Set Github context
         id: set_context
         run: |
-          RELEASE_BASE=`echo "${HOOKED_LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"` # e.g) vx.x
-          RELEASE_BRANCH_NAME=release/${RELEASE_BASE}                                            # e.g) release/vx.x
-          BACKPORT_BRANCH_NAME=backport/${RELEASE_BASE}/${GITHUB_HEAD_REF}                       # e.g) backport/vx.x/{current branch name}
+          LABEL_NAMES=`cat hoge.json | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '.event.pull_request.labels[] | select(.name | startswith($PREFIX)) | .name'`
 
-          echo "RELEASE_BASE=${RELEASE_BASE}"                  >> $GITHUB_OUTPUT
-          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"    >> $GITHUB_OUTPUT
-          echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"  >> $GITHUB_OUTPUT
+          echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
+          echo "${LABEL_NAMES}"
 
-          echo "${RELEASE_BASE}"
-          echo "${RELEASE_BRANCH_NAME}"
-          echo "${BACKPORT_BRANCH_NAME}"
-        env:
-          TARGET_LABEL_NAME_PREFIX: "actions/backport/"
-          HOOKED_LABEL_NAME: ${{ github.event.label.name }}
-
-      - name: Create PR
+      - name: Create backport PR
+        if: ${{ steps.set_context.outputs.LABEL_NAMES != '' }}
         run: |
-          git checkout -b ${BACKPORT_BRANCH_NAME}
-          git push origin ${BACKPORT_BRANCH_NAME}
-          gh pr create --base ${RELEASE_BRANCH_NAME} \
-                       --title "Backport to release/${RELEASE_BASE}" \
-                       --body ""
+          for LABEL_NAME in ${LABEL_NAMES}; do
+              RELEASE_BASE=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`        # e.g) vx.x
+              RELEASE_BRANCH_NAME=release/${RELEASE_BASE}                                            # e.g) release/vx.x
+              BACKPORT_BRANCH_NAME=backport/${RELEASE_BASE}/${GITHUB_HEAD_REF}                       # e.g) backport/vx.x/{current branch name}
+
+              echo "RELEASE_BASE=${RELEASE_BASE}"
+              echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
+              echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
+              echo "SHA=${GITHUB_SHA}"
+
+              git checkout ${RELEASE_BRANCH_NAME}
+
+              git checkout -b ${BACKPORT_BRANCH_NAME}
+
+              # Force cherry-pick. The conflicts will be modified within the backport PR.
+              git cherry-pick $GITHUB_SHA
+              git push origin ${BACKPORT_BRANCH_NAME}
+
+              # gh pr create --base ${RELEASE_BRANCH_NAME} \
+              #              --title "Backport to release/${RELEASE_BASE}" \
+              #              --body-file .github/PULL_REQUEST_TEMPLATE.md
+          done
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BASE: ${{ steps.set_context.outputs.RELEASE_BASE }}
-          RELEASE_BRANCH_NAME: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME }}
-          BACKPORT_BRANCH_NAME: ${{ steps.set_context.outputs.BACKPORT_BRANCH_NAME }}
+          GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
