@@ -175,17 +175,17 @@ jobs:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
-      # - name: Create release
-      #   uses: softprops/action-gh-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-      #   with:
-      #     tag_name: ${{ steps.update_for_new_release.outputs.VERSION }}
-      #     name: Release ${{ steps.update_for_new_release.outputs.VERSION }}
-      #     body: |
-      #       See [CHANGELOG.md](https://github.com/vdaas/vald/blob/${{ steps.update_for_new_release.outputs.VERSION }}/CHANGELOG.md) for details.
-      #     draft: false
-      #     prerelease: false
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+        with:
+          tag_name: ${{ steps.update_for_new_release.outputs.VERSION }}
+          name: Release ${{ steps.update_for_new_release.outputs.VERSION }}
+          body: |
+            See [CHANGELOG.md](https://github.com/vdaas/vald/blob/${{ steps.update_for_new_release.outputs.VERSION }}/CHANGELOG.md) for details.
+          draft: false
+          prerelease: false
 
       # - name: Add the version to goproxy
       #   run: |
