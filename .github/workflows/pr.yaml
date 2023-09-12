@@ -52,12 +52,7 @@ jobs:
       - name: Set Github context
         id: set_context
         run: |
-          echo ${TARGET_LABEL_NAME_PREFIX}
-          echo ${GITHUB_EVENT_PATH}
-          cat ${GITHUB_EVENT_PATH}
-          jq --version
-
-          LABEL_NAMES=`cat ${GITHUB_EVENT_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '.event.pull_request.labels[] | select(.name | startswith($PREFIX)) | .name'`
+          LABEL_NAMES=`cat ${GITHUB_EVENT_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '.pull_request.labels[] | select(.name | startswith($PREFIX)) | .name'`
 
           echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
           echo "${LABEL_NAMES}"
@@ -83,9 +78,9 @@ jobs:
               git cherry-pick $GITHUB_SHA
               git push origin ${BACKPORT_BRANCH_NAME}
 
-              # gh pr create --base ${RELEASE_BRANCH_NAME} \
-              #              --title "Backport to release/${RELEASE_BASE}" \
-              #              --body-file .github/PULL_REQUEST_TEMPLATE.md
+              gh pr create --base ${RELEASE_BRANCH_NAME} \
+                           --title "Backport to release/${RELEASE_BASE}" \
+                           --body-file .github/PULL_REQUEST_TEMPLATE.md
           done
         env:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
