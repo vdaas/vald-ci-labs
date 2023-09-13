@@ -92,10 +92,6 @@ message Search {
     uint32 min_num = 8 [(validate.rules).uint32.gte = 0];
     // Aggregation Algorithm
     AggregationAlgorithm aggregation_algorithm = 9;
-    // this flag is test.
-    int64 test_flag = 10;
-    // this flag is test.
-    int64 flag = 11;
   }
 
   // AggregationAlgorithm is enum of each aggregation algorithms
