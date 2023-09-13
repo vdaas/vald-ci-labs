@@ -52,7 +52,7 @@ jobs:
       - name: Set Github context
         id: set_context
         run: |
-          LABEL_NAMES=`cat ${GITHUB_EVENT_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.event.pull_request.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
+          LABEL_NAMES=`cat ${GITHUB_EVENT_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.pull_request.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
 
           echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
           echo "${LABEL_NAMES}"
