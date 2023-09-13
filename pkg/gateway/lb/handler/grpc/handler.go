@@ -69,7 +69,6 @@ func New(opts ...Option) vald.Server {
 }
 
 func (s *server) exists(ctx context.Context, uuid string) (id *payload.Object_ID, err error) {
-	// TODO:
 	ctx, span := trace.StartSpan(grpc.WrapGRPCMethod(ctx, "exists"), apiName+"/"+vald.ExistsRPCName+"/exists")
 	defer func() {
 		if span != nil {
