@@ -599,6 +599,11 @@
           "type": "string",
           "format": "int64",
           "description": "this flag is test."
+        },
+        "flag": {
+          "type": "string",
+          "format": "int64",
+          "description": "this flag is test."
         }
       },
       "description": "Represent search configuration."

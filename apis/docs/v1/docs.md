@@ -696,6 +696,7 @@ Represent search configuration.
 | min_num               | [uint32](#uint32)                                                      |       | Minimum number of result to be returned. |
 | aggregation_algorithm | [Search.AggregationAlgorithm](#payload-v1-Search-AggregationAlgorithm) |       | Aggregation Algorithm                    |
 | test_flag             | [int64](#int64)                                                        |       | this flag is test.                       |
+| flag                  | [int64](#int64)                                                        |       | this flag is test.                       |
 
 <a name="payload-v1-Search-IDRequest"></a>
 
