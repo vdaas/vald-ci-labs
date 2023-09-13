@@ -509,6 +509,11 @@
         "aggregationAlgorithm": {
           "$ref": "#/definitions/SearchAggregationAlgorithm",
           "title": "Aggregation Algorithm"
+        },
+        "testTimeout": {
+          "type": "string",
+          "format": "int64",
+          "description": "Search timeout in nanoseconds for testing."
         }
       },
       "description": "Represent search configuration."
