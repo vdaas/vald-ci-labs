@@ -684,17 +684,18 @@ Search related messages.
 
 Represent search configuration.
 
-| Field                 | Type                                                                   | Label | Description                              |
-| --------------------- | ---------------------------------------------------------------------- | ----- | ---------------------------------------- |
-| request_id            | [string](#string)                                                      |       | Unique request ID.                       |
-| num                   | [uint32](#uint32)                                                      |       | Maximum number of result to be returned. |
-| radius                | [float](#float)                                                        |       | Search radius.                           |
-| epsilon               | [float](#float)                                                        |       | Search coefficient.                      |
-| timeout               | [int64](#int64)                                                        |       | Search timeout in nanoseconds.           |
-| ingress_filters       | [Filter.Config](#payload-v1-Filter-Config)                             |       | Ingress filter configurations.           |
-| egress_filters        | [Filter.Config](#payload-v1-Filter-Config)                             |       | Egress filter configurations.            |
-| min_num               | [uint32](#uint32)                                                      |       | Minimum number of result to be returned. |
-| aggregation_algorithm | [Search.AggregationAlgorithm](#payload-v1-Search-AggregationAlgorithm) |       | Aggregation Algorithm                    |
+| Field                 | Type                                                                   | Label | Description                                |
+| --------------------- | ---------------------------------------------------------------------- | ----- | ------------------------------------------ |
+| request_id            | [string](#string)                                                      |       | Unique request ID.                         |
+| num                   | [uint32](#uint32)                                                      |       | Maximum number of result to be returned.   |
+| radius                | [float](#float)                                                        |       | Search radius.                             |
+| epsilon               | [float](#float)                                                        |       | Search coefficient.                        |
+| timeout               | [int64](#int64)                                                        |       | Search timeout in nanoseconds.             |
+| ingress_filters       | [Filter.Config](#payload-v1-Filter-Config)                             |       | Ingress filter configurations.             |
+| egress_filters        | [Filter.Config](#payload-v1-Filter-Config)                             |       | Egress filter configurations.              |
+| min_num               | [uint32](#uint32)                                                      |       | Minimum number of result to be returned.   |
+| aggregation_algorithm | [Search.AggregationAlgorithm](#payload-v1-Search-AggregationAlgorithm) |       | Aggregation Algorithm                      |
+| test_timeout          | [int64](#int64)                                                        |       | Search timeout in nanoseconds for testing. |
 
 <a name="payload-v1-Search-IDRequest"></a>
 
