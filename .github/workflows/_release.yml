@@ -15,10 +15,16 @@
 #
 name: Run release
 on:
-  push:
-    branches:
-      - "release/v*.*"
-      - "!release/v*.*.*"
+  workflow_call:
+    inputs:
+      release_branch_name:
+        type: string
+        description: "The release branch name. e.g release/v1.7"
+        required: true
+      release_tag:
+        type: string
+        description: "The release tag"
+        required: true
 
 jobs:
   dump-contexts-to-log:
@@ -31,79 +37,21 @@ jobs:
     uses: ./.github/workflows/_detect-ci-container.yml
     secrets: inherit
 
-  semver-auto:
-    runs-on: ubuntu-latest
-    outputs:
-      RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-      RELEASE_TAG: ${{ steps.upgrade_semver.outputs.RELEASE_TAG }}
-      RELEASE: ${{ steps.upgrade_semver.outputs.RELEASE }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Set Github context
-        id: set_context
-        run: |
-          RELEASE_BRANCH_NAME_SUFFIX=`echo '${{ github.ref }}' | sed -e 's:^refs/heads/release/::'`
-          BRANCH_LATEST_TAG=`git tag | grep ${RELEASE_BRANCH_NAME_SUFFIX} | tail -n 1`
-          RELEASE_KIND=`echo "${{ github.event.head_commit.message }}" | sed -n -E 's:^\[(major|minor|patch)\].*:\1:p'`
-
-          echo "RELEASE_BRANCH_NAME_SUFFIX=${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT # e.g) vx.x
-          echo "BRANCH_LATEST_TAG=${BRANCH_LATEST_TAG}"                   >> $GITHUB_OUTPUT # e.g) vx.x.x or empty
-          echo "RELEASE_KIND=${RELEASE_KIND}"                             >> $GITHUB_OUTPUT # e.g) major or minor or patch or empty
-
-          echo "${RELEASE_BRANCH_NAME_SUFFIX}"
-          echo "${BRANCH_LATEST_TAG}"
-          echo "${RELEASE_KIND}"
-
-      - name: Upgrade semver
-        id: upgrade_semver
-        if: ${{ steps.set_context.outputs.RELEASE_KIND != '' }}
-        env:
-          RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-          BRANCH_LATEST_TAG: ${{ steps.set_context.outputs.BRANCH_LATEST_TAG }}
-          RELEASE_KIND: ${{ steps.set_context.outputs.RELEASE_KIND }}
-        run: |
-          if [ -z "${BRANCH_LATEST_TAG}" ]; then
-            case ${RELEASE_KIND} in
-            major | minor) RELEASE_TAG="${RELEASE_BRANCH_NAME_SUFFIX}.0"; ;;
-            *) echo "not supported semver kind"; exit 1; ;;
-            esac
-          else
-            IFS=. read -r version minor patch <<< "${BRANCH_LATEST_TAG}"
-
-            case ${RELEASE_KIND} in
-            patch) RELEASE_TAG="$version.$minor.$((patch+1))"; ;;
-            *) echo "not supported semver kind"; exit 1; ;;
-            esac
-          fi
-
-          if [ `git tag | grep "${RELEASE_TAG}"` ] || [ `cat versions/VALD_VERSION` = "${RELEASE_TAG}" ]; then
-            echo "release already exists: ${RELEASE_TAG}"
-            exit 1
-          fi
-
-          echo "RELEASE=true"             >> $GITHUB_OUTPUT
-          echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_OUTPUT # e.g) vx.x.x
-
-          echo "${RELEASE_TAG}"
-
   release:
     needs:
+      - dump-contexts-to-log
       - detect-ci-container
-      - semver-auto
     runs-on: ubuntu-latest
-    if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     container:
       image: ghcr.io/vdaas/vald/vald-ci-container:${{ needs.detect-ci-container.outputs.TAG_NAME }}
     env:
-      RELEASE_BRANCH_NAME: release/${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-      RELEASE_TAG: ${{ needs.semver-auto.outputs.RELEASE_TAG }}
+      RELEASE_BRANCH_NAME: ${{ inputs.release_branch_name }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.DISPATCH_TOKEN }}
 
       - name: Set Git config
         run: |
