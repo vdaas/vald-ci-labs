@@ -13,13 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: "Run backport PR creation"
+name: "Run backport PR"
 on:
   pull_request:
     branches:
       - "main"
     types:
       - "closed"
+
+env:
+  TARGET_LABEL_NAME_PREFIX: "actions/backport/"
 
 jobs:
   dump-contexts-to-log:
@@ -32,12 +35,12 @@ jobs:
   create:
     runs-on: ubuntu-latest
     needs: [dump-contexts-to-log]
-    env:
-      TARGET_LABEL_NAME_PREFIX: "actions/backport/"
+
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.DISPATCH_TOKEN }}
 
       - name: Set Git config
         run: |
@@ -49,7 +52,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Set Github context
+      - name: Set context
         id: set_context
         run: |
           LABEL_NAMES=`cat ${GITHUB_EVENT_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.pull_request.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
@@ -57,7 +60,7 @@ jobs:
           echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
           echo "${LABEL_NAMES}"
 
-      - name: Create backport PR
+      - name: Create PR
         if: ${{ steps.set_context.outputs.LABEL_NAMES != '' }}
         env:
           LABEL_NAMES: ${{ steps.set_context.outputs.LABEL_NAMES }}
@@ -65,24 +68,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
         run: |
           for LABEL_NAME in ${LABEL_NAMES}; do
-              RELEASE_BASE=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`        # e.g) vx.x
-              RELEASE_BRANCH_NAME=release/${RELEASE_BASE}                                            # e.g) release/vx.x
-              BACKPORT_BRANCH_NAME=backport/${RELEASE_BASE}/${GITHUB_HEAD_REF}                       # e.g) backport/vx.x/{current branch name}
+              BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`        # e.g) release/vx.x, main
+              BACKPORT_BRANCH_NAME="backport/${BRANCH_NAME}/${GITHUB_HEAD_REF}"                     # e.g) backport/release/vx.x/{current branch name}
 
-              echo "RELEASE_BASE=${RELEASE_BASE}"
-              echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
+              echo "BRANCH_NAME=${BRANCH_NAME}"
               echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
               echo "SHA=${GITHUB_SHA}"
 
-              git checkout ${RELEASE_BRANCH_NAME}
-
+              git checkout ${BRANCH_NAME}
               git checkout -b ${BACKPORT_BRANCH_NAME}
 
               # Force cherry-pick. The conflicts will be modified within the backport PR.
               git cherry-pick $GITHUB_SHA
               git push origin ${BACKPORT_BRANCH_NAME}
 
-              gh pr create --base ${RELEASE_BRANCH_NAME} \
-                           --title "Backport to release/${RELEASE_BASE}" \
+              gh pr create --base ${BRANCH_NAME} \
+                           --title "Backport to ${BRANCH_NAME}" \
                            --body-file .github/PULL_REQUEST_TEMPLATE.md
           done
