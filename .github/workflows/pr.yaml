@@ -23,11 +23,12 @@ on:
 
 env:
   TARGET_LABEL_NAME_PREFIX: "actions/backport/"
+  BACKPORT_BRANCH_NAME_PREFIX: "backport"
 
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.merged == true }}
+    # if: ${{ github.event.pull_request.merged == true }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/dump-context
@@ -68,8 +69,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
         run: |
           for LABEL_NAME in ${LABEL_NAMES}; do
-              BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`        # e.g) release/vx.x, main
-              BACKPORT_BRANCH_NAME="backport/${BRANCH_NAME}/${GITHUB_HEAD_REF}"                     # e.g) backport/release/vx.x/{current branch name}
+              BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`           # e.g) release/vx.x, main
+              BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${GITHUB_HEAD_REF}"  # e.g) backport/release/vx.x/{current branch name}
 
               echo "BRANCH_NAME=${BRANCH_NAME}"
               echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
