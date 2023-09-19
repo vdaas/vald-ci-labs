@@ -16,8 +16,6 @@
 name: "Run backport PR"
 on:
   pull_request:
-    branches:
-      - "main"
     types:
       - "closed"
 
