@@ -72,11 +72,11 @@ jobs:
 
           echo "RELEASE_TAG=${RELEASE_TAG}"
 
-  release:
+  release-pr:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     needs:
       - semver-auto
-    uses: ./.github/workflows/_release.yml
+    uses: ./.github/workflows/_release-pr.yml
     with:
       release_branch_name: "release/${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME_SUFFIX }}"
       release_tag: ${{ needs.semver-auto.outputs.RELEASE_TAG }}
