@@ -93,7 +93,7 @@ jobs:
           git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
           gh label create "${BACKPORT_LABEL_PREFIX}${RELEASE_BRANCH_NAME}" # e.g) actions/backport/release/v1.8
 
-          echo "RELEASE=true" >> ${GITHUB_OUTPUT}
+          echo "RELEASE=true" >> $GITHUB_OUTPUT
           echo "RELEASE_TAG=${RELEASE_TAG}"
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
           echo "LABEL_NAME=${BACKPORT_LABEL_PREFIX}${RELEASE_BRANCH_NAME}"
