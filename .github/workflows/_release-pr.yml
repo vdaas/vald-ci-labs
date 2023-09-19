@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Run release
+name: "Create release PR"
 on:
   workflow_call:
     inputs:
@@ -37,7 +37,7 @@ jobs:
     uses: ./.github/workflows/_detect-ci-container.yml
     secrets: inherit
 
-  release:
+  create:
     needs:
       - dump-contexts-to-log
       - detect-ci-container
@@ -46,6 +46,7 @@ jobs:
       image: ghcr.io/vdaas/vald/vald-ci-container:${{ needs.detect-ci-container.outputs.TAG_NAME }}
     env:
       RELEASE_BRANCH_NAME: ${{ inputs.release_branch_name }}
+      PREPARE_RELEASE_BRANCH_NAME: prepare/${{ inputs.release_branch_name }}
       RELEASE_TAG: ${{ inputs.release_tag }}
     steps:
       - uses: actions/checkout@v3
@@ -67,6 +68,7 @@ jobs:
         id: update_for_new_release
         run: |
           git checkout ${RELEASE_BRANCH_NAME}
+          git checkout -b ${PREPARE_RELEASE_BRANCH_NAME} && git push origin ${PREPARE_RELEASE_BRANCH_NAME}
 
           LAST_COMMIT_MESSAGE=`git log --pretty=format:%s -1`
           PR_NUM=`echo "${LAST_COMMIT_MESSAGE}" | grep -o "#[[:digit:]]\+" | sed -e 's/#//' | head -1`
@@ -114,32 +116,12 @@ jobs:
             charts/vald/values.yaml \
             k8s \
             versions/VALD_VERSION
-           git commit -S --signoff -m ":bookmark: :robot: Release ${RELEASE_TAG}"
+          git commit -S --signoff -m ":bookmark: :robot: Release ${RELEASE_TAG}"
 
-           git tag ${RELEASE_TAG}
+          gh pr create --base ${BRANCH_NAME} \
+                       --title ":bookmark: :robot: Release ${RELEASE_TAG}" \
+                       --body-file .github/PULL_REQUEST_TEMPLATE.md
 
-           git remote set-url origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-           git push origin ${RELEASE_BRANCH_NAME}
-           git push origin ${RELEASE_TAG}
-
-           echo "VERSION=${RELEASE_TAG}" >> $GITHUB_OUTPUT
         env:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-        with:
-          tag_name: ${{ steps.update_for_new_release.outputs.VERSION }}
-          name: Release ${{ steps.update_for_new_release.outputs.VERSION }}
-          body: |
-            See [CHANGELOG.md](https://github.com/vdaas/vald/blob/${{ steps.update_for_new_release.outputs.VERSION }}/CHANGELOG.md) for details.
-          draft: false
-          prerelease: false
-
-      # - name: Add the version to goproxy
-      #   run: |
-      #     curl "https://proxy.golang.org/github.com/vdaas/vald/@v/${{ steps.update_for_new_release.outputs.VERSION }}.info"
