@@ -2,7 +2,7 @@
 # Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
@@ -368,22 +368,22 @@ $(BINDIR)/telepresence:
 .PHONY: telepresence/swap/agent-ngt
 ## swap agent-ngt deployment using telepresence
 telepresence/swap/agent-ngt:
-	@$(call telepresence,vald-agent-ngt,vdaas/vald-ci-labs-agent-ngt)
+	@$(call telepresence,vald-agent-ngt,vdaas/vald-agent-ngt)
 
 .PHONY: telepresence/swap/discoverer
 ## swap discoverer deployment using telepresence
 telepresence/swap/discoverer:
-	@$(call telepresence,vald-discoverer,vdaas/vald-ci-labs-discoverer-k8s)
+	@$(call telepresence,vald-discoverer,vdaas/vald-discoverer-k8s)
 
 .PHONY: telepresence/swap/manager-index
 ## swap manager-index deployment using telepresence
 telepresence/swap/manager-index:
-	@$(call telepresence,vald-manager-index,vdaas/vald-ci-labs-manager-index)
+	@$(call telepresence,vald-manager-index,vdaas/vald-manager-index)
 
 .PHONY: telepresence/swap/lb-gateway
 ## swap lb-gateway deployment using telepresence
 telepresence/swap/lb-gateway:
-	@$(call telepresence,vald-lb-gateway,vdaas/vald-ci-labs-lb-gateway)
+	@$(call telepresence,vald-lb-gateway,vdaas/vald-lb-gateway)
 
 .PHONY: kubelinter/install
 ## install kubelinter

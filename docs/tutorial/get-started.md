@@ -82,7 +82,7 @@ In this tutorial, you will deploy the basic configuration of Vald that is consis
 1. Clone the repository
 
    ```bash
-   git clone https://github.com/vdaas/vald-ci-labs.git && \
+   git clone https://github.com/vdaas/vald.git && \
    cd vald
    ```
 
@@ -192,7 +192,7 @@ In this tutorial, you will deploy the basic configuration of Vald that is consis
 In this chapter, you will execute insert, search, and delete vectors to your Vald cluster using the example code.<br>
 The [Fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist) is used as a dataset for indexing and search query.
 
-The example code is implemented in Go and using [vald-client-go](https://github.com/vdaas/vald-ci-labs-client-go), one of the official Vald client libraries, for requesting to Vald cluster.
+The example code is implemented in Go and using [vald-client-go](https://github.com/vdaas/vald-client-go), one of the official Vald client libraries, for requesting to Vald cluster.
 Vald provides multiple language client libraries such as Go, Java, Node.js, Python, etc.
 If you are interested, please refer to [SDKs](../user-guides/sdks.md).<br>
 
@@ -222,7 +222,7 @@ If you are interested, please refer to [SDKs](../user-guides/sdks.md).<br>
 
 1.  Run Example
 
-    We use [`example/client/main.go`](https://github.com/vdaas/vald-ci-labs/blob/main/example/client/main.go) to run the example.<br>
+    We use [`example/client/main.go`](https://github.com/vdaas/vald/blob/main/example/client/main.go) to run the example.<br>
     This example will insert and index 400 vectors into the Vald from the Fashion-MNIST dataset via [gRPC](https://grpc.io/).
     And then after waiting for indexing, it will request for searching the nearest vector 10 times.
     You will get the 10 nearest neighbor vectors for each search query.<br>
@@ -251,8 +251,8 @@ If you are interested, please refer to [SDKs](../user-guides/sdks.md).<br>
 
               "github.com/kpango/fuid"
               "github.com/kpango/glg"
-              "github.com/vdaas/vald-ci-labs-client-go/v1/payload"
-              "github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+              "github.com/vdaas/vald-client-go/v1/payload"
+              "github.com/vdaas/vald-client-go/v1/vald"
 
               "gonum.org/v1/hdf5"
               "google.golang.org/grpc"

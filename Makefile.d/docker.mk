@@ -2,7 +2,7 @@
 # Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
@@ -30,7 +30,7 @@ docker/name/org:
 
 .PHONY: docker/name/org/alter
 docker/name/org/alter:
-	@echo "ghcr.io/vdaas/vald-ci-labs"
+	@echo "ghcr.io/vdaas/vald"
 
 .PHONY: docker/platforms
 docker/platforms:

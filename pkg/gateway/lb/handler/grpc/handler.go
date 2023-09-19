@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -21,28 +21,28 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"sync"
 	"sync/atomic"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
-	"github.com/vdaas/vald-ci-labs/internal/conv"
-	"github.com/vdaas/vald-ci-labs/internal/core/algorithm"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/info"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
-	"github.com/vdaas/vald-ci-labs/internal/safety"
-	"github.com/vdaas/vald-ci-labs/internal/slices"
-	"github.com/vdaas/vald-ci-labs/internal/strings"
-	"github.com/vdaas/vald-ci-labs/pkg/gateway/lb/service"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/apis/grpc/v1/vald"
+	"github.com/vdaas/vald/internal/conv"
+	"github.com/vdaas/vald/internal/core/algorithm"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/info"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald/internal/net/grpc/codes"
+	"github.com/vdaas/vald/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/internal/observability/trace"
+	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald/internal/slices"
+	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/pkg/gateway/lb/service"
 )
 
 type server struct {
@@ -69,7 +69,6 @@ func New(opts ...Option) vald.Server {
 }
 
 func (s *server) exists(ctx context.Context, uuid string) (id *payload.Object_ID, err error) {
-	// TODO
 	ctx, span := trace.StartSpan(grpc.WrapGRPCMethod(ctx, "exists"), apiName+"/"+vald.ExistsRPCName+"/exists")
 	defer func() {
 		if span != nil {
@@ -1485,7 +1484,7 @@ func (s *server) MultiInsert(ctx context.Context, reqs *payload.Insert_MultiRequ
 		lmu sync.Mutex
 	)
 	eg, ectx := errgroup.New(ctx)
-	eg.Limitation(s.multiConcurrency)
+	eg.SetLimit(s.multiConcurrency)
 	locs = &payload.Object_Locations{
 		Locations: make([]*payload.Object_Location, len(reqs.GetRequests())),
 	}
@@ -2022,7 +2021,7 @@ func (s *server) MultiUpdate(ctx context.Context, reqs *payload.Update_MultiRequ
 		lmu sync.Mutex
 	)
 	eg, ectx := errgroup.New(ctx)
-	eg.Limitation(s.multiConcurrency)
+	eg.SetLimit(s.multiConcurrency)
 	locs = &payload.Object_Locations{
 		Locations: make([]*payload.Object_Location, len(reqs.GetRequests())),
 	}
@@ -2371,7 +2370,7 @@ func (s *server) MultiUpsert(ctx context.Context, reqs *payload.Upsert_MultiRequ
 		lmu sync.Mutex
 	)
 	eg, ectx := errgroup.New(ctx)
-	eg.Limitation(s.multiConcurrency)
+	eg.SetLimit(s.multiConcurrency)
 	locs = &payload.Object_Locations{
 		Locations: make([]*payload.Object_Location, len(reqs.GetRequests())),
 	}
@@ -2675,7 +2674,7 @@ func (s *server) MultiRemove(ctx context.Context, reqs *payload.Remove_MultiRequ
 		lmu sync.Mutex
 	)
 	eg, ectx := errgroup.New(ctx)
-	eg.Limitation(s.multiConcurrency)
+	eg.SetLimit(s.multiConcurrency)
 	locs = &payload.Object_Locations{
 		Locations: make([]*payload.Object_Location, len(reqs.GetRequests())),
 	}
@@ -2765,6 +2764,131 @@ func (s *server) MultiRemove(ctx context.Context, reqs *payload.Remove_MultiRequ
 	return locs, errs
 }
 
+func (s *server) RemoveByTimestamp(ctx context.Context, req *payload.Remove_TimestampRequest) (locs *payload.Object_Locations, errs error) {
+	ctx, span := trace.StartSpan(grpc.WithGRPCMethod(ctx, vald.PackageName+"."+vald.RemoveRPCServiceName+"/"+vald.RemoveByTimestampRPCName), apiName+"/"+vald.RemoveByTimestampRPCName)
+	defer func() {
+		if span != nil {
+			span.End()
+		}
+	}()
+
+	var mu sync.Mutex
+	var emu sync.Mutex
+	visited := make(map[string]int) // map[uuid: position of locs]
+	locs = new(payload.Object_Locations)
+
+	err := s.gateway.BroadCast(ctx, func(ctx context.Context, target string, vc vald.Client, copts ...grpc.CallOption) (err error) {
+		sctx, sspan := trace.StartSpan(grpc.WithGRPCMethod(ctx, "BroadCast/"+target), apiName+"/removeByTimestamp/BroadCast/"+target)
+		defer func() {
+			if sspan != nil {
+				sspan.End()
+			}
+		}()
+
+		res, err := vc.RemoveByTimestamp(sctx, req, copts...)
+		if err != nil {
+			if errors.Is(err, errors.ErrGRPCClientConnNotFound("*")) {
+				err = status.WrapWithInternal(
+					vald.RemoveByTimestampRPCName+" API connection not found", err,
+				)
+				if sspan != nil {
+					sspan.RecordError(err)
+					sspan.SetAttributes(trace.StatusCodeInternal(err.Error())...)
+					sspan.SetStatus(trace.StatusError, err.Error())
+				}
+				log.Error(err)
+				emu.Lock()
+				errs = errors.Join(errs, err)
+				emu.Unlock()
+				return nil
+			}
+			var (
+				st  *status.Status
+				msg string
+			)
+			st, msg, err = status.ParseError(err, codes.Internal,
+				vald.RemoveByTimestampRPCName+" gRPC error response",
+			)
+			if sspan != nil {
+				sspan.RecordError(err)
+				sspan.SetAttributes(trace.FromGRPCStatus(st.Code(), msg)...)
+				sspan.SetStatus(trace.StatusError, err.Error())
+			}
+			if err != nil && st.Code() != codes.NotFound {
+				log.Error(err)
+				emu.Lock()
+				errs = errors.Join(errs, err)
+				emu.Unlock()
+				return nil
+			}
+		}
+
+		if res != nil && len(res.GetLocations()) > 0 {
+			for _, loc := range res.GetLocations() {
+				mu.Lock()
+				if pos, ok := visited[loc.GetUuid()]; !ok {
+					locs.Locations = append(locs.GetLocations(), loc)
+					visited[loc.GetUuid()] = len(locs.Locations) - 1
+				} else {
+					if pos < len(locs.GetLocations()) {
+						locs.GetLocations()[pos].Ips = append(locs.GetLocations()[pos].Ips, loc.GetIps()...)
+						if s := locs.GetLocations()[pos].Name; len(s) == 0 {
+							locs.GetLocations()[pos].Name = loc.GetName()
+						} else {
+							// strings.Join is used because '+=' causes performance degradation when the number of characters is large.
+							locs.GetLocations()[pos].Name = strings.Join([]string{
+								s, loc.GetName(),
+							}, ",")
+						}
+					}
+				}
+				mu.Unlock()
+			}
+		}
+		return nil
+	})
+	if errs != nil {
+		err = errors.Join(err, errs)
+	}
+	if err != nil {
+		st, msg, err := status.ParseError(err, codes.Internal,
+			"failed to parse "+vald.RemoveByTimestampRPCName+" gRPC error response",
+			&errdetails.RequestInfo{
+				ServingData: errdetails.Serialize(req),
+			},
+			&errdetails.ResourceInfo{
+				ResourceName: fmt.Sprintf("%s: %s(%s)", apiName, s.name, s.ip),
+			},
+		)
+		log.Error(err)
+		if span != nil {
+			span.RecordError(err)
+			span.SetAttributes(trace.FromGRPCStatus(st.Code(), msg)...)
+			span.SetStatus(trace.StatusError, err.Error())
+		}
+		return nil, err
+	}
+	if locs == nil || len(locs.GetLocations()) == 0 {
+		err = status.WrapWithNotFound(
+			vald.RemoveByTimestampRPCName+" API remove target not found", errors.ErrIndexNotFound,
+			&errdetails.RequestInfo{
+				ServingData: errdetails.Serialize(req),
+			},
+			&errdetails.ResourceInfo{
+				ResourceName: fmt.Sprintf("%s: %s(%s)", apiName, s.name, s.ip),
+			},
+		)
+		log.Error(err)
+		if span != nil {
+			span.RecordError(err)
+			span.SetAttributes(trace.StatusCodeNotFound(err.Error())...)
+			span.SetStatus(trace.StatusError, err.Error())
+		}
+		return nil, err
+	}
+	return locs, nil
+}
+
 func (s *server) getObject(ctx context.Context, uuid string) (vec *payload.Object_Vector, err error) {
 	ctx, span := trace.StartSpan(grpc.WrapGRPCMethod(ctx, "getObject"), apiName+"/"+vald.GetObjectRPCName+"/getObject")
 	defer func() {
@@ -2849,10 +2973,15 @@ func (s *server) getObject(ctx context.Context, uuid string) (vec *payload.Objec
 				return nil
 			}
 			if ovec != nil && ovec.GetId() != "" && ovec.GetVector() != nil {
+				var send bool
 				once.Do(func() {
 					vch <- ovec
+					send = true
 					cancel(doneErr)
 				})
+				if !send {
+					ovec.ReturnToVTPool()
+				}
 			}
 			return nil
 		})

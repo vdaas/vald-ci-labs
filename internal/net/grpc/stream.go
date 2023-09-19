@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -21,19 +21,19 @@ import (
 	"context"
 	"fmt"
 	"runtime"
-	"sync"
 	"sync/atomic"
 
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/io"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
-	"github.com/vdaas/vald-ci-labs/internal/safety"
-	"github.com/vdaas/vald-ci-labs/internal/slices"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net/grpc/codes"
+	"github.com/vdaas/vald/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/internal/observability/trace"
+	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald/internal/slices"
+	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald/internal/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
@@ -43,11 +43,14 @@ type (
 )
 
 // BidirectionalStream represents gRPC bidirectional stream server handler.
+// It receives messages from the stream, calls the function with the received message, and sends the returned message to the stream.
+// It limits the number of concurrent calls to the function with the concurrency integer.
+// It records errors and returns them as a single error.
 func BidirectionalStream[Q any, R any](ctx context.Context, stream ServerStream,
 	concurrency int,
 	f func(context.Context, *Q) (*R, error),
 ) (err error) {
-	ctx, span := trace.StartSpan(stream.Context(), apiName+"/BidirectionalStream")
+	ctx, span := trace.StartSpan(ctx, apiName+"/BidirectionalStream")
 	defer func() {
 		if span != nil {
 			span.End()
@@ -55,7 +58,7 @@ func BidirectionalStream[Q any, R any](ctx context.Context, stream ServerStream,
 	}()
 	eg, ctx := errgroup.New(ctx)
 	if concurrency > 0 {
-		eg.Limitation(concurrency)
+		eg.SetLimit(concurrency)
 	}
 
 	var (
@@ -103,7 +106,6 @@ func BidirectionalStream[Q any, R any](ctx context.Context, stream ServerStream,
 					log.Errorf("failed to receive stream message: %v", err)
 				}
 				return finalize()
-
 			}
 			if data != nil {
 				eg.Go(safety.RecoverWithoutPanicFunc(func() (err error) {

@@ -76,7 +76,7 @@ There are three ways to backup index data:
 
 <!-- TODO: change link when publish the backup configuration page -->
 
-Please refer to [the sample configurations](https://github.com/vdaas/vald-ci-labs/tree/main/charts/vald/values).
+Please refer to [the sample configurations](https://github.com/vdaas/vald/tree/main/charts/vald/values).
 
 ---
 

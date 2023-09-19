@@ -4,7 +4,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -27,14 +27,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/file"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/tests/e2e/hdf5"
-	"github.com/vdaas/vald-ci-labs/tests/e2e/kubernetes/client"
-	"github.com/vdaas/vald-ci-labs/tests/e2e/kubernetes/portforward"
-	"github.com/vdaas/vald-ci-labs/tests/e2e/operation"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/file"
+	"github.com/vdaas/vald/internal/net/grpc/codes"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/tests/e2e/hdf5"
+	"github.com/vdaas/vald/tests/e2e/kubernetes/client"
+	"github.com/vdaas/vald/tests/e2e/kubernetes/portforward"
+	"github.com/vdaas/vald/tests/e2e/operation"
 )
 
 var (
@@ -245,6 +245,22 @@ func TestE2ERemoveOnly(t *testing.T) {
 	}
 }
 
+func TestE2ERemoveByTimestampOnly(t *testing.T) {
+	t.Cleanup(teardown)
+	ctx := context.Background()
+
+	op, err := operation.New(host, port)
+	if err != nil {
+		t.Fatalf("an error occurred: %s", err)
+	}
+
+	// Remove all vector data after the current - 1 hour.
+	err = op.RemoveByTimestamp(t, ctx, time.Now().Add(-time.Hour).UnixNano())
+	if err != nil {
+		t.Fatalf("an error occurred: %s", err)
+	}
+}
+
 func TestE2EInsertAndSearch(t *testing.T) {
 	t.Cleanup(teardown)
 	ctx := context.Background()
@@ -376,6 +392,12 @@ func TestE2EStandardCRUD(t *testing.T) {
 	err = op.Remove(t, ctx, operation.Dataset{
 		Train: ds.Train[removeFrom : removeFrom+removeNum],
 	})
+	if err != nil {
+		t.Fatalf("an error occurred: %s", err)
+	}
+
+	// Remove all vector data after the current - 1 hour.
+	err = op.RemoveByTimestamp(t, ctx, time.Now().Add(-time.Hour).UnixNano())
 	if err != nil {
 		t.Fatalf("an error occurred: %s", err)
 	}

@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -22,12 +22,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/vdaas/vald-ci-labs/internal/encoding/json"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/io"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net/http/dump"
-	"github.com/vdaas/vald-ci-labs/internal/net/http/rest"
+	"github.com/vdaas/vald/internal/encoding/json"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net/http/dump"
+	"github.com/vdaas/vald/internal/net/http/rest"
 )
 
 // RFC7807Error represents RFC 7807 error.

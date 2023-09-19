@@ -2,7 +2,7 @@
 # Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
@@ -80,7 +80,7 @@ update/chaos-mesh:
 .PHONY: update/go
 ## update go version
 update/go:
-	curl --silent https://go.dev/VERSION?m=text | sed -e 's/go//g' > $(ROOTDIR)/versions/GO_VERSION
+	curl --silent https://go.dev/VERSION?m=text | head -n 1 | sed -e 's/go//g' > $(ROOTDIR)/versions/GO_VERSION
 
 .PHONY: update/golangci-lint
 ## update golangci-lint version
@@ -160,9 +160,9 @@ update/yq:
 .PHONY: update/vald
 ## update vald it's self version
 update/vald:
-	curl --silent https://api.github.com/repos/vdaas/vald-ci-labs/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALD_VERSION
+	curl --silent https://api.github.com/repos/vdaas/vald/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALD_VERSION
 
 .PHONY: update/valdcli
 ## update vald client library made by clojure self version
 update/valdcli:
-	curl --silent https://api.github.com/repos/vdaas/vald-ci-labs-client-clj/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALDCLI_VERSION
+	curl --silent https://api.github.com/repos/vdaas/vald-client-clj/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALDCLI_VERSION

@@ -14,12 +14,12 @@ Let's check the below table for the details.
 
 | API service name |                                          proto                                          |                                                                                             dependencies                                                                                              | usage                                                              |
 | :--------------: | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------- |
-|      Insert      | [insert.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/vald/insert.proto) | [payload.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Insert vectors into Vald Agent                                     |
-|      Update      | [update.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/vald/update.proto) | [payload.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Update vectors stored in Vald Agent                                |
-|      Upsert      | [upsert.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/vald/upsert.proto) | [payload.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Update vectors stored Vald Agent or Insert vectors into Vald Agent |
-|      Search      | [search.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/vald/search.proto) | [payload.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Search similar vectors with query                                  |
-|      Remove      | [remove.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/vald/remove.proto) | [payload.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Remove stored vectors from Vald Agent                              |
-|      Object      | [object.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/vald/object.proto) | [payload.proto](https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Get object information of vector stored in Vald Agent              |
+|      Insert      | [insert.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/vald/insert.proto) | [payload.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Insert vectors into Vald Agent                                     |
+|      Update      | [update.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/vald/update.proto) | [payload.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Update vectors stored in Vald Agent                                |
+|      Upsert      | [upsert.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/vald/upsert.proto) | [payload.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Update vectors stored Vald Agent or Insert vectors into Vald Agent |
+|      Search      | [search.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/vald/search.proto) | [payload.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Search similar vectors with query                                  |
+|      Remove      | [remove.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/vald/remove.proto) | [payload.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Remove stored vectors from Vald Agent                              |
+|      Object      | [object.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/vald/object.proto) | [payload.proto](https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto)<br>[annotation.proto](https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto) | Get object information of vector stored in Vald Agent              |
 
 ## How to build protobuf
 
@@ -36,8 +36,8 @@ There are 3 steps to building API proto:
 
 1. Download Vald api proto files and external dependence
 
-   - [vald api proto](https://github.com/vdaas/vald-ci-labs/tree/main/apis/proto/v1/vald)
-   - [vald payload proto](https://github.com/vdaas/vald-ci-labs/tree/main/apis/proto/v1/payload)
+   - [vald api proto](https://github.com/vdaas/vald/tree/main/apis/proto/v1/vald)
+   - [vald payload proto](https://github.com/vdaas/vald/tree/main/apis/proto/v1/payload)
    - [googleapis](https://github.com/googleapis/googleapis)
    - [PGV](https://github.com/envoyproxy/protoc-gen-validate)
 
@@ -114,7 +114,7 @@ There are many tools for building proto in Rust, we use [tonic](https://github.c
 
     ```bash
     // download vald proto files
-    git clone https://github.com/vdaas/vald-ci-labs \
+    git clone https://github.com/vdaas/vald \
     && cp -R vald/apis/proto/v1/vald proto/vald \
     && cp -R vald/apis/proto/v1/payload proto/payload \
     && rm -rf vald

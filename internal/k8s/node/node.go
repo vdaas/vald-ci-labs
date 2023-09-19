@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -21,8 +21,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs/internal/k8s"
-	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald/internal/k8s"
+	"github.com/vdaas/vald/internal/log"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"

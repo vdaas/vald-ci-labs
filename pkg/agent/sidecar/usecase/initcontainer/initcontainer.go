@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -19,30 +19,30 @@ package initcontainer
 import (
 	"context"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/sidecar"
-	iconf "github.com/vdaas/vald-ci-labs/internal/config"
-	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/cloudstorage"
-	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/cloudstorage/urlopener"
-	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3"
-	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/session"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/io"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
-	"github.com/vdaas/vald-ci-labs/internal/net/http/client"
-	"github.com/vdaas/vald-ci-labs/internal/observability"
-	"github.com/vdaas/vald-ci-labs/internal/runner"
-	"github.com/vdaas/vald-ci-labs/internal/safety"
-	"github.com/vdaas/vald-ci-labs/internal/servers/server"
-	"github.com/vdaas/vald-ci-labs/internal/servers/starter"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/config"
-	handler "github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/handler/grpc"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/handler/rest"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/router"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/restorer"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/storage"
+	"github.com/vdaas/vald/apis/grpc/v1/agent/sidecar"
+	iconf "github.com/vdaas/vald/internal/config"
+	"github.com/vdaas/vald/internal/db/storage/blob/cloudstorage"
+	"github.com/vdaas/vald/internal/db/storage/blob/cloudstorage/urlopener"
+	"github.com/vdaas/vald/internal/db/storage/blob/s3"
+	"github.com/vdaas/vald/internal/db/storage/blob/s3/session"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald/internal/net/http/client"
+	"github.com/vdaas/vald/internal/observability"
+	"github.com/vdaas/vald/internal/runner"
+	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald/internal/servers/server"
+	"github.com/vdaas/vald/internal/servers/starter"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/pkg/agent/sidecar/config"
+	handler "github.com/vdaas/vald/pkg/agent/sidecar/handler/grpc"
+	"github.com/vdaas/vald/pkg/agent/sidecar/handler/rest"
+	"github.com/vdaas/vald/pkg/agent/sidecar/router"
+	"github.com/vdaas/vald/pkg/agent/sidecar/service/restorer"
+	"github.com/vdaas/vald/pkg/agent/sidecar/service/storage"
 )
 
 type run struct {

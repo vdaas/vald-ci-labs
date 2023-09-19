@@ -34,10 +34,10 @@ brew install hdf5
 This chapter will show you how to deploy Vald Agent on docker.<br>
 This chapter will use NGT for the core engine of Vald Agent.
 
-1. Clone the vdaas/vald-ci-labs repository
+1. Clone the vdaas/vald repository
 
    ```bash
-   git clone https://github.com/vdaas/vald-ci-labs.git
+   git clone https://github.com/vdaas/vald.git
    ```
 
 1. Create a directory for setting deploy vald-agent-ngt
@@ -49,7 +49,7 @@ This chapter will use NGT for the core engine of Vald Agent.
 1. Create the `config.yaml`
 
    The configuration of Vald agent for docker is set using `config.yaml`<br>
-   You can also check [the sample configuration](https://github.com/vdaas/vald-ci-labs/blob/main/cmd/agent/core/ngt/sample.yaml).
+   You can also check [the sample configuration](https://github.com/vdaas/vald/blob/main/cmd/agent/core/ngt/sample.yaml).
 
    ```bash
    cat << EOF > config.yaml
@@ -135,7 +135,7 @@ This chapter will use NGT for the core engine of Vald Agent.
    - Please check whether there is `config.yaml` file and `backup` directory in your current directory.
 
    ```bash
-   docker run -v $(pwd):/etc/server -u "$(id -u $USER):$(id -g $USER)" -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -p 8081:8081 --rm -it vdaas/vald-ci-labs-agent-ngt
+   docker run -v $(pwd):/etc/server -u "$(id -u $USER):$(id -g $USER)" -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -p 8081:8081 --rm -it vdaas/vald-agent-ngt
    ```
 
 1. Verify
@@ -174,7 +174,7 @@ This chapter will use NGT for the core engine of Vald Agent.
    And then, after waiting for indexing, it will request to search the nearest vector 10 times.
    You will get the 10 nearest neighbor vectors for each search query.<br>
 
-   We use [`example/client/agent/main.go`](https://github.com/vdaas/vald-ci-labs/blob/main/example/client/agent/main.go) to run the example.
+   We use [`example/client/agent/main.go`](https://github.com/vdaas/vald/blob/main/example/client/agent/main.go) to run the example.
    The example code is the same as running an example-only Vald agent on Kubernetes.
    If you want to learn the detail of running an example, please refer to the tutorial of [Vald Agent Standalone on kubernetes](../tutorial/get-started.md/#run-using-example-code).
 

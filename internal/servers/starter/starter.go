@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -20,12 +20,12 @@ package starter
 import (
 	"fmt"
 
-	"github.com/vdaas/vald-ci-labs/internal/config"
-	"github.com/vdaas/vald-ci-labs/internal/net/http/metrics"
-	"github.com/vdaas/vald-ci-labs/internal/servers"
-	"github.com/vdaas/vald-ci-labs/internal/servers/server"
-	"github.com/vdaas/vald-ci-labs/internal/strings"
-	"github.com/vdaas/vald-ci-labs/internal/tls"
+	"github.com/vdaas/vald/internal/config"
+	"github.com/vdaas/vald/internal/net/http/metrics"
+	"github.com/vdaas/vald/internal/servers"
+	"github.com/vdaas/vald/internal/servers/server"
+	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald/internal/tls"
 )
 
 type Server servers.Listener

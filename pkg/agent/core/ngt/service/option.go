@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -22,12 +22,12 @@ import (
 	"os"
 	"time"
 
-	core "github.com/vdaas/vald-ci-labs/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/file"
-	"github.com/vdaas/vald-ci-labs/internal/rand"
-	"github.com/vdaas/vald-ci-labs/internal/strings"
-	"github.com/vdaas/vald-ci-labs/internal/timeutil"
+	core "github.com/vdaas/vald/internal/core/algorithm/ngt"
+	"github.com/vdaas/vald/internal/file"
+	"github.com/vdaas/vald/internal/rand"
+	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/internal/timeutil"
 )
 
 // Option represent the functional option for ngt

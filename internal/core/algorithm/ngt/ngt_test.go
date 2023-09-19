@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -25,17 +25,16 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
-	"sync"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/vdaas/vald-ci-labs/internal/core/algorithm"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/file"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/log/logger"
-	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
-	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
+	"github.com/vdaas/vald/internal/core/algorithm"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/file"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/log/logger"
+	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald/internal/test/comparator"
+	"github.com/vdaas/vald/internal/test/goleak"
 )
 
 var (
@@ -50,7 +49,7 @@ var (
 	}
 
 	searchResultComparator = []comparator.Option{
-		comparator.CompareField("Distance", cmp.Comparer(func(s1, s2 float32) bool {
+		comparator.CompareField("Distance", comparator.Comparer(func(s1, s2 float32) bool {
 			if s1 == 0 { // if vec1 is same as vec2, the distance should be same
 				return s2 == 0
 			}
@@ -103,7 +102,7 @@ func TestNew(t *testing.T) {
 		beforeFunc  func(args)
 		afterFunc   func(*testing.T, NGT) error
 	}
-	defaultComprators := append(ngtComparator, comparator.CompareField("idxPath", cmp.Comparer(func(s1, s2 string) bool {
+	defaultComprators := append(ngtComparator, comparator.CompareField("idxPath", comparator.Comparer(func(s1, s2 string) bool {
 		return s1 == s2
 	})))
 	defaultCheckFunc := func(w want, got NGT, err error, comparators ...comparator.Option) error {
@@ -140,9 +139,10 @@ func TestNew(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Float,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
-				comparators: append(ngtComparator, comparator.CompareField("idxPath", cmp.Comparer(func(s1, s2 string) bool {
+				comparators: append(ngtComparator, comparator.CompareField("idxPath", comparator.Comparer(func(s1, s2 string) bool {
 					return strings.HasPrefix(s1, "/tmp/ngt-") || strings.HasPrefix(s2, "/tmp/ngt-")
 				}))),
 			}
@@ -165,6 +165,7 @@ func TestNew(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Float,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 			}
@@ -189,6 +190,7 @@ func TestNew(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Uint8,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 			}
@@ -263,7 +265,7 @@ func TestLoad(t *testing.T) {
 		}
 
 		// comparator for idxPath
-		comparators := append(ngtComparator, comparator.CompareField("idxPath", cmp.Comparer(func(s1, s2 string) bool {
+		comparators := append(ngtComparator, comparator.CompareField("idxPath", comparator.Comparer(func(s1, s2 string) bool {
 			return s1 == s2
 		})))
 
@@ -317,6 +319,7 @@ func TestLoad(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Uint8,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 				checkFunc: func(ctx context.Context, w want, n NGT, e error) error {
@@ -332,7 +335,7 @@ func TestLoad(t *testing.T) {
 
 					// check no vector can be searched
 					vs, err := n.Search(ctx, []float32{0, 1, 2, 3, 4, 5, 6, 7, 8}, 10, 0, 0)
-					if err != nil && !errors.Is(err, errors.ErrEmptySearchResult) {
+					if err != nil && !errors.Is(err, errors.ErrSearchResultEmptyButNoDataStored) {
 						return err
 					}
 					if len(vs) != 0 {
@@ -382,6 +385,7 @@ func TestLoad(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Uint8,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 				checkFunc: func(ctx context.Context, w want, n NGT, e error) error {
@@ -447,6 +451,7 @@ func TestLoad(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Float,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 				checkFunc: func(ctx context.Context, w want, n NGT, e error) error {
@@ -462,7 +467,7 @@ func TestLoad(t *testing.T) {
 
 					// check no vector can be searched
 					vs, err := n.Search(ctx, []float32{0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8}, 10, 0, 0)
-					if err != nil && !errors.Is(err, errors.ErrEmptySearchResult) {
+					if err != nil && !errors.Is(err, errors.ErrSearchResultEmptyButNoDataStored) {
 						return err
 					}
 					if len(vs) != 0 {
@@ -512,6 +517,7 @@ func TestLoad(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Float,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 				checkFunc: func(ctx context.Context, w want, n NGT, e error) error {
@@ -671,7 +677,7 @@ func Test_gen(t *testing.T) {
 		beforeFunc  func(*testing.T, args)
 		afterFunc   func(*testing.T, NGT) error
 	}
-	defaultComprators := append(ngtComparator, comparator.CompareField("idxPath", cmp.Comparer(func(s1, s2 string) bool {
+	defaultComprators := append(ngtComparator, comparator.CompareField("idxPath", comparator.Comparer(func(s1, s2 string) bool {
 		return s1 == s2
 	})))
 	defaultCheckFunc := func(_ context.Context, w want, got NGT, err error, comparators ...comparator.Option) error {
@@ -707,9 +713,10 @@ func Test_gen(t *testing.T) {
 					bulkInsertChunkSize: 100,
 					objectType:          Float,
 					mu:                  &sync.RWMutex{},
+					cmu:                 &sync.RWMutex{},
 				},
 			},
-			comparators: append(ngtComparator, comparator.CompareField("idxPath", cmp.Comparer(func(s1, s2 string) bool {
+			comparators: append(ngtComparator, comparator.CompareField("idxPath", comparator.Comparer(func(s1, s2 string) bool {
 				return strings.HasPrefix(s1, "/tmp/ngt-") || strings.HasPrefix(s2, "/tmp/ngt-")
 			}))),
 		},
@@ -753,6 +760,7 @@ func Test_gen(t *testing.T) {
 						bulkInsertChunkSize: 100,
 						objectType:          Uint8,
 						mu:                  &sync.RWMutex{},
+						cmu:                 &sync.RWMutex{},
 					},
 				},
 				checkFunc: func(ctx context.Context, w want, n NGT, e error, comparators ...comparator.Option) error {
@@ -1095,6 +1103,7 @@ func Test_ngt_open(t *testing.T) {
 		epsilon             float32
 		poolSize            uint32
 		mu                  *sync.RWMutex
+		cmu                 *sync.RWMutex
 	}
 	type want struct {
 		err error
@@ -1142,6 +1151,7 @@ func Test_ngt_open(t *testing.T) {
 				dimension:  9,
 				objectType: Float,
 				mu:         &sync.RWMutex{},
+				cmu:        &sync.RWMutex{},
 			},
 			beforeFunc: func(t *testing.T, fields fields) {
 				t.Helper()
@@ -1176,6 +1186,7 @@ func Test_ngt_open(t *testing.T) {
 				dimension:  9,
 				objectType: Float,
 				mu:         &sync.RWMutex{},
+				cmu:        &sync.RWMutex{},
 			},
 			want: want{
 				err: errors.ErrIndexFileNotFound,
@@ -1189,6 +1200,7 @@ func Test_ngt_open(t *testing.T) {
 				dimension:  9,
 				objectType: Float,
 				mu:         &sync.RWMutex{},
+				cmu:        &sync.RWMutex{},
 			},
 			beforeFunc: func(t *testing.T, fields fields) {
 				t.Helper()
@@ -1824,7 +1836,7 @@ func Test_ngt_Search(t *testing.T) {
 			},
 		},
 		{
-			name: "return ErrEmptySearchResult error if there is no inserted vector",
+			name: "return  ErrSearchResultEmptyButNoDataStored error if there is no inserted vector",
 			args: args{
 				ctx:  context.Background(),
 				vec:  []float32{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9},
@@ -1841,11 +1853,11 @@ func Test_ngt_Search(t *testing.T) {
 			},
 			createFunc: defaultCreateFunc,
 			want: want{
-				err: errors.ErrEmptySearchResult,
+				err: errors.ErrSearchResultEmptyButNoDataStored,
 			},
 		},
 		{
-			name: "return ErrEmptySearchResult error if the context is canceled",
+			name: "return ErrSearchResultEmptyButNoDataStored error if the context is canceled",
 			args: args{
 				ctx: func() context.Context {
 					ctx, cancel := context.WithCancel(context.Background())
@@ -1866,7 +1878,7 @@ func Test_ngt_Search(t *testing.T) {
 			},
 			createFunc: defaultCreateFunc,
 			want: want{
-				err: errors.ErrEmptySearchResult,
+				err: errors.ErrSearchResultEmptyButNoDataStored,
 			},
 		},
 	}

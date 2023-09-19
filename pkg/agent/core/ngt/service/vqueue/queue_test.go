@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -16,6 +16,68 @@
 
 // Package vqueue manages the vector cache layer for reducing FFI overhead for fast Agent processing.
 package vqueue
+
+import (
+	"testing"
+	"time"
+
+	"github.com/stretchr/testify/require"
+)
+
+func TestGetVector(t *testing.T) {
+	type want struct {
+		vec       []float32
+		timestamp int64
+		exists    bool
+	}
+	type test struct {
+		name      string
+		uuid      string
+		vec       []float32
+		timestamp int64
+		want      want
+	}
+
+	now := time.Now().UnixNano()
+
+	tests := []test{
+		{
+			name:      "success insert and delete",
+			uuid:      "test-uuid",
+			vec:       []float32{1.0, 2.0, 3.0},
+			timestamp: now,
+			want: want{
+				vec:       []float32{1.0, 2.0, 3.0},
+				timestamp: now,
+				exists:    true,
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		test := tc
+		t.Run(test.name, func(t *testing.T) {
+			vq, err := New()
+			require.NoError(t, err)
+
+			// Insert data into the queue
+			vq.PushInsert(test.uuid, test.vec, test.timestamp)
+
+			// Test that the data exists in the queue
+			gotVec, gotTimestamp, exists := vq.GetVector(test.uuid)
+			require.Equal(t, test.want.vec, gotVec)
+			require.Equal(t, test.want.timestamp, gotTimestamp)
+			require.Equal(t, test.want.exists, exists)
+
+			// Delete data from the queue
+			vq.PushDelete(test.uuid, time.Now().UnixNano())
+
+			// Test that the data no longer exists in the queue
+			_, _, exists = vq.GetVector(test.uuid)
+			require.False(t, exists)
+		})
+	}
+}
 
 // NOT IMPLEMENTED BELOW
 //
@@ -116,8 +178,8 @@ package vqueue
 // 		date   int64
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -150,8 +212,8 @@ package vqueue
 // 		           date:0,
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -177,8 +239,8 @@ package vqueue
 // 		           date:0,
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -232,8 +294,8 @@ package vqueue
 // 		date int64
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -265,8 +327,8 @@ package vqueue
 // 		           date:0,
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -291,8 +353,8 @@ package vqueue
 // 		           date:0,
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -345,30 +407,34 @@ package vqueue
 // 		uuid string
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
 // 	type want struct {
-// 		want  []float32
-// 		want1 bool
+// 		wantVec       []float32
+// 		wantTimestamp int64
+// 		wantExists    bool
 // 	}
 // 	type test struct {
 // 		name       string
 // 		args       args
 // 		fields     fields
 // 		want       want
-// 		checkFunc  func(want, []float32, bool) error
+// 		checkFunc  func(want, []float32, int64, bool) error
 // 		beforeFunc func(*testing.T, args)
 // 		afterFunc  func(*testing.T, args)
 // 	}
-// 	defaultCheckFunc := func(w want, got []float32, got1 bool) error {
-// 		if !reflect.DeepEqual(got, w.want) {
-// 			return errors.Errorf("got: \"%#v\",\n\t\t\t\twant: \"%#v\"", got, w.want)
+// 	defaultCheckFunc := func(w want, gotVec []float32, gotTimestamp int64, gotExists bool) error {
+// 		if !reflect.DeepEqual(gotVec, w.wantVec) {
+// 			return errors.Errorf("got: \"%#v\",\n\t\t\t\twant: \"%#v\"", gotVec, w.wantVec)
 // 		}
-// 		if !reflect.DeepEqual(got1, w.want1) {
-// 			return errors.Errorf("got: \"%#v\",\n\t\t\t\twant: \"%#v\"", got1, w.want1)
+// 		if !reflect.DeepEqual(gotTimestamp, w.wantTimestamp) {
+// 			return errors.Errorf("got: \"%#v\",\n\t\t\t\twant: \"%#v\"", gotTimestamp, w.wantTimestamp)
+// 		}
+// 		if !reflect.DeepEqual(gotExists, w.wantExists) {
+// 			return errors.Errorf("got: \"%#v\",\n\t\t\t\twant: \"%#v\"", gotExists, w.wantExists)
 // 		}
 // 		return nil
 // 	}
@@ -381,8 +447,8 @@ package vqueue
 // 		           uuid:"",
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -406,8 +472,8 @@ package vqueue
 // 		           uuid:"",
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -446,8 +512,8 @@ package vqueue
 // 				dc: test.fields.dc,
 // 			}
 //
-// 			got, got1 := v.GetVector(test.args.uuid)
-// 			if err := checkFunc(test.want, got, got1); err != nil {
+// 			gotVec, gotTimestamp, gotExists := v.GetVector(test.args.uuid)
+// 			if err := checkFunc(test.want, gotVec, gotTimestamp, gotExists); err != nil {
 // 				tt.Errorf("error = %v", err)
 // 			}
 //
@@ -460,8 +526,8 @@ package vqueue
 // 		uuid string
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -492,8 +558,8 @@ package vqueue
 // 		           uuid:"",
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -517,8 +583,8 @@ package vqueue
 // 		           uuid:"",
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -571,8 +637,8 @@ package vqueue
 // 		uuid string
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -603,8 +669,8 @@ package vqueue
 // 		           uuid:"",
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -628,8 +694,8 @@ package vqueue
 // 		           uuid:"",
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -684,8 +750,8 @@ package vqueue
 // 		f   func(uuid string, vector []float32, date int64) bool
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -714,8 +780,8 @@ package vqueue
 // 		           f:nil,
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -741,8 +807,8 @@ package vqueue
 // 		           f:nil,
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -796,8 +862,8 @@ package vqueue
 // 		f   func(uuid string) bool
 // 	}
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -826,8 +892,8 @@ package vqueue
 // 		           f:nil,
 // 		       },
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -853,8 +919,8 @@ package vqueue
 // 		           f:nil,
 // 		           },
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -903,8 +969,8 @@ package vqueue
 //
 // func Test_vqueue_IVQLen(t *testing.T) {
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -931,8 +997,8 @@ package vqueue
 // 		   {
 // 		       name: "test_case_1",
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -953,8 +1019,8 @@ package vqueue
 // 		       return test {
 // 		           name: "test_case_2",
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },
@@ -1004,8 +1070,8 @@ package vqueue
 //
 // func Test_vqueue_DVQLen(t *testing.T) {
 // 	type fields struct {
-// 		il indexMap
-// 		dl indexMap
+// 		il sync.Map[string, *index]
+// 		dl sync.Map[string, *index]
 // 		ic uint64
 // 		dc uint64
 // 	}
@@ -1032,8 +1098,8 @@ package vqueue
 // 		   {
 // 		       name: "test_case_1",
 // 		       fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		       },
@@ -1054,8 +1120,8 @@ package vqueue
 // 		       return test {
 // 		           name: "test_case_2",
 // 		           fields: fields {
-// 		           il:indexMap{},
-// 		           dl:indexMap{},
+// 		           il:nil,
+// 		           dl:nil,
 // 		           ic:0,
 // 		           dc:0,
 // 		           },

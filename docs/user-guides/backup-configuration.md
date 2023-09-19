@@ -29,7 +29,7 @@ Please refer to the following tables and decide which method fit for your case.
 
 This section shows the best practice for configuring backup features with PV, S3, or PV + S3.
 
-Each sample configuration yaml is published on [here](https://github.com/vdaas/vald-ci-labs/tree/master/charts/vald/values).
+Each sample configuration yaml is published on [here](https://github.com/vdaas/vald/tree/master/charts/vald/values).
 Please refer it for more details.
 
 ### General
@@ -308,4 +308,4 @@ If an index file exists under `${index_path}/origin`, restore is attempted based
 
 The number of generations of broken indexes currently stored can be obtained as a metric `agent_core_ngt_broken_index_store_count`.
 
-Reference: [vald/k8s/metrics/grafana/dashboards/01-vald-agent.yaml](https://github.com/vdaas/vald-ci-labs/blob/main/k8s/metrics/grafana/dashboards/01-vald-agent.yaml)
+Reference: [vald/k8s/metrics/grafana/dashboards/01-vald-agent.yaml](https://github.com/vdaas/vald/blob/main/k8s/metrics/grafana/dashboards/01-vald-agent.yaml)

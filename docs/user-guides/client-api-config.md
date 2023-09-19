@@ -36,8 +36,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs-client-go/v1/payload"
-	"github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+	"github.com/vdaas/vald-client-go/v1/payload"
+	"github.com/vdaas/vald-client-go/v1/vald"
 	"google.golang.org/grpc"
 )
 
@@ -152,8 +152,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs-client-go/v1/payload"
-	"github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+	"github.com/vdaas/vald-client-go/v1/payload"
+	"github.com/vdaas/vald-client-go/v1/vald"
 	"google.golang.org/grpc"
 )
 
@@ -276,8 +276,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs-client-go/v1/payload"
-	"github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+	"github.com/vdaas/vald-client-go/v1/payload"
+	"github.com/vdaas/vald-client-go/v1/vald"
 	"google.golang.org/grpc"
 )
 
@@ -460,8 +460,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs-client-go/v1/payload"
-	"github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+	"github.com/vdaas/vald-client-go/v1/payload"
+	"github.com/vdaas/vald-client-go/v1/vald"
 	"google.golang.org/grpc"
 )
 
@@ -643,8 +643,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs-client-go/v1/payload"
-	"github.com/vdaas/vald-ci-labs-client-go/v1/vald"
+	"github.com/vdaas/vald-client-go/v1/payload"
+	"github.com/vdaas/vald-client-go/v1/vald"
 	"google.golang.org/grpc"
 )
 

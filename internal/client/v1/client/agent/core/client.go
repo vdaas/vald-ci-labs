@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -21,12 +21,12 @@ import (
 	"context"
 	"reflect"
 
-	agent "github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/core"
-	"github.com/vdaas/vald-ci-labs/internal/client/v1/client"
-	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/vald"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
-	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	agent "github.com/vdaas/vald/apis/grpc/v1/agent/core"
+	"github.com/vdaas/vald/internal/client/v1/client"
+	"github.com/vdaas/vald/internal/client/v1/client/vald"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald/internal/observability/trace"
 )
 
 // Client represents agent NGT client interface.

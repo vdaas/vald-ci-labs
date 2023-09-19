@@ -1,7 +1,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //	https://www.apache.org/licenses/LICENSE-2.0
@@ -18,18 +18,21 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/config"
-	"github.com/vdaas/vald-ci-labs/internal/conv"
-	"github.com/vdaas/vald-ci-labs/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/net"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/internal/test/data/request"
-	"github.com/vdaas/vald-ci-labs/internal/test/data/vector"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
+	tmock "github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/internal/config"
+	"github.com/vdaas/vald/internal/conv"
+	"github.com/vdaas/vald/internal/core/algorithm/ngt"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald/internal/net/grpc/codes"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/internal/test/data/request"
+	"github.com/vdaas/vald/internal/test/data/vector"
+	"github.com/vdaas/vald/internal/test/mock"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
 )
 
 func Test_server_Exists(t *testing.T) {
@@ -133,7 +136,7 @@ func Test_server_Exists(t *testing.T) {
 			- case 3.6: success exists with euc-jp ID from euc-jp index
 			- case 4.1: success exists with 😀
 		- Decision Table Testing
-		    - NONE
+			- NONE
 	*/
 	tests := []test{
 		{
@@ -423,6 +426,12 @@ func Test_server_GetObject(t *testing.T) {
 				return errors.Errorf("got code: \"%#v\",\n\t\t\t\twant code: \"%#v\"", st.Code(), w.errCode)
 			}
 		}
+
+		// FIXME: remove these lines after migrating Config.Timestamp to Vector.Timestamp
+		if gotRes != nil {
+			w.wantRes.Timestamp = gotRes.Timestamp
+		}
+
 		if !reflect.DeepEqual(gotRes, w.wantRes) {
 			return errors.Errorf("got: \"%#v\",\n\t\t\t\twant: \"%#v\"", gotRes, w.wantRes)
 		}
@@ -1179,11 +1188,161 @@ func Test_server_GetObject(t *testing.T) {
 	}
 }
 
+func Test_server_StreamGetObject(t *testing.T) {
+	t.Parallel()
+
+	defaultConfig := config.NGT{
+		Dimension:           100,
+		DistanceType:        "l2",
+		ObjectType:          "float",
+		BulkInsertChunkSize: 10,
+		CreationEdgeSize:    20,
+		SearchEdgeSize:      10,
+		EnableProactiveGC:   false,
+		EnableCopyOnWrite:   false,
+		KVSDB: &config.KVSDB{
+			Concurrency: 10,
+		},
+		BrokenIndexHistoryLimit: 1,
+	}
+
+	setup := func(t *testing.T) (context.Context, Server) {
+		t.Helper()
+		ngt, err := service.New(&defaultConfig)
+		require.NoError(t, err)
+
+		ctx := context.Background()
+		eg, ectx := errgroup.New(ctx)
+		opts := []Option{
+			WithIP(net.LoadLocalIP()),
+			WithNGT(ngt),
+			WithErrGroup(eg),
+		}
+		s, err := New(opts...)
+		require.NoError(t, err)
+
+		return ectx, s
+	}
+
+	type test struct {
+		name     string
+		testfunc func(t *testing.T)
+	}
+
+	tests := []test{
+		{
+			name: "returns multiple objects",
+			testfunc: func(t *testing.T) {
+				ectx, s := setup(t)
+
+				// insert and create `num` index
+				num := 42
+				req, err := request.GenMultiInsertReq(request.Float, vector.Gaussian, num, 100, &payload.Insert_Config{})
+				require.NoError(t, err)
+
+				_, err = s.MultiInsert(ectx, req)
+				require.NoError(t, err)
+
+				_, err = s.CreateIndex(ectx, &payload.Control_CreateIndexRequest{
+					PoolSize: uint32(len(req.Requests)),
+				})
+				require.NoError(t, err)
+
+				// Set mock and expectations
+				stream := mock.ListObjectStreamMock{}
+				stream.On("Send", tmock.Anything).Return(nil)
+
+				// Call the method under test
+				err = s.StreamListObject(&payload.Object_List_Request{}, &stream)
+				require.NoError(t, err)
+
+				// Check results
+				stream.AssertExpectations(t)
+				stream.AssertNumberOfCalls(t, "Send", num)
+				for _, req := range req.Requests {
+					stream.AssertCalled(t, "Send", tmock.MatchedBy(func(r *payload.Object_List_Response) bool {
+						vec := *r.GetVector()
+						wantVec := req.GetVector()
+						// Check every fields but timestamp
+						if vec.GetId() != wantVec.GetId() {
+							return false
+						}
+						if !reflect.DeepEqual(vec.GetVector(), wantVec.GetVector()) {
+							return false
+						}
+						return true
+					}))
+				}
+			},
+		},
+		{
+			name: "returns joined error when Send fails in the stream",
+			testfunc: func(t *testing.T) {
+				ectx, s := setup(t)
+
+				// insert and create some index
+				req, err := request.GenMultiInsertReq(request.Float, vector.Gaussian, 2, 100, &payload.Insert_Config{})
+				require.NoError(t, err)
+
+				_, err = s.MultiInsert(ectx, req)
+				require.NoError(t, err)
+
+				_, err = s.CreateIndex(ectx, &payload.Control_CreateIndexRequest{
+					PoolSize: uint32(len(req.Requests)),
+				})
+				require.NoError(t, err)
+
+				// Set mock and expectations
+				stream := mock.ListObjectStreamMock{}
+				stream.On("Send", tmock.Anything).Return(status.New(codes.Unknown, "foo").Err()).Once()
+				stream.On("Send", tmock.Anything).Return(status.New(codes.Aborted, "bar").Err())
+
+				// Call the method under test
+				err = s.StreamListObject(&payload.Object_List_Request{}, &stream)
+
+				// Check the errros are joined and its a gRPC error
+				require.ErrorContains(t, err, "foo")
+				require.ErrorContains(t, err, "bar")
+				_, ok := status.FromError(err)
+				require.True(t, ok, "err should be a gRPC error")
+
+				stream.AssertExpectations(t)
+			},
+		},
+		{
+			name: "Send must not be called when there is no index",
+			testfunc: func(t *testing.T) {
+				_, s := setup(t)
+
+				// Set mock and expectations
+				stream := mock.ListObjectStreamMock{}
+				stream.On("Send", tmock.Anything).Return(nil)
+
+				// Call the method under test
+				err := s.StreamListObject(&payload.Object_List_Request{}, &stream)
+				require.NoError(t, err)
+
+				// Check results
+				stream.AssertNotCalled(t, "Send", tmock.Anything)
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		test := tc
+		t.Run(test.name, func(tt *testing.T) {
+			tt.Parallel()
+			test.testfunc(tt)
+		})
+	}
+}
+
 // NOT IMPLEMENTED BELOW
 //
-// func Test_server_StreamGetObject(t *testing.T) {
+// func Test_server_StreamListObject(t *testing.T) {
 // 	type args struct {
-// 		stream vald.Object_StreamGetObjectServer
+// 		in0    *payload.Object_List_Request
+// 		stream vald.Object_StreamListObjectServer
 // 	}
 // 	type fields struct {
 // 		name                     string
@@ -1218,6 +1377,7 @@ func Test_server_GetObject(t *testing.T) {
 // 		   {
 // 		       name: "test_case_1",
 // 		       args: args {
+// 		           in0:nil,
 // 		           stream:nil,
 // 		       },
 // 		       fields: fields {
@@ -1246,6 +1406,7 @@ func Test_server_GetObject(t *testing.T) {
 // 		       return test {
 // 		           name: "test_case_2",
 // 		           args: args {
+// 		           in0:nil,
 // 		           stream:nil,
 // 		           },
 // 		           fields: fields {
@@ -1295,7 +1456,7 @@ func Test_server_GetObject(t *testing.T) {
 // 				UnimplementedValdServer:  test.fields.UnimplementedValdServer,
 // 			}
 //
-// 			err := s.StreamGetObject(test.args.stream)
+// 			err := s.StreamListObject(test.args.in0, test.args.stream)
 // 			if err := checkFunc(test.want, err); err != nil {
 // 				tt.Errorf("error = %v", err)
 // 			}

@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -20,13 +20,13 @@ package grpc
 import (
 	"reflect"
 
-	agent "github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/core"
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
+	agent "github.com/vdaas/vald/apis/grpc/v1/agent/core"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/apis/grpc/v1/vald"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
 )
 
 type Server interface {

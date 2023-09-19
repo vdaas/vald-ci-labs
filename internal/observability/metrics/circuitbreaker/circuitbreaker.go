@@ -1,7 +1,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //	https://www.apache.org/licenses/LICENSE-2.0
@@ -16,9 +16,9 @@ package circuitbreaker
 import (
 	"context"
 
-	"github.com/vdaas/vald-ci-labs/internal/circuitbreaker"
-	"github.com/vdaas/vald-ci-labs/internal/observability/attribute"
-	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
+	"github.com/vdaas/vald/internal/circuitbreaker"
+	"github.com/vdaas/vald/internal/observability/attribute"
+	"github.com/vdaas/vald/internal/observability/metrics"
 	"go.opentelemetry.io/otel/sdk/metric/aggregation"
 	"go.opentelemetry.io/otel/sdk/metric/view"
 )

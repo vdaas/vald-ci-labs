@@ -3,7 +3,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //	https://www.apache.org/licenses/LICENSE-2.0
@@ -19,16 +19,16 @@ import (
 	"context"
 	"reflect"
 	"strconv"
-	"sync"
 	"testing"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/io"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald/internal/net/grpc/codes"
+	"github.com/vdaas/vald/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald/internal/sync"
 )
 
 type (
@@ -104,6 +104,7 @@ func (c *client) SearchWithParameters(
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)
+	var mu sync.Mutex
 	go func() {
 		defer wg.Done()
 
@@ -115,6 +116,7 @@ func (c *client) SearchWithParameters(
 
 			if err != nil {
 				if err := evalidator(t, err); err != nil {
+					mu.Lock()
 					rerr = errors.Join(
 						rerr,
 						errors.Errorf(
@@ -122,6 +124,7 @@ func (c *client) SearchWithParameters(
 							err.Error(),
 						),
 					)
+					mu.Unlock()
 				}
 				return
 			}
@@ -135,7 +138,9 @@ func (c *client) SearchWithParameters(
 							status.GetCode(),
 							status.GetMessage(),
 							errdetails.Serialize(status.GetDetails()))
+						mu.Lock()
 						rerr = errors.Join(rerr, e)
+						mu.Unlock()
 					}
 					continue
 				}
@@ -182,6 +187,8 @@ func (c *client) SearchWithParameters(
 			},
 		})
 		if err != nil {
+			mu.Lock()
+			defer mu.Unlock()
 			return err
 		}
 		err = sc.Send(&payload.Search_Request{
@@ -196,6 +203,8 @@ func (c *client) SearchWithParameters(
 			},
 		})
 		if err != nil {
+			mu.Lock()
+			defer mu.Unlock()
 			return err
 		}
 		err = sc.Send(&payload.Search_Request{
@@ -210,6 +219,8 @@ func (c *client) SearchWithParameters(
 			},
 		})
 		if err != nil {
+			mu.Lock()
+			defer mu.Unlock()
 			return err
 		}
 		err = sc.Send(&payload.Search_Request{
@@ -224,6 +235,8 @@ func (c *client) SearchWithParameters(
 			},
 		})
 		if err != nil {
+			mu.Lock()
+			defer mu.Unlock()
 			return err
 		}
 		err = sc.Send(&payload.Search_Request{
@@ -238,6 +251,8 @@ func (c *client) SearchWithParameters(
 			},
 		})
 		if err != nil {
+			mu.Lock()
+			defer mu.Unlock()
 			return err
 		}
 	}
@@ -289,6 +304,7 @@ func (c *client) SearchByIDWithParameters(
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)
+	var mu sync.Mutex
 	go func() {
 		defer wg.Done()
 
@@ -300,6 +316,7 @@ func (c *client) SearchByIDWithParameters(
 
 			if err != nil {
 				if err := evalidator(t, err); err != nil {
+					mu.Lock()
 					rerr = errors.Join(
 						rerr,
 						errors.Errorf(
@@ -307,6 +324,7 @@ func (c *client) SearchByIDWithParameters(
 							err.Error(),
 						),
 					)
+					mu.Unlock()
 				}
 				return
 			}
@@ -320,7 +338,9 @@ func (c *client) SearchByIDWithParameters(
 							status.GetCode(),
 							status.GetMessage(),
 							errdetails.Serialize(status.GetDetails()))
+						mu.Lock()
 						rerr = errors.Join(rerr, e)
+						mu.Unlock()
 					}
 					continue
 				}
@@ -352,6 +372,8 @@ func (c *client) SearchByIDWithParameters(
 			},
 		})
 		if err != nil {
+			mu.Lock()
+			defer mu.Unlock()
 			return err
 		}
 	}
@@ -362,6 +384,8 @@ func (c *client) SearchByIDWithParameters(
 
 	t.Log("searchByID operation finished")
 
+	mu.Lock()
+	defer mu.Unlock()
 	return rerr
 }
 
@@ -1001,6 +1025,33 @@ func (c *client) RemoveWithParameters(
 	return rerr
 }
 
+func (c *client) RemoveByTimestamp(t *testing.T, ctx context.Context, timestamp int64) error {
+	t.Log("removeByTimestamp operation started")
+
+	client, err := c.getClient(ctx)
+	if err != nil {
+		return err
+	}
+
+	req := &payload.Remove_TimestampRequest{
+		Timestamps: []*payload.Remove_Timestamp{
+			{
+				Timestamp: timestamp,
+				Operator:  payload.Remove_Timestamp_Gt,
+			},
+		},
+	}
+
+	_, err = client.RemoveByTimestamp(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	t.Log("removeByTimestamp operation finished")
+
+	return nil
+}
+
 func (c *client) Exists(t *testing.T, ctx context.Context, id string) error {
 	t.Log("exists operation started")
 
@@ -1088,6 +1139,10 @@ func (c *client) GetObject(
 					res.GetVector().GetVector(),
 					ds.Train[idx],
 				)
+			}
+
+			if ts := resp.GetTimestamp(); ts <= 0 {
+				t.Error("timestamp is not set properly")
 			}
 		}
 	}()

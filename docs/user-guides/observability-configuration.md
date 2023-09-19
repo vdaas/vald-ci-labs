@@ -25,7 +25,7 @@ The recommended observability environment consists of the following:
 - Grafana
 - OpenTelemetry Operator and OpenTelemtry Collector
 
-Vald provides [the default manifests](https://github.com/vdaas/vald-ci-labs/tree/main/k8s/metrics) and [the make commands](https://github.com/vdaas/vald-ci-labs/blob/main/Makefile.d/k8s.mk) for deploying those components.
+Vald provides [the default manifests](https://github.com/vdaas/vald/tree/main/k8s/metrics) and [the make commands](https://github.com/vdaas/vald/blob/main/Makefile.d/k8s.mk) for deploying those components.
 Please refer to the following sections to deploy each component.
 
 <div class="notice">
@@ -244,7 +244,7 @@ defaults:
 ## Monitoring telemetry data
 
 Telemetry data can be monitored using Grafana, Jaeger, etc.
-Vald publishes [the sample manifest](https://github.com/vdaas/vald-ci-labs/blob/main/charts/vald/values/dev-observability.yaml), which enables Grafana and Jaeger.
+Vald publishes [the sample manifest](https://github.com/vdaas/vald/blob/main/charts/vald/values/dev-observability.yaml), which enables Grafana and Jaeger.
 
 You can apply it after creating an observability environment.
 

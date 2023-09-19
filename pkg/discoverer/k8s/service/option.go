@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -20,9 +20,9 @@ package service
 import (
 	"time"
 
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/net"
-	"github.com/vdaas/vald-ci-labs/internal/timeutil"
+	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/internal/timeutil"
 )
 
 type Option func(d *discoverer) error

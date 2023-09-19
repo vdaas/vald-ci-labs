@@ -71,16 +71,16 @@ This chapter uses [NGT](https://github.com/yahoojapan/ngt) as Vald Agent to perf
 
 1. Clone the repository
 
-   To use the `deployment yaml` for deployment, let's clone [`vdaas/vald-ci-labs`](https://github.com/vdaas/vald-ci-labs.git) repository.
+   To use the `deployment yaml` for deployment, let's clone [`vdaas/vald`](https://github.com/vdaas/vald.git) repository.
 
    ```bash
-   git clone https://github.com/vdaas/vald-ci-labs.git && \
+   git clone https://github.com/vdaas/vald.git && \
    cd vald
    ```
 
 1. Deploy Vald Agent Standalone using Helm
 
-   There is the [values.yaml](https://github.com/vdaas/vald-ci-labs/blob/main/example/helm/values-standalone-agent-ngt.yaml) to deploy standalone Vald Agent.
+   There is the [values.yaml](https://github.com/vdaas/vald/blob/main/example/helm/values-standalone-agent-ngt.yaml) to deploy standalone Vald Agent.
    Each component can be disabled by setting the value `false` to the `[component].enabled` field.
    This is useful for deploying standalone Vald Agent NGT pods.
 
@@ -134,7 +134,7 @@ This chapter uses [NGT](https://github.com/yahoojapan/ngt) as Vald Agent to perf
 
 1.  Run Example
 
-    We use [`example/client/agent/main.go`](https://github.com/vdaas/vald-ci-labs/blob/main/example/client/agent/main.go) to run the example.<br>
+    We use [`example/client/agent/main.go`](https://github.com/vdaas/vald/blob/main/example/client/agent/main.go) to run the example.<br>
     This example will insert and index 400 vectors into the Vald from the Fashion-MNIST dataset via gRPC.
     And then after waiting for indexing, it will request for searching the nearest vector 10 times.
     You will get the 10 nearest neighbor vectors for each search query.<br>
@@ -164,9 +164,9 @@ This chapter uses [NGT](https://github.com/yahoojapan/ngt) as Vald Agent to perf
 
               "github.com/kpango/fuid"
               "github.com/kpango/glg"
-              agent "github.com/vdaas/vald-ci-labs-client-go/v1/agent/core"
-              "github.com/vdaas/vald-ci-labs-client-go/v1/vald"
-              "github.com/vdaas/vald-ci-labs-client-go/v1/payload"
+              agent "github.com/vdaas/vald-client-go/v1/agent/core"
+              "github.com/vdaas/vald-client-go/v1/vald"
+              "github.com/vdaas/vald-client-go/v1/payload"
 
               "gonum.org/v1/hdf5"
               "google.golang.org/grpc"

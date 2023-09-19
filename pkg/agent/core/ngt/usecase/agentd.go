@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -19,23 +19,23 @@ package usecase
 import (
 	"context"
 
-	agent "github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/core"
-	vald "github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
-	iconf "github.com/vdaas/vald-ci-labs/internal/config"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
-	"github.com/vdaas/vald-ci-labs/internal/observability"
-	ngtmetrics "github.com/vdaas/vald-ci-labs/internal/observability/metrics/agent/core/ngt"
-	infometrics "github.com/vdaas/vald-ci-labs/internal/observability/metrics/info"
-	"github.com/vdaas/vald-ci-labs/internal/runner"
-	"github.com/vdaas/vald-ci-labs/internal/safety"
-	"github.com/vdaas/vald-ci-labs/internal/servers/server"
-	"github.com/vdaas/vald-ci-labs/internal/servers/starter"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/config"
-	handler "github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/handler/grpc"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/handler/rest"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/router"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
+	agent "github.com/vdaas/vald/apis/grpc/v1/agent/core"
+	vald "github.com/vdaas/vald/apis/grpc/v1/vald"
+	iconf "github.com/vdaas/vald/internal/config"
+	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald/internal/observability"
+	ngtmetrics "github.com/vdaas/vald/internal/observability/metrics/agent/core/ngt"
+	infometrics "github.com/vdaas/vald/internal/observability/metrics/info"
+	"github.com/vdaas/vald/internal/runner"
+	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald/internal/servers/server"
+	"github.com/vdaas/vald/internal/servers/starter"
+	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/config"
+	handler "github.com/vdaas/vald/pkg/agent/core/ngt/handler/grpc"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/handler/rest"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/router"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
 )
 
 type run struct {

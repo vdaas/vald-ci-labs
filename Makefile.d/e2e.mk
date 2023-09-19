@@ -2,7 +2,7 @@
 # Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
@@ -58,6 +58,11 @@ e2e/upsert:
 ## run remove e2e
 e2e/remove:
 	$(call run-e2e-crud-test,-run TestE2ERemoveOnly)
+
+.PHONY: e2e/remove/timestamp
+## run removeByTimestamp e2e
+e2e/remove/timestamp:
+	$(call run-e2e-crud-test,-run TestE2ERemoveByTimestampOnly)
 
 .PHONY: e2e/insert/search
 ## run insert and search e2e

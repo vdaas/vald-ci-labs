@@ -1,7 +1,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //	https://www.apache.org/licenses/LICENSE-2.0
@@ -18,24 +18,21 @@ import (
 	"fmt"
 	"math"
 	"math/big"
-	"sync"
 	"sync/atomic"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/info"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
-	"github.com/vdaas/vald-ci-labs/internal/safety"
-	"github.com/vdaas/vald-ci-labs/internal/slices"
-	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/apis/grpc/v1/vald"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/info"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald/internal/net/grpc/codes"
+	"github.com/vdaas/vald/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/internal/observability/trace"
+	"github.com/vdaas/vald/internal/slices"
+	"github.com/vdaas/vald/internal/sync"
 )
 
 type Aggregator interface {
@@ -62,8 +59,6 @@ func (s *server) aggregationSearch(ctx context.Context, aggr Aggregator, cfg *pa
 
 	num := int(cfg.GetNum())
 	min := int(cfg.GetMinNum())
-	eg, ectx := errgroup.New(ctx)
-	var cancel context.CancelFunc
 	var timeout time.Duration
 	if to := cfg.GetTimeout(); to != 0 {
 		timeout = time.Duration(to)
@@ -71,69 +66,134 @@ func (s *server) aggregationSearch(ctx context.Context, aggr Aggregator, cfg *pa
 		timeout = s.timeout
 	}
 
-	ectx, cancel = context.WithTimeout(ectx, timeout)
-	aggr.Start(ectx)
-	eg.Go(safety.RecoverFunc(func() error {
-		defer cancel()
-		return s.gateway.BroadCast(ectx, func(ctx context.Context, target string, vc vald.Client, copts ...grpc.CallOption) error {
-			sctx, sspan := trace.StartSpan(grpc.WrapGRPCMethod(ctx, "BroadCast/"+target), apiName+"/aggregationSearch/"+target)
-			defer func() {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	aggr.Start(ctx)
+	err = s.gateway.BroadCast(ctx, func(ctx context.Context, target string, vc vald.Client, copts ...grpc.CallOption) error {
+		sctx, sspan := trace.StartSpan(grpc.WrapGRPCMethod(ctx, "BroadCast/"+target), apiName+"/aggregationSearch/"+target)
+		defer func() {
+			if sspan != nil {
+				sspan.End()
+			}
+		}()
+		r, err := f(sctx, vc, copts...)
+		if err != nil {
+			switch {
+			case errors.Is(err, context.Canceled),
+				errors.Is(err, errors.ErrRPCCallFailed(target, context.Canceled)):
 				if sspan != nil {
-					sspan.End()
+					sspan.RecordError(err)
+					sspan.SetAttributes(trace.StatusCodeCancelled(
+						errdetails.ValdGRPCResourceTypePrefix +
+							"/vald.v1.search.BroadCast/" +
+							target + " canceled: " + err.Error())...)
+					sspan.SetStatus(trace.StatusError, err.Error())
 				}
-			}()
-			r, err := f(sctx, vc, copts...)
-			if err != nil {
-				switch {
-				case errors.Is(err, context.Canceled),
-					errors.Is(err, errors.ErrRPCCallFailed(target, context.Canceled)):
-					if sspan != nil {
-						sspan.RecordError(err)
-						sspan.SetAttributes(trace.StatusCodeCancelled(
-							errdetails.ValdGRPCResourceTypePrefix +
-								"/vald.v1.search.BroadCast/" +
-								target + " canceled: " + err.Error())...)
-						sspan.SetStatus(trace.StatusError, err.Error())
-					}
-				case errors.Is(err, context.DeadlineExceeded),
-					errors.Is(err, errors.ErrRPCCallFailed(target, context.DeadlineExceeded)):
-					if sspan != nil {
-						sspan.RecordError(err)
-						sspan.SetAttributes(trace.StatusCodeDeadlineExceeded(
-							errdetails.ValdGRPCResourceTypePrefix +
-								"/vald.v1.search.BroadCast/" +
-								target + " deadline_exceeded: " + err.Error())...)
-						sspan.SetStatus(trace.StatusError, err.Error())
-					}
-				default:
-					st, msg, err := status.ParseError(err, codes.Internal, "failed to parse search gRPC error response",
-						&errdetails.ResourceInfo{
-							ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
-							ResourceName: fmt.Sprintf("%s: %s(%s) to %s", apiName, s.name, s.ip, target),
-						})
-					if sspan != nil {
-						sspan.RecordError(err)
-						sspan.SetAttributes(trace.FromGRPCStatus(st.Code(), msg)...)
-						sspan.SetStatus(trace.StatusError, err.Error())
-					}
-					switch st.Code() {
-					case codes.Internal,
-						codes.Unavailable,
-						codes.ResourceExhausted:
-						log.Warn(err)
-						return err
-					case codes.NotFound,
-						codes.Aborted,
-						codes.InvalidArgument:
-						return nil
-					}
+				return nil
+			case errors.Is(err, context.DeadlineExceeded),
+				errors.Is(err, errors.ErrRPCCallFailed(target, context.DeadlineExceeded)):
+				if sspan != nil {
+					sspan.RecordError(err)
+					sspan.SetAttributes(trace.StatusCodeDeadlineExceeded(
+						errdetails.ValdGRPCResourceTypePrefix +
+							"/vald.v1.search.BroadCast/" +
+							target + " deadline_exceeded: " + err.Error())...)
+					sspan.SetStatus(trace.StatusError, err.Error())
+				}
+				return nil
+			default:
+				st, msg, err := status.ParseError(err, codes.Unknown, "failed to parse search gRPC error response",
+					&errdetails.ResourceInfo{
+						ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
+						ResourceName: fmt.Sprintf("%s: %s(%s) to %s", apiName, s.name, s.ip, target),
+					})
+				if sspan != nil {
+					sspan.RecordError(err)
+					sspan.SetAttributes(trace.FromGRPCStatus(st.Code(), msg)...)
+					sspan.SetStatus(trace.StatusError, err.Error())
+				}
+				switch st.Code() {
+				case codes.Internal,
+					codes.Unavailable,
+					codes.ResourceExhausted:
+					log.Warn(err)
+					return err
+				case codes.NotFound,
+					codes.Aborted,
+					codes.InvalidArgument:
+					return nil
+				}
+			}
+			log.Debug(err)
+			return nil
+		}
+		if r == nil || len(r.GetResults()) == 0 {
+			select {
+			case <-sctx.Done():
+				err = status.WrapWithNotFound("failed to process search request", errors.ErrEmptySearchResult,
+					&errdetails.ResourceInfo{
+						ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
+						ResourceName: fmt.Sprintf("%s: %s(%s) to %s", apiName, s.name, s.ip, target),
+					})
+				if sspan != nil {
+					sspan.RecordError(err)
+					sspan.SetAttributes(trace.StatusCodeNotFound(err.Error())...)
+					sspan.SetStatus(trace.StatusError, err.Error())
 				}
 				log.Debug(err)
 				return nil
-			}
-			if r == nil || len(r.GetResults()) == 0 {
-				select {
-				case <-sctx.Done():
+			default:
+				r, err = f(sctx, vc, copts...)
+				if err != nil {
+					switch {
+					case errors.Is(err, context.Canceled),
+						errors.Is(err, errors.ErrRPCCallFailed(target, context.Canceled)):
+						if sspan != nil {
+							sspan.RecordError(err)
+							sspan.SetAttributes(trace.StatusCodeCancelled(
+								errdetails.ValdGRPCResourceTypePrefix +
+									"/vald.v1.search.BroadCast/" +
+									target + " canceled: " + err.Error())...)
+							sspan.SetStatus(trace.StatusError, err.Error())
+						}
+						return nil
+					case errors.Is(err, context.DeadlineExceeded),
+						errors.Is(err, errors.ErrRPCCallFailed(target, context.DeadlineExceeded)):
+						if sspan != nil {
+							sspan.RecordError(err)
+							sspan.SetAttributes(trace.StatusCodeDeadlineExceeded(
+								errdetails.ValdGRPCResourceTypePrefix +
+									"/vald.v1.search.BroadCast/" +
+									target + " deadline_exceeded: " + err.Error())...)
+							sspan.SetStatus(trace.StatusError, err.Error())
+						}
+						return nil
+					default:
+						st, msg, err := status.ParseError(err, codes.Unknown, "failed to parse search gRPC error response",
+							&errdetails.ResourceInfo{
+								ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
+								ResourceName: fmt.Sprintf("%s: %s(%s) to %s", apiName, s.name, s.ip, target),
+							})
+						if sspan != nil {
+							sspan.RecordError(err)
+							sspan.SetAttributes(trace.FromGRPCStatus(st.Code(), msg)...)
+							sspan.SetStatus(trace.StatusError, err.Error())
+						}
+						switch st.Code() {
+						case codes.Internal,
+							codes.Unavailable,
+							codes.ResourceExhausted:
+							log.Warn(err)
+							return err
+						case codes.NotFound,
+							codes.Aborted,
+							codes.InvalidArgument:
+							return nil
+						}
+					}
+					log.Debug(err)
+					return nil
+				}
+				if r == nil || len(r.GetResults()) == 0 {
 					err = status.WrapWithNotFound("failed to process search request", errors.ErrEmptySearchResult,
 						&errdetails.ResourceInfo{
 							ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
@@ -146,80 +206,13 @@ func (s *server) aggregationSearch(ctx context.Context, aggr Aggregator, cfg *pa
 					}
 					log.Debug(err)
 					return nil
-				default:
-					r, err = f(sctx, vc, copts...)
-					if err != nil {
-						switch {
-						case errors.Is(err, context.Canceled),
-							errors.Is(err, errors.ErrRPCCallFailed(target, context.Canceled)):
-							if sspan != nil {
-								sspan.RecordError(err)
-								sspan.SetAttributes(trace.StatusCodeCancelled(
-									errdetails.ValdGRPCResourceTypePrefix +
-										"/vald.v1.search.BroadCast/" +
-										target + " canceled: " + err.Error())...)
-								sspan.SetStatus(trace.StatusError, err.Error())
-							}
-						case errors.Is(err, context.DeadlineExceeded),
-							errors.Is(err, errors.ErrRPCCallFailed(target, context.DeadlineExceeded)):
-							if sspan != nil {
-								sspan.RecordError(err)
-								sspan.SetAttributes(trace.StatusCodeDeadlineExceeded(
-									errdetails.ValdGRPCResourceTypePrefix +
-										"/vald.v1.search.BroadCast/" +
-										target + " deadline_exceeded: " + err.Error())...)
-								sspan.SetStatus(trace.StatusError, err.Error())
-							}
-						default:
-							st, msg, err := status.ParseError(err, codes.Internal, "failed to parse search gRPC error response",
-								&errdetails.ResourceInfo{
-									ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
-									ResourceName: fmt.Sprintf("%s: %s(%s) to %s", apiName, s.name, s.ip, target),
-								})
-							if sspan != nil {
-								sspan.RecordError(err)
-								sspan.SetAttributes(trace.FromGRPCStatus(st.Code(), msg)...)
-								sspan.SetStatus(trace.StatusError, err.Error())
-							}
-							switch st.Code() {
-							case codes.Internal,
-								codes.Unavailable,
-								codes.ResourceExhausted:
-								log.Warn(err)
-								return err
-							case codes.NotFound,
-								codes.Aborted,
-								codes.InvalidArgument:
-								return nil
-							}
-						}
-						log.Debug(err)
-						return nil
-					}
-					if r == nil || len(r.GetResults()) == 0 {
-						err = status.WrapWithNotFound("failed to process search request", errors.ErrEmptySearchResult,
-							&errdetails.ResourceInfo{
-								ResourceType: errdetails.ValdGRPCResourceTypePrefix + "/vald.v1.search",
-								ResourceName: fmt.Sprintf("%s: %s(%s) to %s", apiName, s.name, s.ip, target),
-							})
-						if sspan != nil {
-							sspan.RecordError(err)
-							sspan.SetAttributes(trace.StatusCodeNotFound(err.Error())...)
-							sspan.SetStatus(trace.StatusError, err.Error())
-						}
-						log.Debug(err)
-						return nil
-					}
 				}
 			}
-			aggr.Send(sctx, r)
-			return nil
-		})
-	}))
-
-	<-ectx.Done() // Blocking here
-
-	err = eg.Wait()
+		}
+		aggr.Send(sctx, r)
+		return nil
+	})
+	cancel()
 	if errors.Is(err, errors.ErrGRPCClientConnNotFound("*")) {
 		err = status.WrapWithInternal("search API connection not found", err,
 			&errdetails.RequestInfo{
@@ -242,7 +235,7 @@ func (s *server) aggregationSearch(ctx context.Context, aggr Aggregator, cfg *pa
 		res.Results = res.GetResults()[:num]
 	}
 
-	if errors.Is(ectx.Err(), context.DeadlineExceeded) {
+	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 		if len(res.GetResults()) == 0 {
 			err = status.WrapWithDeadlineExceeded(
 				"error search result length is 0 due to the timeoutage limit",
@@ -366,7 +359,7 @@ type valdStdAggr struct {
 	dch     chan DistPayload
 	closed  atomic.Bool
 	maxDist atomic.Value
-	visited valdsync.Map[string, any]
+	visited sync.Map[string, any]
 	result  []*payload.Object_Distance
 	cancel  context.CancelFunc
 }
@@ -496,7 +489,7 @@ type valdPairingHeapAggr struct {
 	num     int
 	ph      *PairingHeap
 	mu      sync.Mutex
-	visited valdsync.Map[string, any]
+	visited sync.Map[string, any]
 	result  []*payload.Object_Distance
 }
 
@@ -536,7 +529,11 @@ func (v *valdPairingHeapAggr) Result() *payload.Search_Response {
 	for !v.ph.IsEmpty() && len(v.result) <= v.num {
 		var min *DistPayload
 		min, v.ph = v.ph.ExtractMin()
-		v.result = append(v.result, min.raw)
+		if min != nil {
+			v.result = append(v.result, min.raw)
+		} else if v.ph == nil {
+			break
+		}
 	}
 	if len(v.result) > v.num {
 		v.result = v.result[:v.num]

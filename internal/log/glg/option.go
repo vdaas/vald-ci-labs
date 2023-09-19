@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -18,9 +18,9 @@ package glg
 
 import (
 	"github.com/kpango/glg"
-	"github.com/vdaas/vald-ci-labs/internal/log/format"
-	"github.com/vdaas/vald-ci-labs/internal/log/level"
-	"github.com/vdaas/vald-ci-labs/internal/log/retry"
+	"github.com/vdaas/vald/internal/log/format"
+	"github.com/vdaas/vald/internal/log/level"
+	"github.com/vdaas/vald/internal/log/retry"
 )
 
 type Option func(l *logger)

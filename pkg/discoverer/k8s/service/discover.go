@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -20,24 +20,23 @@ package service
 import (
 	"context"
 	"reflect"
-	"sync"
 	"sync/atomic"
 	"time"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/config"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
-	"github.com/vdaas/vald-ci-labs/internal/errors"
-	"github.com/vdaas/vald-ci-labs/internal/k8s"
-	mnode "github.com/vdaas/vald-ci-labs/internal/k8s/metrics/node"
-	mpod "github.com/vdaas/vald-ci-labs/internal/k8s/metrics/pod"
-	"github.com/vdaas/vald-ci-labs/internal/k8s/node"
-	"github.com/vdaas/vald-ci-labs/internal/k8s/pod"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net"
-	"github.com/vdaas/vald-ci-labs/internal/safety"
-	"github.com/vdaas/vald-ci-labs/internal/slices"
-	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/internal/config"
+	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald/internal/k8s"
+	mnode "github.com/vdaas/vald/internal/k8s/metrics/node"
+	mpod "github.com/vdaas/vald/internal/k8s/metrics/pod"
+	"github.com/vdaas/vald/internal/k8s/node"
+	"github.com/vdaas/vald/internal/k8s/pod"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald/internal/slices"
+	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald/internal/sync/errgroup"
 )
 
 type Discoverer interface {
@@ -48,10 +47,10 @@ type Discoverer interface {
 
 type discoverer struct {
 	maxPods         int
-	nodes           valdsync.Map[string, *node.Node]
-	nodeMetrics     valdsync.Map[string, mnode.Node]
-	pods            valdsync.Map[string, *[]pod.Pod]
-	podMetrics      valdsync.Map[string, mpod.Pod]
+	nodes           sync.Map[string, *node.Node]
+	nodeMetrics     sync.Map[string, mnode.Node]
+	pods            sync.Map[string, *[]pod.Pod]
+	podMetrics      sync.Map[string, mpod.Pod]
 	podsByNode      atomic.Value
 	podsByNamespace atomic.Value
 	podsByName      atomic.Value

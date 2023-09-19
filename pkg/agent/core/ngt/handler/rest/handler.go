@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -20,10 +20,10 @@ package rest
 import (
 	"net/http"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/net/http/dump"
-	"github.com/vdaas/vald-ci-labs/internal/net/http/json"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/handler/grpc"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/internal/net/http/dump"
+	"github.com/vdaas/vald/internal/net/http/json"
+	"github.com/vdaas/vald/pkg/agent/core/ngt/handler/grpc"
 )
 
 type Handler interface {

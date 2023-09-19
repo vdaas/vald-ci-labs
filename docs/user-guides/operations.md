@@ -117,8 +117,8 @@ VERSION=v1.4.1
 ```
 
 ```bash
-kubectl replace -f https://raw.githubusercontent.com/vdaas/vald-ci-labs/${VERSION}/charts/vald-helm-operator/crds/valdrelease.yaml && \
-kubectl replace -f https://raw.githubusercontent.com/vdaas/vald-ci-labs/${VERSION}/charts/vald-helm-operator/crds/valdhelmoperatorrelease.yaml
+kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/${VERSION}/charts/vald-helm-operator/crds/valdrelease.yaml && \
+kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/${VERSION}/charts/vald-helm-operator/crds/valdhelmoperatorrelease.yaml
 ```
 
 After upgrading CRDs, please upgrade the operator.
@@ -134,17 +134,17 @@ The operator will automatically detect the changes and update the deployed Vald 
 - [vald-helm-operator-chart][vald-helm-operator-chart]
 - [CHANGELOG][changelog]
 
-[vald-helm-chart]: https://github.com/vdaas/vald-ci-labs/tree/main/charts/vald
-[vald-helm-operator-chart]: https://github.com/vdaas/vald-ci-labs/tree/main/charts/vald-helm-operator
+[vald-helm-chart]: https://github.com/vdaas/vald/tree/main/charts/vald
+[vald-helm-operator-chart]: https://github.com/vdaas/vald/tree/main/charts/vald-helm-operator
 [changelog]: https://vald.vdaas.org/docs/release/changelog/
 [pod-priority-preemption]: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
 [resource-quota]: https://kubernetes.io/docs/concepts/policy/resource-quotas/
 [prometheus-io]: https://prometheus.io/
 [grafana]: https://grafana.com
-[vald-prometheus]: https://github.com/vdaas/vald-ci-labs/tree/main/k8s/metrics/prometheus
+[vald-prometheus]: https://github.com/vdaas/vald/tree/main/k8s/metrics/prometheus
 [prometheus-operator]: https://github.com/coreos/prometheus-operator
 [prometheus-configuration]: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
-[vald-grafana]: https://github.com/vdaas/vald-ci-labs/tree/main/k8s/metrics/grafana
-[vald-grafana-dashboards]: https://github.com/vdaas/vald-ci-labs/tree/main/k8s/metrics/grafana/dashboards
+[vald-grafana]: https://github.com/vdaas/vald/tree/main/k8s/metrics/grafana
+[vald-grafana-dashboards]: https://github.com/vdaas/vald/tree/main/k8s/metrics/grafana/dashboards
 [grafana-operator]: https://operatorhub.io/operator/grafana-operator
 [semver]: https://semver.org/

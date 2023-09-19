@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -21,16 +21,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/discoverer"
-	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/info"
-	"github.com/vdaas/vald-ci-labs/internal/log"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
-	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
-	"github.com/vdaas/vald-ci-labs/internal/singleflight"
-	"github.com/vdaas/vald-ci-labs/internal/strings"
-	"github.com/vdaas/vald-ci-labs/pkg/discoverer/k8s/service"
+	"github.com/vdaas/vald/apis/grpc/v1/discoverer"
+	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald/internal/info"
+	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald/internal/net/grpc/status"
+	"github.com/vdaas/vald/internal/observability/trace"
+	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald/internal/sync/singleflight"
+	"github.com/vdaas/vald/pkg/discoverer/k8s/service"
 )
 
 type DiscovererServer interface {
@@ -81,7 +81,7 @@ func (s *server) Pods(ctx context.Context, req *payload.Discoverer_Request) (*pa
 		}
 	}()
 	key := singleflightKey(podPrefix, req)
-	res, _, err := s.pgroup.Do(ctx, key, func() (*payload.Info_Pods, error) {
+	res, _, err := s.pgroup.Do(ctx, key, func(context.Context) (*payload.Info_Pods, error) {
 		return s.dsc.GetPods(req)
 	})
 	if err != nil {
@@ -154,7 +154,7 @@ func (s *server) Nodes(ctx context.Context, req *payload.Discoverer_Request) (*p
 	}()
 
 	key := singleflightKey(nodePrefix, req)
-	res, _, err := s.ngroup.Do(ctx, key, func() (*payload.Info_Nodes, error) {
+	res, _, err := s.ngroup.Do(ctx, key, func(context.Context) (*payload.Info_Nodes, error) {
 		return s.dsc.GetNodes(req)
 	})
 	if err != nil {
