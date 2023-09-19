@@ -1,7 +1,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //	https://www.apache.org/licenses/LICENSE-2.0
@@ -18,15 +18,15 @@ import (
 	"flag"
 	"fmt"
 	"runtime"
-	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
 
 	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
 	"github.com/vdaas/vald-ci-labs/internal/rand"
 	"github.com/vdaas/vald-ci-labs/internal/slices"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 	"github.com/vdaas/vald-ci-labs/internal/test/data/strings"
 )
 
@@ -116,7 +116,7 @@ func doSearchWithAggregator(ctx context.Context, k, concurrency int, anew func(n
 	f func(ctx context.Context) *payload.Search_Response,
 ) (res *payload.Search_Response, err error) {
 	eg, ectx := errgroup.New(ctx)
-	eg.Limitation(concurrency)
+	eg.SetLimit(concurrency)
 	aggr := anew(k, concurrency)
 	aggr.Start(ectx)
 	for i := 0; i < concurrency; i++ {

@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -25,13 +25,13 @@ import (
 
 	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/discoverer"
 	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
 	"github.com/vdaas/vald-ci-labs/internal/errors"
 	"github.com/vdaas/vald-ci-labs/internal/log"
 	"github.com/vdaas/vald-ci-labs/internal/net"
 	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
 	"github.com/vdaas/vald-ci-labs/internal/safety"
-	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type Client interface {
@@ -344,7 +344,7 @@ func (c *client) disconnectOldAddrs(ctx context.Context, oldAddrs, connectedAddr
 	if !c.autoconn {
 		return nil
 	}
-	var cur valdsync.Map[string, any] // TODO: Does this have to be a sync.Map not a map?
+	var cur sync.Map[string, any]
 	for _, addr := range connectedAddrs {
 		cur.Store(addr, struct{}{})
 	}

@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -27,13 +27,14 @@ import "C"
 import (
 	"context"
 	"reflect"
-	"sync"
+	"sync/atomic"
 	"unsafe"
 
 	"github.com/vdaas/vald-ci-labs/internal/core/algorithm"
 	"github.com/vdaas/vald-ci-labs/internal/errors"
 	"github.com/vdaas/vald-ci-labs/internal/file"
 	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 type (
@@ -44,7 +45,7 @@ type (
 		Search(ctx context.Context, vec []float32, size int, epsilon, radius float32) ([]SearchResult, error)
 
 		// Linear Search returns linear search result as []SearchResult
-		LinearSearch(vec []float32, size int) ([]SearchResult, error)
+		LinearSearch(ctx context.Context, vec []float32, size int) ([]SearchResult, error)
 
 		// Insert returns NGT object id.
 		// This only stores not indexing, you must call CreateIndex and SaveIndex.
@@ -96,11 +97,13 @@ type (
 		radius              float32
 		epsilon             float32
 		poolSize            uint32
+		cnt                 uint64
 		prop                C.NGTProperty
 		epool               sync.Pool
 		index               C.NGTIndex
 		ospace              C.NGTObjectSpace
 		mu                  *sync.RWMutex
+		cmu                 *sync.RWMutex
 	}
 )
 
@@ -221,6 +224,7 @@ func gen(isLoad bool, opts ...Option) (NGT, error) {
 		err error
 	)
 	n.mu = new(sync.RWMutex)
+	n.cmu = new(sync.RWMutex)
 
 	defer func() {
 		if err != nil {
@@ -387,7 +391,7 @@ func (n *ngt) Search(ctx context.Context, vec []float32, size int, epsilon, radi
 		radius = n.radius
 	}
 
-	n.mu.RLock()
+	n.rLock(true)
 	ret := C.ngt_search_index_as_float(
 		n.index,
 		(*C.float)(&vec[0]),
@@ -397,21 +401,25 @@ func (n *ngt) Search(ctx context.Context, vec []float32, size int, epsilon, radi
 		*(*C.float)(unsafe.Pointer(&radius)),
 		results,
 		ebuf)
-
+	vec = nil
 	if ret == ErrorCode {
 		ne := ebuf
-		n.mu.RUnlock()
+		n.rUnlock(true)
 		return nil, n.newGoError(ne)
 	}
-	n.mu.RUnlock()
+	n.rUnlock(true)
 
 	rsize := int(C.ngt_get_result_size(results, ebuf))
 	if rsize <= 0 {
-		err = n.newGoError(ebuf)
-		if err == nil {
-			err = errors.ErrEmptySearchResult
+		if atomic.LoadUint64(&n.cnt) == 0 {
+			n.PutErrorBuffer(ebuf)
+			return nil, errors.ErrSearchResultEmptyButNoDataStored
 		}
-		return nil, err
+		err = n.newGoError(ebuf)
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.ErrEmptySearchResult
 	}
 	result = make([]SearchResult, rsize)
 
@@ -436,7 +444,7 @@ func (n *ngt) Search(ctx context.Context, vec []float32, size int, epsilon, radi
 }
 
 // Linear Search returns linear search result as []SearchResult.
-func (n *ngt) LinearSearch(vec []float32, size int) (result []SearchResult, err error) {
+func (n *ngt) LinearSearch(ctx context.Context, vec []float32, size int) (result []SearchResult, err error) {
 	if len(vec) != int(n.dimension) {
 		return nil, errors.ErrIncompatibleDimensionSize(len(vec), int(n.dimension))
 	}
@@ -448,7 +456,7 @@ func (n *ngt) LinearSearch(vec []float32, size int) (result []SearchResult, err 
 		return nil, n.newGoError(ebuf)
 	}
 
-	n.mu.RLock()
+	n.rLock(true)
 	ret := C.ngt_linear_search_index_as_float(
 		n.index,
 		(*C.float)(&vec[0]),
@@ -457,25 +465,35 @@ func (n *ngt) LinearSearch(vec []float32, size int) (result []SearchResult, err 
 		*(*C.size_t)(unsafe.Pointer(&size)),
 		results,
 		ebuf)
+	vec = nil
 
 	if ret == ErrorCode {
 		ne := ebuf
-		n.mu.RUnlock()
+		n.rUnlock(true)
 		return nil, n.newGoError(ne)
 	}
-	n.mu.RUnlock()
+	n.rUnlock(true)
 
 	rsize := int(C.ngt_get_result_size(results, ebuf))
 	if rsize <= 0 {
-		err = n.newGoError(ebuf)
-		if err == nil {
-			err = errors.ErrEmptySearchResult
+		if atomic.LoadUint64(&n.cnt) == 0 {
+			n.PutErrorBuffer(ebuf)
+			return nil, errors.ErrSearchResultEmptyButNoDataStored
 		}
-		return nil, err
+		err = n.newGoError(ebuf)
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.ErrEmptySearchResult
 	}
 	result = make([]SearchResult, rsize)
-
 	for i := range result {
+		select {
+		case <-ctx.Done():
+			n.PutErrorBuffer(ebuf)
+			return result[:i], nil
+		default:
+		}
 		d := C.ngt_get_result(results, C.uint32_t(i), ebuf)
 		if d.id == 0 && d.distance == 0 {
 			result[i] = SearchResult{0, 0, n.newGoError(ebuf)}
@@ -498,13 +516,15 @@ func (n *ngt) Insert(vec []float32) (id uint, err error) {
 	}
 
 	ebuf := n.GetErrorBuffer()
-	n.mu.Lock()
+	n.lock(true)
 	id = uint(C.ngt_insert_index_as_float(n.index, (*C.float)(&vec[0]), C.uint32_t(n.dimension), ebuf))
-	n.mu.Unlock()
+	n.unlock(true)
+	vec = nil
 	if id == 0 {
 		return 0, n.newGoError(ebuf)
 	}
 	n.PutErrorBuffer(ebuf)
+	atomic.AddUint64(&n.cnt, 1)
 
 	return id, nil
 }
@@ -598,9 +618,9 @@ func (n *ngt) CreateIndex(poolSize uint32) error {
 		poolSize = n.poolSize
 	}
 	ebuf := n.GetErrorBuffer()
-	n.mu.Lock()
+	n.lock(true)
 	ret := C.ngt_create_index(n.index, C.uint32_t(poolSize), ebuf)
-	n.mu.Unlock()
+	n.unlock(true)
 	if ret == ErrorCode {
 		return n.newGoError(ebuf)
 	}
@@ -615,9 +635,9 @@ func (n *ngt) SaveIndex() error {
 		path := C.CString(n.idxPath)
 		defer C.free(unsafe.Pointer(path))
 		ebuf := n.GetErrorBuffer()
-		n.mu.Lock()
+		n.rLock(true)
 		ret := C.ngt_save_index(n.index, path, ebuf)
-		n.mu.Unlock()
+		n.rUnlock(true)
 		if ret == ErrorCode {
 			return n.newGoError(ebuf)
 		}
@@ -633,9 +653,9 @@ func (n *ngt) SaveIndexWithPath(idxPath string) error {
 		path := C.CString(idxPath)
 		defer C.free(unsafe.Pointer(path))
 		ebuf := n.GetErrorBuffer()
-		n.mu.Lock()
+		n.rLock(true)
 		ret := C.ngt_save_index(n.index, path, ebuf)
-		n.mu.Unlock()
+		n.rUnlock(true)
 		if ret == ErrorCode {
 			return n.newGoError(ebuf)
 		}
@@ -648,13 +668,15 @@ func (n *ngt) SaveIndexWithPath(idxPath string) error {
 // Remove removes from NGT index.
 func (n *ngt) Remove(id uint) error {
 	ebuf := n.GetErrorBuffer()
-	n.mu.Lock()
+	n.lock(true)
 	ret := C.ngt_remove_index(n.index, C.ObjectID(id), ebuf)
-	n.mu.Unlock()
+	n.unlock(true)
 	if ret == ErrorCode {
 		return n.newGoError(ebuf)
 	}
 	n.PutErrorBuffer(ebuf)
+
+	atomic.AddUint64(&n.cnt, ^uint64(0))
 
 	return nil
 }
@@ -676,17 +698,17 @@ func (n *ngt) GetVector(id uint) (ret []float32, err error) {
 	ebuf := n.GetErrorBuffer()
 	switch n.objectType {
 	case Float:
-		n.mu.RLock()
+		n.rLock(false)
 		results := C.ngt_get_object_as_float(n.ospace, C.ObjectID(id), ebuf)
-		n.mu.RUnlock()
+		n.rUnlock(false)
 		if results == nil {
 			return nil, n.newGoError(ebuf)
 		}
 		ret = (*[algorithm.MaximumVectorDimensionSize]float32)(unsafe.Pointer(results))[:dimension:dimension]
 	case HalfFloat:
-		n.mu.RLock()
+		n.rLock(false)
 		results := C.ngt_get_allocated_object_as_float(n.ospace, C.ObjectID(id), ebuf)
-		n.mu.RUnlock()
+		n.rUnlock(false)
 		defer C.free(unsafe.Pointer(results))
 		if results == nil {
 			return nil, n.newGoError(ebuf)
@@ -696,9 +718,9 @@ func (n *ngt) GetVector(id uint) (ret []float32, err error) {
 			ret[i] = elem
 		}
 	case Uint8:
-		n.mu.RLock()
+		n.rLock(false)
 		results := C.ngt_get_object_as_integer(n.ospace, C.ObjectID(id), ebuf)
-		n.mu.RUnlock()
+		n.rUnlock(false)
 		if results == nil {
 			return nil, n.newGoError(ebuf)
 		}
@@ -746,4 +768,32 @@ func (n *ngt) GetErrorBuffer() (ebuf C.NGTError) {
 
 func (n *ngt) PutErrorBuffer(ebuf C.NGTError) {
 	n.epool.Put(ebuf)
+}
+
+func (n *ngt) lock(cLock bool) {
+	if cLock {
+		n.cmu.Lock()
+	}
+	n.mu.Lock()
+}
+
+func (n *ngt) unlock(cLock bool) {
+	n.mu.Unlock()
+	if cLock {
+		n.cmu.Unlock()
+	}
+}
+
+func (n *ngt) rLock(cLock bool) {
+	if cLock {
+		n.cmu.RLock()
+	}
+	n.mu.RLock()
+}
+
+func (n *ngt) rUnlock(cLock bool) {
+	n.mu.RUnlock()
+	if cLock {
+		n.cmu.RUnlock()
+	}
 }

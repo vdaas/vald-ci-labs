@@ -1,4 +1,4 @@
-module github.com/vdaas/vald-ci-labs/example/client
+module github.com/vdaas/vald/example/client
 
 go 1.20
 

@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -23,14 +23,14 @@ import (
 	"net"
 	"net/netip"
 	"strconv"
-	"sync"
 	"syscall"
 
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
 	"github.com/vdaas/vald-ci-labs/internal/errors"
 	"github.com/vdaas/vald-ci-labs/internal/log"
 	"github.com/vdaas/vald-ci-labs/internal/safety"
 	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type (
@@ -234,7 +234,7 @@ func ScanPorts(ctx context.Context, start, end uint16, host string) (ports []uin
 		return nil, err
 	}
 	eg, egctx := errgroup.New(ctx)
-	eg.Limitation(int(rl.Max) / 2)
+	eg.SetLimit(int(rl.Max) / 2)
 
 	var mu sync.Mutex
 

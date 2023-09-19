@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -24,11 +24,11 @@ import (
 
 	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
 	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/discoverer"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
 	"github.com/vdaas/vald-ci-labs/internal/errors"
 	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
 	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
-	valdsync "github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type Gateway interface {
@@ -102,7 +102,7 @@ func (g *gateway) DoMulti(ctx context.Context, num int,
 	} else {
 		limit = uint32(num)
 	}
-	var visited valdsync.Map[string, any]
+	var visited sync.Map[string, any]
 	err = g.client.GetClient().OrderedRange(sctx, addrs, func(ictx context.Context,
 		addr string,
 		conn *grpc.ClientConn,

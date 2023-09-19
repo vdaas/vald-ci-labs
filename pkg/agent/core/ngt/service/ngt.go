@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -27,14 +27,13 @@ import (
 	"path/filepath"
 	"reflect"
 	"runtime"
-	"sync"
 	"sync/atomic"
 	"time"
 
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 	"github.com/vdaas/vald-ci-labs/internal/config"
 	"github.com/vdaas/vald-ci-labs/internal/conv"
 	core "github.com/vdaas/vald-ci-labs/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald-ci-labs/internal/errgroup"
 	"github.com/vdaas/vald-ci-labs/internal/errors"
 	"github.com/vdaas/vald-ci-labs/internal/file"
 	"github.com/vdaas/vald-ci-labs/internal/log"
@@ -42,7 +41,8 @@ import (
 	"github.com/vdaas/vald-ci-labs/internal/safety"
 	"github.com/vdaas/vald-ci-labs/internal/slices"
 	"github.com/vdaas/vald-ci-labs/internal/strings"
-	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/model"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service/kvs"
 	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service/vqueue"
 	"github.com/vdaas/vald-ci-labs/pkg/agent/internal/metadata"
@@ -50,10 +50,10 @@ import (
 
 type NGT interface {
 	Start(ctx context.Context) <-chan error
-	Search(ctx context.Context, vec []float32, size uint32, epsilon, radius float32) ([]model.Distance, error)
-	SearchByID(ctx context.Context, uuid string, size uint32, epsilon, radius float32) ([]float32, []model.Distance, error)
-	LinearSearch(vec []float32, size uint32) ([]model.Distance, error)
-	LinearSearchByID(uuid string, size uint32) ([]float32, []model.Distance, error)
+	Search(ctx context.Context, vec []float32, size uint32, epsilon, radius float32) (*payload.Search_Response, error)
+	SearchByID(ctx context.Context, uuid string, size uint32, epsilon, radius float32) ([]float32, *payload.Search_Response, error)
+	LinearSearch(ctx context.Context, vec []float32, size uint32) (*payload.Search_Response, error)
+	LinearSearchByID(ctx context.Context, uuid string, size uint32) ([]float32, *payload.Search_Response, error)
 	Insert(uuid string, vec []float32) (err error)
 	InsertWithTime(uuid string, vec []float32, t int64) (err error)
 	InsertMultiple(vecs map[string][]float32) (err error)
@@ -66,7 +66,8 @@ type NGT interface {
 	DeleteWithTime(uuid string, t int64) (err error)
 	DeleteMultiple(uuids ...string) (err error)
 	DeleteMultipleWithTime(uuids []string, t int64) (err error)
-	GetObject(uuid string) (vec []float32, err error)
+	GetObject(uuid string) (vec []float32, timestamp int64, err error)
+	ListObjectFunc(ctx context.Context, f func(uuid string, oid uint32, timestamp int64) bool)
 	CreateIndex(ctx context.Context, poolSize uint32) (err error)
 	SaveIndex(ctx context.Context) (err error)
 	Exists(string) (uint32, bool)
@@ -778,6 +779,8 @@ func (n *ngt) loadKVS(ctx context.Context, path string, timeout time.Duration) (
 
 	err = eg.Wait()
 	if err != nil {
+		m = nil
+		mt = nil
 		return err
 	}
 
@@ -801,6 +804,8 @@ func (n *ngt) loadKVS(ctx context.Context, path string, timeout time.Duration) (
 			n.fmap[k] = noTimeStampFile
 		}
 	}
+	m = nil
+	mt = nil
 
 	return nil
 }
@@ -869,7 +874,7 @@ func (n *ngt) Start(ctx context.Context) <-chan error {
 	return ech
 }
 
-func (n *ngt) Search(ctx context.Context, vec []float32, size uint32, epsilon, radius float32) ([]model.Distance, error) {
+func (n *ngt) Search(ctx context.Context, vec []float32, size uint32, epsilon, radius float32) (res *payload.Search_Response, err error) {
 	if n.IsIndexing() {
 		return nil, errors.ErrCreateIndexingIsInProgress
 	}
@@ -878,44 +883,21 @@ func (n *ngt) Search(ctx context.Context, vec []float32, size uint32, epsilon, r
 		if n.IsIndexing() {
 			return nil, errors.ErrCreateIndexingIsInProgress
 		}
-		log.Errorf("cgo error detected: ngt api returned error %v", err)
+		if errors.Is(err, errors.ErrSearchResultEmptyButNoDataStored) && n.Len() == 0 {
+			return nil, nil
+		}
+		log.Errorf("cgo error detected during search: ngt api returned error %v", err)
 		return nil, err
 	}
 
-	if len(sr) == 0 {
-		return nil, errors.ErrEmptySearchResult
-	}
-
-	ds := make([]model.Distance, 0, len(sr))
-	for _, d := range sr {
-		select {
-		case <-ctx.Done():
-			return ds, nil
-		default:
-		}
-		if err = d.Error; d.ID == 0 && err != nil {
-			log.Warnf("an error occurred while searching: %s", err)
-			continue
-		}
-		key, _, ok := n.kvs.GetInverse(d.ID)
-		if ok {
-			ds = append(ds, model.Distance{
-				ID:       key,
-				Distance: d.Distance,
-			})
-		} else {
-			log.Warn("not found", d.ID, d.Distance)
-		}
-	}
-
-	return ds, nil
+	return n.toSearchResponse(sr)
 }
 
-func (n *ngt) SearchByID(ctx context.Context, uuid string, size uint32, epsilon, radius float32) (vec []float32, dst []model.Distance, err error) {
+func (n *ngt) SearchByID(ctx context.Context, uuid string, size uint32, epsilon, radius float32) (vec []float32, dst *payload.Search_Response, err error) {
 	if n.IsIndexing() {
 		return nil, nil, errors.ErrCreateIndexingIsInProgress
 	}
-	vec, err = n.GetObject(uuid)
+	vec, _, err = n.GetObject(uuid)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -926,52 +908,34 @@ func (n *ngt) SearchByID(ctx context.Context, uuid string, size uint32, epsilon,
 	return vec, dst, nil
 }
 
-func (n *ngt) LinearSearch(vec []float32, size uint32) ([]model.Distance, error) {
+func (n *ngt) LinearSearch(ctx context.Context, vec []float32, size uint32) (res *payload.Search_Response, err error) {
 	if n.IsIndexing() {
 		return nil, errors.ErrCreateIndexingIsInProgress
 	}
-	sr, err := n.core.LinearSearch(vec, int(size))
+	sr, err := n.core.LinearSearch(ctx, vec, int(size))
 	if err != nil {
 		if n.IsIndexing() {
 			return nil, errors.ErrCreateIndexingIsInProgress
 		}
-		log.Errorf("cgo error detected: ngt api returned error %v", err)
+		if errors.Is(err, errors.ErrSearchResultEmptyButNoDataStored) && n.Len() == 0 {
+			return nil, nil
+		}
+		log.Errorf("cgo error detected during linear search: ngt api returned error %v", err)
 		return nil, err
 	}
 
-	if len(sr) == 0 {
-		return nil, errors.ErrEmptySearchResult
-	}
-
-	ds := make([]model.Distance, 0, len(sr))
-	for _, d := range sr {
-		if err = d.Error; d.ID == 0 && err != nil {
-			log.Warnf("an error occurred while searching: %s", err)
-			continue
-		}
-		key, _, ok := n.kvs.GetInverse(d.ID)
-		if ok {
-			ds = append(ds, model.Distance{
-				ID:       key,
-				Distance: d.Distance,
-			})
-		} else {
-			log.Warn("not found", d.ID, d.Distance)
-		}
-	}
-
-	return ds, nil
+	return n.toSearchResponse(sr)
 }
 
-func (n *ngt) LinearSearchByID(uuid string, size uint32) (vec []float32, dst []model.Distance, err error) {
+func (n *ngt) LinearSearchByID(ctx context.Context, uuid string, size uint32) (vec []float32, dst *payload.Search_Response, err error) {
 	if n.IsIndexing() {
 		return nil, nil, errors.ErrCreateIndexingIsInProgress
 	}
-	vec, err = n.GetObject(uuid)
+	vec, _, err = n.GetObject(uuid)
 	if err != nil {
 		return nil, nil, err
 	}
-	dst, err = n.LinearSearch(vec, size)
+	dst, err = n.LinearSearch(ctx, vec, size)
 	if err != nil {
 		return vec, nil, err
 	}
@@ -1352,11 +1316,15 @@ func (n *ngt) saveIndex(ctx context.Context) (err error) {
 	defer n.smu.Unlock()
 	log.Infof("save index operation started, the number of create index execution = %d", nocie)
 
-	eg.Go(safety.RecoverFunc(func() (err error) {
-		log.Debugf("start save operation for kvsdb, the number of kvsdb = %d", n.kvs.Len())
-		if n.kvs.Len() > 0 && path != "" {
+	if n.kvs.Len() > 0 && path != "" {
+		eg.Go(safety.RecoverFunc(func() (err error) {
+			log.Debugf("start save operation for kvsdb, the number of kvsdb = %d", n.kvs.Len())
 			m := make(map[string]uint32, n.Len())
 			mt := make(map[string]int64, n.Len())
+			defer func() {
+				m = nil
+				mt = nil
+			}()
 			var mu sync.Mutex
 			n.kvs.Range(ectx, func(key string, id uint32, ts int64) bool {
 				mu.Lock()
@@ -1366,37 +1334,43 @@ func (n *ngt) saveIndex(ctx context.Context) (err error) {
 				atomic.AddUint64(&kvsLen, 1)
 				return true
 			})
-			var f *os.File
-			f, err = file.Open(
-				file.Join(path, kvsFileName),
-				os.O_WRONLY|os.O_CREATE|os.O_TRUNC,
-				fs.ModePerm,
-			)
-			if err != nil {
-				log.Warnf("failed to create or open kvsdb file, err: %v", err)
-				return err
-			}
-			defer func() {
-				if f != nil {
-					derr := f.Close()
-					if derr != nil {
-						err = errors.Join(err, derr)
-					}
-				}
-			}()
-			gob.Register(map[string]uint32{})
-			err = gob.NewEncoder(f).Encode(&m)
-			if err != nil {
-				log.Warnf("failed to encode kvsdb data, err: %v", err)
-				return err
-			}
-			err = f.Sync()
-			if err != nil {
-				log.Warnf("failed to flush all kvsdb data to storage, err: %v", err)
-				return err
-			}
-			m = make(map[string]uint32)
 
+			var wg sync.WaitGroup
+			wg.Add(1)
+			defer wg.Wait()
+			eg.Go(safety.RecoverFunc(func() (err error) {
+				defer wg.Done()
+				var f *os.File
+				f, err = file.Open(
+					file.Join(path, kvsFileName),
+					os.O_WRONLY|os.O_CREATE|os.O_TRUNC,
+					fs.ModePerm,
+				)
+				if err != nil {
+					log.Warnf("failed to create or open kvsdb file, err: %v", err)
+					return err
+				}
+				defer func() {
+					if f != nil {
+						derr := f.Close()
+						if derr != nil {
+							err = errors.Join(err, derr)
+						}
+					}
+				}()
+				gob.Register(map[string]uint32{})
+				err = gob.NewEncoder(f).Encode(&m)
+				if err != nil {
+					log.Warnf("failed to encode kvsdb data, err: %v", err)
+					return err
+				}
+				err = f.Sync()
+				if err != nil {
+					log.Warnf("failed to flush all kvsdb data to storage, err: %v", err)
+					return err
+				}
+				return nil
+			}))
 			var ft *os.File
 			ft, err = file.Open(
 				file.Join(path, kvsTimestampFileName),
@@ -1426,11 +1400,10 @@ func (n *ngt) saveIndex(ctx context.Context) (err error) {
 				log.Warnf("failed to flush all kvsdb timestamp data to storage, err: %v", err)
 				return err
 			}
-			mt = make(map[string]int64)
-		}
-		log.Debug("save operation for kvsdb finished")
-		return nil
-	}))
+			log.Debug("save operation for kvsdb finished")
+			return nil
+		}))
+	}
 
 	eg.Go(safety.RecoverFunc(func() (err error) {
 		n.fmu.Lock()
@@ -1585,25 +1558,30 @@ func (n *ngt) Exists(uuid string) (oid uint32, ok bool) {
 	return oid, ok
 }
 
-func (n *ngt) GetObject(uuid string) (vec []float32, err error) {
-	vec, ok := n.vq.GetVector(uuid)
-	if !ok {
-		oid, _, ok := n.kvs.Get(uuid)
-		if !ok {
-			log.Debugf("GetObject\tuuid: %s's data not found in kvsdb and insert vqueue", uuid)
-			return nil, errors.ErrObjectIDNotFound(uuid)
-		}
-		if n.vq.DVExists(uuid) {
-			log.Debugf("GetObject\tuuid: %s's data found in kvsdb and not found in insert vqueue, but delete vqueue data exists. the object will be delete soon", uuid)
-			return nil, errors.ErrObjectIDNotFound(uuid)
-		}
-		vec, err = n.core.GetVector(uint(oid))
-		if err != nil {
-			log.Debugf("GetObject\tuuid: %s oid: %d's vector not found in ngt index", uuid, oid)
-			return nil, errors.ErrObjectNotFound(err, uuid)
-		}
+func (n *ngt) GetObject(uuid string) (vec []float32, timestamp int64, err error) {
+	vec, ts, exists := n.vq.GetVector(uuid)
+	if exists {
+		return vec, ts, nil
 	}
-	return vec, nil
+
+	oid, ts, ok := n.kvs.Get(uuid)
+	if !ok {
+		log.Debugf("GetObject\tuuid: %s's data not found in kvsdb and insert vqueue", uuid)
+		return nil, 0, errors.ErrObjectIDNotFound(uuid)
+	}
+
+	if n.vq.DVExists(uuid) {
+		log.Debugf("GetObject\tuuid: %s's data found in kvsdb and not found in insert vqueue, but delete vqueue data exists. the object will be delete soon", uuid)
+		return nil, 0, errors.ErrObjectIDNotFound(uuid)
+	}
+
+	vec, err = n.core.GetVector(uint(oid))
+	if err != nil {
+		log.Debugf("GetObject\tuuid: %s oid: %d's vector not found in ngt index", uuid, oid)
+		return nil, 0, errors.ErrObjectNotFound(err, uuid)
+	}
+
+	return vec, ts, nil
 }
 
 func (n *ngt) readyForUpdate(uuid string, vec []float32) (err error) {
@@ -1613,7 +1591,7 @@ func (n *ngt) readyForUpdate(uuid string, vec []float32) (err error) {
 	if len(vec) != n.GetDimensionSize() {
 		return errors.ErrInvalidDimensionSize(len(vec), n.GetDimensionSize())
 	}
-	ovec, err := n.GetObject(uuid)
+	ovec, _, err := n.GetObject(uuid)
 	// if error (GetObject cannot find vector) return error
 	if err != nil {
 		return err
@@ -1708,4 +1686,64 @@ func (n *ngt) Close(ctx context.Context) (err error) {
 
 func (n *ngt) BrokenIndexCount() uint64 {
 	return atomic.LoadUint64(&n.nobic)
+}
+
+// ListObjectFunc applies the input function on each index stored in the kvs and vqueue.
+// Use this function for performing something on each object with caring about the memory usage.
+// If the vector exists in the vqueue, this vector is not indexed so the oid(object ID) is processed as 0.
+func (n *ngt) ListObjectFunc(ctx context.Context, f func(uuid string, oid uint32, ts int64) bool) {
+	dup := make(map[string]bool)
+	n.vq.Range(ctx, func(uuid string, vec []float32, ts int64) (ok bool) {
+		ok = f(uuid, 0, ts)
+		if !ok {
+			return false
+		}
+		var kts int64
+		_, kts, ok = n.kvs.Get(uuid)
+		if ok && ts > kts {
+			dup[uuid] = true
+		}
+		return true
+	})
+	n.kvs.Range(ctx, func(uuid string, oid uint32, ts int64) (ok bool) {
+		if dup[uuid] {
+			return true
+		}
+		return f(uuid, oid, ts)
+	})
+}
+
+func (n *ngt) toSearchResponse(sr []core.SearchResult) (res *payload.Search_Response, err error) {
+	if len(sr) == 0 {
+		if n.Len() == 0 {
+			return nil, nil
+		}
+		return nil, errors.ErrEmptySearchResult
+	}
+
+	res = &payload.Search_Response{
+		Results: make([]*payload.Object_Distance, 0, len(sr)),
+	}
+	for _, d := range sr {
+		if err = d.Error; d.ID == 0 && err != nil {
+			log.Warnf("an error occurred while searching: %v", err)
+			continue
+		}
+		key, _, ok := n.kvs.GetInverse(d.ID)
+		if ok {
+			res.Results = append(res.GetResults(), &payload.Object_Distance{
+				Id:       key,
+				Distance: d.Distance,
+			})
+		} else {
+			log.Warn("not found", d.ID, d.Distance)
+		}
+	}
+	if len(res.GetResults()) == 0 {
+		if n.Len() == 0 {
+			return nil, nil
+		}
+		return nil, errors.ErrEmptySearchResult
+	}
+	return res, nil
 }

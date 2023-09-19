@@ -1,7 +1,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //	https://www.apache.org/licenses/LICENSE-2.0
@@ -16,7 +16,6 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
@@ -30,11 +29,12 @@ import (
 	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
 	"github.com/vdaas/vald-ci-labs/internal/safety"
 	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 	"go.opentelemetry.io/otel/attribute"
 )
 
 func (s *server) LinearSearch(ctx context.Context, req *payload.Search_Request) (res *payload.Search_Response, err error) {
-	_, span := trace.StartSpan(ctx, apiName+"/"+vald.LinearSearchRPCName)
+	ctx, span := trace.StartSpan(ctx, apiName+"/"+vald.LinearSearchRPCName)
 	defer func() {
 		if span != nil {
 			span.End()
@@ -67,10 +67,12 @@ func (s *server) LinearSearch(ctx context.Context, req *payload.Search_Request) 
 		}
 		return nil, err
 	}
-	res, err = toSearchResponse(
-		s.ngt.LinearSearch(
-			req.GetVector(),
-			req.GetConfig().GetNum()))
+	res, err = s.ngt.LinearSearch(ctx,
+		req.GetVector(),
+		req.GetConfig().GetNum())
+	if err == nil && res == nil {
+		return nil, nil
+	}
 	if err != nil || res == nil {
 		var attrs []attribute.KeyValue
 		switch {
@@ -158,7 +160,7 @@ func (s *server) LinearSearch(ctx context.Context, req *payload.Search_Request) 
 }
 
 func (s *server) LinearSearchByID(ctx context.Context, req *payload.Search_IDRequest) (res *payload.Search_Response, err error) {
-	_, span := trace.StartSpan(ctx, apiName+"/"+vald.LinearSearchByIDRPCName)
+	ctx, span := trace.StartSpan(ctx, apiName+"/"+vald.LinearSearchByIDRPCName)
 	defer func() {
 		if span != nil {
 			span.End()
@@ -192,10 +194,12 @@ func (s *server) LinearSearchByID(ctx context.Context, req *payload.Search_IDReq
 		}
 		return nil, err
 	}
-	vec, dst, err := s.ngt.LinearSearchByID(
+	vec, res, err := s.ngt.LinearSearchByID(ctx,
 		uuid,
 		req.GetConfig().GetNum())
-	res, err = toSearchResponse(dst, err)
+	if err == nil && res == nil {
+		return nil, nil
+	}
 	if err != nil || res == nil {
 		var attrs []attribute.KeyValue
 		switch {

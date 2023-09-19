@@ -2,7 +2,7 @@
 // Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //    https://www.apache.org/licenses/LICENSE-2.0
@@ -20,11 +20,13 @@ package payload.v1;
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 import "github.com/googleapis/googleapis/google/rpc/status.proto";
+import "github.com/planetscale/vtprotobuf/include/github.com/planetscale/vtprotobuf/vtproto/ext.proto";
 
 option go_package = "github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload";
 option java_multiple_files = true;
 option java_outer_classname = "ValdPayload";
 option java_package = "org.vdaas.vald.api.v1.payload";
+option objc_class_prefix = "Payload";
 
 // Search related messages.
 message Search {
@@ -92,8 +94,6 @@ message Search {
     uint32 min_num = 8 [(validate.rules).uint32.gte = 0];
     // Aggregation Algorithm
     AggregationAlgorithm aggregation_algorithm = 9;
-    // Search timeout in nanoseconds for testing.
-    int64 test_timeout = 10;
   }
 
   // AggregationAlgorithm is enum of each aggregation algorithms
@@ -298,6 +298,28 @@ message Remove {
     repeated Request requests = 1;
   }
 
+  // Represent the remove request based on timestamp.
+  message TimestampRequest {
+    // Represent the multiple remove request contents based on timestamp.
+    repeated Timestamp timestamps = 1;
+  }
+
+  message Timestamp {
+    // Operator is enum of each conditional operator.
+    enum Operator {
+      Eq = 0;
+      Ne = 1;
+      Ge = 2;
+      Gt = 3;
+      Le = 4;
+      Lt = 5;
+    }
+    // The timestamp.
+    int64 timestamp = 1;
+    // The conditional operator.
+    Operator operator = 2;
+  }
+
   // Represent the remove configuration.
   message Config {
     // A flag to skip exist check during upsert operation.
@@ -347,10 +369,13 @@ message Object {
 
   // Represent a vector.
   message Vector {
+    option (vtproto.mempool) = true;
     // The vector ID.
     string id = 1 [(validate.rules).string.min_len = 1];
     // The vector.
     repeated float vector = 2 [(validate.rules).repeated.min_items = 2];
+    // timestamp represents when this vector inserted.
+    int64 timestamp = 3;
   }
 
   // Represent multiple vectors.
@@ -417,6 +442,20 @@ message Object {
   // Represent multiple vector locations.
   message Locations {
     repeated Location locations = 1;
+  }
+
+  // Represent the list object vector stream request and response.
+  message List {
+    message Request {}
+
+    message Response {
+      oneof payload {
+        // The vector
+        Vector vector = 1;
+        // The RPC error status.
+        google.rpc.Status status = 2;
+      }
+    }
   }
 }
 

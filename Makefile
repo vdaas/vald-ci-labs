@@ -2,7 +2,7 @@
 # Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
+# You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,6 @@
 ORG                             ?= vdaas
 NAME                            = vald
 GOPKG                           = github.com/$(ORG)/$(NAME)
-GOPRIVATE                       = $(GOPKG),$(GOPKG)/apis,$(GOPKG)-client-go
 DATETIME                        = $(eval DATETIME := $(shell date -u +%Y/%m/%d_%H:%M:%S%z))$(DATETIME)
 TAG                            ?= latest
 CRORG                          ?= $(ORG)
@@ -39,7 +38,8 @@ VERSION ?= $(eval VERSION := $(shell cat versions/VALD_VERSION))$(VERSION)
 NGT_VERSION := $(eval NGT_VERSION := $(shell cat versions/NGT_VERSION))$(NGT_VERSION)
 NGT_REPO = github.com/yahoojapan/NGT
 
-GOPROXY=direct
+GOPRIVATE = $(GOPKG),$(GOPKG)/apis,$(GOPKG)-client-go
+GOPROXY = "https://proxy.golang.org,direct"
 GOPATH := $(eval GOPATH := $(shell go env GOPATH))$(GOPATH)
 GO_VERSION := $(eval GO_VERSION := $(shell cat versions/GO_VERSION))$(GO_VERSION)
 GOARCH := $(eval GOARCH := $(shell go env GOARCH))$(GOARCH)
@@ -361,7 +361,7 @@ clean:
 license:
 	GOPRIVATE=$(GOPRIVATE) \
 	MAINTAINER=$(MAINTAINER) \
-	go run -mod=readonly hack/license/gen/main.go ./
+	go run -mod=readonly hack/license/gen/main.go $(ROOTDIR)
 
 .PHONY: init
 ## initialize development environment
