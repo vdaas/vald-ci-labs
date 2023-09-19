@@ -33,8 +33,8 @@ jobs:
     needs: [dump-contexts-to-log]
     outputs:
       RELEASE_BRANCH_NAME: ${{ steps.set_context.outputs.RELEASE_BRANCH_NAME }}
-      RELEASE: ${{ steps.upgrade_semver.outputs.RELEASE }}
       RELEASE_TAG: ${{ steps.upgrade_semver.outputs.RELEASE_TAG }}
+      RELEASE: ${{ steps.setup_for_release.outputs.RELEASE }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -81,8 +81,8 @@ jobs:
           echo "RELEASE_TAG=${RELEASE_TAG}"
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
 
-      - name: Setup branch
-        id: setup_branch
+      - name: Setup for release
+        id: setup_for_release
         if: ${{ steps.upgrade_semver.outputs.RELEASE_TAG != '' }}
         env:
           RELEASE_TAG: ${{ steps.upgrade_semver.outputs.RELEASE_TAG }}
