@@ -18,8 +18,8 @@ package cassandra
 
 import (
 	"github.com/gocql/gocql"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 )
 
 type convictionPolicy struct{}

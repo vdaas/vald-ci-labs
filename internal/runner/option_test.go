@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 // Goroutine leak is detected by `fastime`, but it should be ignored in the test because it is an external package.

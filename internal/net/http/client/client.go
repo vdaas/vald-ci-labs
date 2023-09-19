@@ -20,10 +20,10 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	htr "github.com/vdaas/vald/internal/net/http/transport"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	htr "github.com/vdaas/vald-ci-labs/internal/net/http/transport"
 	"golang.org/x/net/http2"
 )
 

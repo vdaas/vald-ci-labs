@@ -18,7 +18,7 @@
 package rest
 
 import (
-	"github.com/vdaas/vald/apis/grpc/v1/agent/sidecar"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/sidecar"
 )
 
 type Option func(*handler)

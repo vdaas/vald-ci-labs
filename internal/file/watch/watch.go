@@ -21,11 +21,11 @@ import (
 	"reflect"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/safety"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 // Watcher is an interface that represents a file monitor.

@@ -23,13 +23,13 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/test/comparator"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 // Goroutine leak is detected by `fastime`, but it should be ignored in the test because it is an external package.
@@ -280,7 +280,7 @@ func TestInit(t *testing.T) {
 			},
 			want: want{
 				want: &info{
-					baseURL: "https://github.com/vdaas/vald/tree/gitcommit",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/gitcommit",
 					detail: Detail{
 						GitCommit:  "gitcommit",
 						ServerName: "gateway",
@@ -334,7 +334,7 @@ func TestInit(t *testing.T) {
 			},
 			want: want{
 				want: &info{
-					baseURL: "https://github.com/vdaas/vald/tree/gitcommit",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/gitcommit",
 					detail: Detail{
 						GitCommit:  "gitcommit",
 						ServerName: "",
@@ -452,7 +452,7 @@ func TestNew(t *testing.T) {
 			},
 			want: want{
 				want: &info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						ServerName:        "",
 						Version:           Version,
@@ -485,7 +485,7 @@ func TestNew(t *testing.T) {
 			},
 			want: want{
 				want: &info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						ServerName:        "gateway",
 						Version:           Version,
@@ -521,7 +521,7 @@ func TestNew(t *testing.T) {
 			},
 			want: want{
 				want: &info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						ServerName:        "vald",
 						Version:           "v1.0.0",
@@ -556,7 +556,7 @@ func TestNew(t *testing.T) {
 			},
 			want: want{
 				want: &info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						ServerName:        "",
 						Version:           Version,
@@ -1009,8 +1009,8 @@ func Test_info_Get(t *testing.T) {
 					CGOEnabled: cgoUnknown,
 					StackTrace: []StackTrace{
 						{
-							URL:      "https://github.com/vdaas/vald/tree/main",
-							FuncName: "github.com/vdaas/vald/internal/info.Test_info_Get",
+							URL:      "https://github.com/vdaas/vald-ci-labs/tree/main",
+							FuncName: "github.com/vdaas/vald-ci-labs/internal/info.Test_info_Get",
 							File:     "info_test.go",
 							Line:     100,
 						},
@@ -1056,7 +1056,7 @@ func Test_info_Get(t *testing.T) {
 					StackTrace: []StackTrace{
 						{
 							URL:      "https://github.com/golang/go/blob/" + runtime.Version() + "/src/info_test.go#L100",
-							FuncName: "github.com/vdaas/vald/internal/info.Test_info_Get",
+							FuncName: "github.com/vdaas/vald-ci-labs/internal/info.Test_info_Get",
 							File:     runtime.GOROOT() + "/src/info_test.go",
 							Line:     100,
 						},
@@ -1080,7 +1080,7 @@ func Test_info_Get(t *testing.T) {
 					rtCaller: func(skip int) (pc uintptr, file string, line int, ok bool) {
 						if i == 0 {
 							i++
-							return uintptr(0), "/tmp/go/pkg/mod/github.com/vdaas/vald/internal/info_test.go", 100, true
+							return uintptr(0), "/tmp/go/pkg/mod/github.com/vdaas/vald-ci-labs/internal/info_test.go", 100, true
 						}
 						return uintptr(1), "info_test.go", 100, false
 					},
@@ -1100,9 +1100,9 @@ func Test_info_Get(t *testing.T) {
 					CGOEnabled: cgoUnknown,
 					StackTrace: []StackTrace{
 						{
-							URL:      "https://github.com/vdaas/vald/internal/info_test.go#L100",
-							FuncName: "github.com/vdaas/vald/internal/info.Test_info_Get",
-							File:     "/tmp/go/pkg/mod/github.com/vdaas/vald/internal/info_test.go",
+							URL:      "https://github.com/vdaas/vald-ci-labs/internal/info_test.go#L100",
+							FuncName: "github.com/vdaas/vald-ci-labs/internal/info.Test_info_Get",
+							File:     "/tmp/go/pkg/mod/github.com/vdaas/vald-ci-labs/internal/info_test.go",
 							Line:     100,
 						},
 					},
@@ -1146,7 +1146,7 @@ func Test_info_Get(t *testing.T) {
 					StackTrace: []StackTrace{
 						{
 							URL:      "https://github.com/vdaas/blob/v0.0.0-20171023180738-a3a6125de932/vald/internal/info_test.go#L100",
-							FuncName: "github.com/vdaas/vald/internal/info.Test_info_Get",
+							FuncName: "github.com/vdaas/vald-ci-labs/internal/info.Test_info_Get",
 							File:     "/tmp/go/pkg/mod/github.com/vdaas@v0.0.0-20171023180738-a3a6125de932/vald/internal/info_test.go",
 							Line:     100,
 						},
@@ -1191,7 +1191,7 @@ func Test_info_Get(t *testing.T) {
 					StackTrace: []StackTrace{
 						{
 							URL:      "https://github.com/vdaas/blob/main/vald/internal/info_test.go#L100",
-							FuncName: "github.com/vdaas/vald/internal/info.Test_info_Get",
+							FuncName: "github.com/vdaas/vald-ci-labs/internal/info.Test_info_Get",
 							File:     "/tmp/go/pkg/mod/github.com/vdaas@v0.0.0-20171023180738-a3a6125de932-a843423387/vald/internal/info_test.go",
 							Line:     100,
 						},
@@ -1215,7 +1215,7 @@ func Test_info_Get(t *testing.T) {
 					rtCaller: func(skip int) (pc uintptr, file string, line int, ok bool) {
 						if i == 0 {
 							i++
-							return uintptr(0), "/tmp/go/src/github.com/vdaas/vald/internal/info_test.go", 100, true
+							return uintptr(0), "/tmp/go/src/github.com/vdaas/vald-ci-labs/internal/info_test.go", 100, true
 						}
 						return uintptr(1), "info_test.go", 100, false
 					},
@@ -1235,9 +1235,9 @@ func Test_info_Get(t *testing.T) {
 					CGOEnabled: cgoUnknown,
 					StackTrace: []StackTrace{
 						{
-							URL:      "https://github.com/vdaas/vald/blob/main/internal/info_test.go#L100",
-							FuncName: "github.com/vdaas/vald/internal/info.Test_info_Get",
-							File:     "/tmp/go/src/github.com/vdaas/vald/internal/info_test.go",
+							URL:      "https://github.com/vdaas/vald-ci-labs/blob/main/internal/info_test.go#L100",
+							FuncName: "github.com/vdaas/vald-ci-labs/internal/info.Test_info_Get",
+							File:     "/tmp/go/src/github.com/vdaas/vald-ci-labs/internal/info_test.go",
 							Line:     100,
 						},
 					},
@@ -1316,7 +1316,7 @@ func Test_info_prepare(t *testing.T) {
 			name: "set success with all fields are empty",
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1346,7 +1346,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/internal",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/internal",
 					detail: Detail{
 						GitCommit:  "internal",
 						Version:    "",
@@ -1376,7 +1376,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "v1.0.0",
@@ -1406,7 +1406,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1436,7 +1436,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1466,7 +1466,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1496,7 +1496,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1526,7 +1526,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1556,7 +1556,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1586,7 +1586,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:  GitCommit,
 						Version:    "",
@@ -1616,7 +1616,7 @@ func Test_info_prepare(t *testing.T) {
 			},
 			want: want{
 				want: info{
-					baseURL: "https://github.com/vdaas/vald/tree/main",
+					baseURL: "https://github.com/vdaas/vald-ci-labs/tree/main",
 					detail: Detail{
 						GitCommit:         GitCommit,
 						Version:           "",

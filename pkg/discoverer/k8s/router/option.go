@@ -18,8 +18,8 @@
 package router
 
 import (
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/pkg/discoverer/k8s/handler/rest"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/pkg/discoverer/k8s/handler/rest"
 )
 
 type Option func(*router)

@@ -14,9 +14,9 @@
 package assets
 
 import (
-	"github.com/vdaas/vald/hack/benchmark/assets/x1b"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/file"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/assets/x1b"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/file"
 )
 
 const (

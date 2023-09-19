@@ -27,14 +27,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/net/grpc/codes"
-	"github.com/vdaas/vald/internal/net/grpc/status"
-	"github.com/vdaas/vald/tests/e2e/hdf5"
-	"github.com/vdaas/vald/tests/e2e/kubernetes/client"
-	"github.com/vdaas/vald/tests/e2e/kubernetes/portforward"
-	"github.com/vdaas/vald/tests/e2e/operation"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/tests/e2e/hdf5"
+	"github.com/vdaas/vald-ci-labs/tests/e2e/kubernetes/client"
+	"github.com/vdaas/vald-ci-labs/tests/e2e/kubernetes/portforward"
+	"github.com/vdaas/vald-ci-labs/tests/e2e/operation"
 )
 
 var (

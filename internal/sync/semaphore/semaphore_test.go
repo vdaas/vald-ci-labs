@@ -38,9 +38,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/sync/semaphore"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/sync/semaphore"
 )
 
 const maxSleep = 1 * time.Millisecond

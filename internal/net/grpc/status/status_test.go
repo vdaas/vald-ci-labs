@@ -22,11 +22,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/net/grpc/codes"
-	"github.com/vdaas/vald/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestMain(m *testing.M) {

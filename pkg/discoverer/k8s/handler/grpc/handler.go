@@ -21,16 +21,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vdaas/vald/apis/grpc/v1/discoverer"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net/grpc/errdetails"
-	"github.com/vdaas/vald/internal/net/grpc/status"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/sync/singleflight"
-	"github.com/vdaas/vald/pkg/discoverer/k8s/service"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/discoverer"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/errdetails"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync/singleflight"
+	"github.com/vdaas/vald-ci-labs/pkg/discoverer/k8s/service"
 )
 
 type DiscovererServer interface {

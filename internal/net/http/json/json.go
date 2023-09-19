@@ -22,12 +22,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/vdaas/vald/internal/encoding/json"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net/http/dump"
-	"github.com/vdaas/vald/internal/net/http/rest"
+	"github.com/vdaas/vald-ci-labs/internal/encoding/json"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/dump"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/rest"
 )
 
 // RFC7807Error represents RFC 7807 error.

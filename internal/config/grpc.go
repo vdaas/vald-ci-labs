@@ -18,11 +18,11 @@
 package config
 
 import (
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/circuitbreaker"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/circuitbreaker"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 // GRPCClient represents the configurations for gRPC client.

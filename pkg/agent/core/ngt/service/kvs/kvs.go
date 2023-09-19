@@ -20,9 +20,9 @@ import (
 	"context"
 	"sync/atomic"
 
-	"github.com/vdaas/vald/internal/safety"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 	"github.com/zeebo/xxh3"
 )
 

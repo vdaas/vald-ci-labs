@@ -22,11 +22,11 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/http/routing"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/test/goleak"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/handler/rest"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/routing"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/handler/rest"
 )
 
 func TestNew(t *testing.T) {

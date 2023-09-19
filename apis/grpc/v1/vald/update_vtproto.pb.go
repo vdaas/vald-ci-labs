@@ -19,9 +19,9 @@ package vald
 import (
 	context "context"
 
-	payload "github.com/vdaas/vald/apis/grpc/v1/payload"
-	codes "github.com/vdaas/vald/internal/net/grpc/codes"
-	status "github.com/vdaas/vald/internal/net/grpc/status"
+	payload "github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	codes "github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
+	status "github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
 	grpc "google.golang.org/grpc"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )

@@ -21,10 +21,10 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/sync/semaphore"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/sync/semaphore"
 )
 
 // A Group is a collection of goroutines working on subtasks that are part of

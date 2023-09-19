@@ -25,9 +25,9 @@ import (
 	"time"
 
 	gache "github.com/kpango/gache/v2"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/test/comparator"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/test/comparator"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestDefaultOptions(t *testing.T) {

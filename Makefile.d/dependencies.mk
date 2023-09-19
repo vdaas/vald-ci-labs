@@ -160,9 +160,9 @@ update/yq:
 .PHONY: update/vald
 ## update vald it's self version
 update/vald:
-	curl --silent https://api.github.com/repos/vdaas/vald/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALD_VERSION
+	curl --silent https://api.github.com/repos/vdaas/vald-ci-labs/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALD_VERSION
 
 .PHONY: update/valdcli
 ## update vald client library made by clojure self version
 update/valdcli:
-	curl --silent https://api.github.com/repos/vdaas/vald-client-clj/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALDCLI_VERSION
+	curl --silent https://api.github.com/repos/vdaas/vald-ci-labs-client-clj/releases/latest | grep -Po '"tag_name": "\K.*?(?=")' > $(ROOTDIR)/versions/VALDCLI_VERSION

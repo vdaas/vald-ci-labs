@@ -22,8 +22,8 @@ import (
 	math "math"
 	bits "math/bits"
 
-	io "github.com/vdaas/vald/internal/io"
-	sync "github.com/vdaas/vald/internal/sync"
+	io "github.com/vdaas/vald-ci-labs/internal/io"
+	sync "github.com/vdaas/vald-ci-labs/internal/sync"
 	status "google.golang.org/genproto/googleapis/rpc/status"
 	proto "google.golang.org/protobuf/proto"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

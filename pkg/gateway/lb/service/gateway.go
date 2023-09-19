@@ -22,13 +22,13 @@ import (
 	"reflect"
 	"sync/atomic"
 
-	"github.com/vdaas/vald/apis/grpc/v1/vald"
-	"github.com/vdaas/vald/internal/client/v1/client/discoverer"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/discoverer"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type Gateway interface {

@@ -16,7 +16,7 @@
 
 package mysql
 
-import "github.com/vdaas/vald/internal/db/rdb/mysql/dbr"
+import "github.com/vdaas/vald-ci-labs/internal/db/rdb/mysql/dbr"
 
 type EventReceiver = dbr.EventReceiver
 

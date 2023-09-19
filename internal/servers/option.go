@@ -20,9 +20,9 @@ package servers
 import (
 	"time"
 
-	"github.com/vdaas/vald/internal/servers/server"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/servers/server"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 type Option func(*listener)

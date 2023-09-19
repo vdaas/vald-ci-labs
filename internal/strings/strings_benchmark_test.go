@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	tstr "github.com/vdaas/vald/internal/test/data/strings"
+	tstr "github.com/vdaas/vald-ci-labs/internal/test/data/strings"
 )
 
 var (

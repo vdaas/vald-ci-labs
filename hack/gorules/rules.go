@@ -18,7 +18,7 @@ import (
 )
 
 func CheckPayloadObjectAccess(m dsl.Matcher) {
-	m.Import("github.com/vdaas/vald/apis/grpc/v1/payload")
+	m.Import("github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload")
 
 	m.Match(
 		`$*_ = $*_, $x.$y, $*_`,

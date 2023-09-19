@@ -16,7 +16,7 @@ package request
 import (
 	"strconv"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 )
 
 // GenMultiRemoveReq generates Remove_MultiRequest request.

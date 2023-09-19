@@ -17,7 +17,7 @@
 // Package egress provides egress filter client logic
 package egress
 
-import "github.com/vdaas/vald/internal/net/grpc"
+import "github.com/vdaas/vald-ci-labs/internal/net/grpc"
 
 type Option func(*client) error
 

@@ -30,7 +30,7 @@ docker/name/org:
 
 .PHONY: docker/name/org/alter
 docker/name/org/alter:
-	@echo "ghcr.io/vdaas/vald"
+	@echo "ghcr.io/vdaas/vald-ci-labs"
 
 .PHONY: docker/platforms
 docker/platforms:

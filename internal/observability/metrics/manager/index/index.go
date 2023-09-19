@@ -16,8 +16,8 @@ package index
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/observability/metrics"
-	"github.com/vdaas/vald/pkg/manager/index/service"
+	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
+	"github.com/vdaas/vald-ci-labs/pkg/manager/index/service"
 	"go.opentelemetry.io/otel/sdk/metric/aggregation"
 	"go.opentelemetry.io/otel/sdk/metric/view"
 )

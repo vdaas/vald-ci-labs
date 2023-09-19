@@ -17,9 +17,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/servers/server"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/servers/server"
 )
 
 func TestWithConfig(t *testing.T) {

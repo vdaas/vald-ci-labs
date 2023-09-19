@@ -16,7 +16,7 @@
 
 package logger
 
-import "github.com/vdaas/vald/internal/strings"
+import "github.com/vdaas/vald-ci-labs/internal/strings"
 
 type Type uint8
 

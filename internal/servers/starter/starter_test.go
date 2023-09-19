@@ -17,12 +17,12 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/servers"
-	"github.com/vdaas/vald/internal/servers/server"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/servers"
+	"github.com/vdaas/vald-ci-labs/internal/servers/server"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 func TestNew(t *testing.T) {

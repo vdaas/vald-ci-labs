@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/vdaas/vald/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/file"
 )
 
 const (

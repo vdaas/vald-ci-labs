@@ -17,8 +17,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/http/middleware"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/middleware"
 )
 
 func TestWithMiddleware(t *testing.T) {

@@ -17,10 +17,10 @@
 package usecase
 
 import (
-	"github.com/vdaas/vald/internal/runner"
-	"github.com/vdaas/vald/pkg/agent/sidecar/config"
-	"github.com/vdaas/vald/pkg/agent/sidecar/usecase/initcontainer"
-	"github.com/vdaas/vald/pkg/agent/sidecar/usecase/sidecar"
+	"github.com/vdaas/vald-ci-labs/internal/runner"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/config"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/usecase/initcontainer"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/usecase/sidecar"
 )
 
 func New(cfg *config.Data) (r runner.Runner, err error) {

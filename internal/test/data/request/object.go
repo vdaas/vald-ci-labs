@@ -16,7 +16,7 @@ package request
 import (
 	"strconv"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 )
 
 // GenObjectLocations generate ObjectLocations payload with multiple name and ip with generated uuid.

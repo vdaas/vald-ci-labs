@@ -21,10 +21,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
 )
 
 func TestWithIP(t *testing.T) {

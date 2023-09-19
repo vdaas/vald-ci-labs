@@ -39,7 +39,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/vdaas/vald/internal/sync/semaphore"
+	"github.com/vdaas/vald-ci-labs/internal/sync/semaphore"
 )
 
 // weighted is an interface matching a subset of *Weighted.  It allows

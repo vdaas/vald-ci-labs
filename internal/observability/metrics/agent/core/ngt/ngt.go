@@ -16,8 +16,8 @@ package ngt
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/observability/metrics"
-	"github.com/vdaas/vald/pkg/agent/core/ngt/service"
+	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/core/ngt/service"
 	"go.opentelemetry.io/otel/sdk/metric/aggregation"
 	"go.opentelemetry.io/otel/sdk/metric/view"
 )

@@ -22,11 +22,11 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/timeutil"
-	"github.com/vdaas/vald/pkg/gateway/lb/service"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/pkg/gateway/lb/service"
 )
 
 type Option func(*server)

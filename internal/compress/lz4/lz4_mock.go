@@ -13,7 +13,7 @@
 // limitations under the License.
 package lz4
 
-import "github.com/vdaas/vald/internal/io"
+import "github.com/vdaas/vald-ci-labs/internal/io"
 
 // MockReader represents mock struct of Reader.
 type MockReader struct {

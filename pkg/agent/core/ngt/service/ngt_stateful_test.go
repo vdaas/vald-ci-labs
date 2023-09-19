@@ -28,10 +28,10 @@ import (
 	"github.com/leanovate/gopter"
 	"github.com/leanovate/gopter/commands"
 	"github.com/leanovate/gopter/gen"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 )
 
 type ngtSystem struct {

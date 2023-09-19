@@ -22,14 +22,14 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/vdaas/vald/hack/benchmark/core/benchmark"
-	"github.com/vdaas/vald/hack/benchmark/core/benchmark/strategy"
-	"github.com/vdaas/vald/hack/benchmark/internal/assets"
-	"github.com/vdaas/vald/hack/benchmark/internal/core/algorithm"
-	"github.com/vdaas/vald/hack/benchmark/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/core/benchmark"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/core/benchmark/strategy"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/assets"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/core/algorithm"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/core/algorithm/ngt"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 const (

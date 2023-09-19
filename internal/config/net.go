@@ -18,9 +18,9 @@
 package config
 
 import (
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/net/control"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/net/control"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 // Net represents the network configuration tcp, udp, unix domain socket.

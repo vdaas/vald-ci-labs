@@ -20,13 +20,13 @@ package main
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/runner"
-	"github.com/vdaas/vald/internal/safety"
-	"github.com/vdaas/vald/pkg/gateway/filter/config"
-	"github.com/vdaas/vald/pkg/gateway/filter/usecase"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/runner"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	"github.com/vdaas/vald-ci-labs/pkg/gateway/filter/config"
+	"github.com/vdaas/vald-ci-labs/pkg/gateway/filter/usecase"
 )
 
 const (

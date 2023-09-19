@@ -22,12 +22,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/rand"
-	"github.com/vdaas/vald/internal/slices"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/test/data/strings"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/rand"
+	"github.com/vdaas/vald-ci-labs/internal/slices"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/strings"
 )
 
 const (

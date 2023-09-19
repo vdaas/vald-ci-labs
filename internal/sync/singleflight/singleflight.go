@@ -39,9 +39,9 @@ import (
 	"runtime"
 	"sync/atomic"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/info"
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/info"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 // errGoexit indicates the runtime.Goexit was called in

@@ -17,7 +17,7 @@ import (
 	"context"
 
 	"github.com/stretchr/testify/mock"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 	"google.golang.org/grpc/metadata"
 )
 

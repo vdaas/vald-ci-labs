@@ -18,9 +18,9 @@
 package service
 
 import (
-	"github.com/vdaas/vald/internal/client/v1/client/discoverer"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/discoverer"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 type Option func(i *index) error

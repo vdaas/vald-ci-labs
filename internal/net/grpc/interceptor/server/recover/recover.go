@@ -20,8 +20,8 @@ package recover
 import (
 	"context"
 
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
 )
 
 func RecoverInterceptor() grpc.UnaryServerInterceptor {

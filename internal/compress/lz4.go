@@ -21,9 +21,9 @@ import (
 	"bytes"
 	"reflect"
 
-	"github.com/vdaas/vald/internal/compress/lz4"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/compress/lz4"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 type lz4Compressor struct {

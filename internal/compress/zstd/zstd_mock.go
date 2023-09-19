@@ -15,7 +15,7 @@ package zstd
 
 import (
 	"github.com/klauspost/compress/zstd"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 // MockEncoder represents mock of Encoder.

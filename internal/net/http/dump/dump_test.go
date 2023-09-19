@@ -18,10 +18,10 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/encoding/json"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/encoding/json"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestMain(m *testing.M) {

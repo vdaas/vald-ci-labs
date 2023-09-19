@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/kpango/fastime"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 func Set(loc string) {

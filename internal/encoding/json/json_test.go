@@ -18,9 +18,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 func TestEncode(t *testing.T) {

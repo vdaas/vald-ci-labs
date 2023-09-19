@@ -17,7 +17,7 @@
 // Package config providers configuration type and load configuration logic
 package config
 
-import "github.com/vdaas/vald/internal/backoff"
+import "github.com/vdaas/vald-ci-labs/internal/backoff"
 
 // Backoff represents the configuration for the internal backoff package.
 type Backoff struct {

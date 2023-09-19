@@ -44,7 +44,7 @@ In addition, as you need, please refer to the followings:
 - [Filter Configuration](../user-guides/filtering-configuration.md)
 
 Moreover, we publish the example configuration files for each use case.
-Please also refer to [here](https://github.com/vdaas/vald/tree/main/charts/vald/values).
+Please also refer to [here](https://github.com/vdaas/vald-ci-labs/tree/main/charts/vald/values).
 
 ## Use Helm command
 
@@ -242,7 +242,7 @@ spec:
 
 </details>
 
-For more details of the configuration of vald-helm-operator-release, please refer to [here](https://github.com/vdaas/vald/tree/main/charts/vald-helm-operator#configuration).
+For more details of the configuration of vald-helm-operator-release, please refer to [here](https://github.com/vdaas/vald-ci-labs/tree/main/charts/vald-helm-operator#configuration).
 
 After setting `vr.yaml` (and `vhor.yaml`), you can deploy by the following steps.
 

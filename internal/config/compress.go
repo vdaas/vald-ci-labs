@@ -17,7 +17,7 @@
 // Package config providers configuration type and load configuration logic
 package config
 
-import "github.com/vdaas/vald/internal/strings"
+import "github.com/vdaas/vald-ci-labs/internal/strings"
 
 // CompressAlgorithm is an enum for compress algorithm.
 type CompressAlgorithm uint8

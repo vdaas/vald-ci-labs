@@ -25,12 +25,12 @@ import (
 	"strconv"
 	"syscall"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/safety"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type (
@@ -197,7 +197,7 @@ func JoinHostPort(host string, port uint16) string {
 // and any error occurred.
 // If it is the loopback address, it will return the loopback address and corresponding port number.
 // IPv6 loopback address is not supported yet.
-// For more information, please read https://github.com/vdaas/vald/projects/3#card-43504189
+// For more information, please read https://github.com/vdaas/vald-ci-labs/projects/3#card-43504189
 func SplitHostPort(hostport string) (host string, port uint16, err error) {
 	if !strings.HasPrefix(hostport, "::") && strings.HasPrefix(hostport, ":") {
 		hostport = localIPv4 + hostport

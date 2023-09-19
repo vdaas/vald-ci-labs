@@ -16,7 +16,7 @@ package testdata
 import (
 	"fmt"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
 )
 
 type dummy struct {

@@ -21,13 +21,13 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/vdaas/vald/apis/grpc/v1/filter/egress"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/filter/egress"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 type Client interface {

@@ -20,10 +20,10 @@ package grpc
 import (
 	"os"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/pkg/discoverer/k8s/service"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/pkg/discoverer/k8s/service"
 )
 
 type Option func(*server) error

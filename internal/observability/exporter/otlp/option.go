@@ -16,8 +16,8 @@ package otlp
 import (
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/observability/attribute"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/observability/attribute"
 )
 
 type Option func(*exp) error

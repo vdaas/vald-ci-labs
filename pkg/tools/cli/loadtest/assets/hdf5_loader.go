@@ -14,7 +14,7 @@
 package assets
 
 import (
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 	"gonum.org/v1/hdf5"
 )
 

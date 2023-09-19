@@ -23,8 +23,8 @@ import (
 	"time"
 
 	redis "github.com/go-redis/redis/v8"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 // Option represents the functional option for redisClient.

@@ -22,12 +22,12 @@ import (
 	"os"
 	"time"
 
-	core "github.com/vdaas/vald/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/rand"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/timeutil"
+	core "github.com/vdaas/vald-ci-labs/internal/core/algorithm/ngt"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/rand"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 // Option represent the functional option for ngt

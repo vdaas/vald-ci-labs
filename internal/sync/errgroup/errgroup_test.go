@@ -40,8 +40,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 var (

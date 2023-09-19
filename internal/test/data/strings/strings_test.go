@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestRandom(t *testing.T) {

@@ -18,8 +18,8 @@
 package k8s
 
 import (
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 

@@ -18,7 +18,7 @@
 package config
 
 import (
-	"github.com/vdaas/vald/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/config"
 )
 
 type GlobalConfig = config.GlobalConfig

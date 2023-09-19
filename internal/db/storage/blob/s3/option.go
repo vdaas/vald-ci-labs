@@ -19,11 +19,11 @@ package s3
 import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/reader"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/writer"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/unit"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/reader"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/writer"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/unit"
 )
 
 // Option represents the functional option for client.

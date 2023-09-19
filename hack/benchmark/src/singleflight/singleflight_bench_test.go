@@ -23,9 +23,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/sync"
-	"github.com/vdaas/vald/internal/sync/singleflight"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync/singleflight"
 	stdsingleflight "golang.org/x/sync/singleflight"
 )
 

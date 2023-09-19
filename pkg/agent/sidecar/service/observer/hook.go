@@ -21,7 +21,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald/pkg/agent/sidecar/service/storage"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/storage"
 )
 
 type BackupInfo struct {

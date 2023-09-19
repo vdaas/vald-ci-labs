@@ -37,7 +37,7 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/vdaas/vald/internal/sync/semaphore"
+	"github.com/vdaas/vald-ci-labs/internal/sync/semaphore"
 )
 
 // Example_workerPool demonstrates how to use a semaphore to limit the number of

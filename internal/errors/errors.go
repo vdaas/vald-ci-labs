@@ -24,7 +24,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 var (

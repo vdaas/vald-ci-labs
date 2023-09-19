@@ -18,9 +18,9 @@
 package restorer
 
 import (
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/pkg/agent/sidecar/service/storage"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/storage"
 )
 
 type Option func(r *restorer) error

@@ -21,8 +21,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/vdaas/vald/internal/k8s"
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/k8s"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"

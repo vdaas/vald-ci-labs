@@ -5,7 +5,7 @@
 This guideline includes the coding style for all Vald contributors and reviewers.
 Everyone should follow this guideline to keep the style consistent, so everyone can understand and contribute to Vald easier once they learn it.
 You should have the basic knowledge of how to write Go before contributing to Vald.
-If you find any bugs, please create [a GitHub issue](https://github.com/vdaas/vald/issues/new?assignees=&labels=type%2Fbug%2C+priority%2Fmedium%2C+team%2Fcore&template=bug_report.md&title=), and we will work on it.
+If you find any bugs, please create [a GitHub issue](https://github.com/vdaas/vald-ci-labs/issues/new?assignees=&labels=type%2Fbug%2C+priority%2Fmedium%2C+team%2Fcore&template=bug_report.md&title=), and we will work on it.
 
 Please also read the [Contribution guideline](../contributing/contributing-guide.md) before you start contributing to Vald.
 
@@ -262,7 +262,7 @@ c := &Something{
 }
 ```
 
-To initialize complex structs, we can use a [functional option pattern](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis). Please read [server.go](https://github.com/vdaas/vald/blob/main/internal/servers/servers.go) and [option.go](https://github.com/vdaas/vald/blob/main/internal/servers/option.go) for the reference implementation.
+To initialize complex structs, we can use a [functional option pattern](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis). Please read [server.go](https://github.com/vdaas/vald-ci-labs/blob/main/internal/servers/servers.go) and [option.go](https://github.com/vdaas/vald-ci-labs/blob/main/internal/servers/option.go) for the reference implementation.
 The options implementation should be separated as another file called `option.go` to improve the readability of the source code, and the method name should start with `With` word to differentiate it from other methods.
 
 ### Variables and Constant
@@ -383,9 +383,9 @@ if err := srv.Run(); err != nil {
 
 ### Error handling
 
-All errors should define in [internal/errors package](https://github.com/vdaas/vald/blob/main/internal/errors). All errors should be start with `Err` prefix, and all errors should be handle if possible.
+All errors should define in [internal/errors package](https://github.com/vdaas/vald-ci-labs/blob/main/internal/errors). All errors should be start with `Err` prefix, and all errors should be handle if possible.
 
-Please use [internal/sync/errgroup](https://github.com/vdaas/vald/blob/main/internal/sync/errgroup) for synchronized error handling on multi-goroutine processing.
+Please use [internal/sync/errgroup](https://github.com/vdaas/vald-ci-labs/blob/main/internal/sync/errgroup) for synchronized error handling on multi-goroutine processing.
 
 ### Error checking
 
@@ -442,7 +442,7 @@ if err != nil {
 
 ### Logging
 
-We define our own logging interface in [internal/log package](https://github.com/vdaas/vald/blob/main/internal/log).
+We define our own logging interface in [internal/log package](https://github.com/vdaas/vald-ci-labs/blob/main/internal/log).
 By default, we use [glg](https://github.com/kpango/glg) to do the logging internally.
 We defined the following logging levels.
 
@@ -474,7 +474,7 @@ We provide the following errors to describe the error to apply the option.
 
 We strongly recommend the following implementation to set the value using the functional option.
 
-If an invalid value is set to the functional option, the `ErrInvalidOption` error defined in the [internal/errors/option.go](https://github.com/vdaas/vald/blob/main/internal/errors/option.go) should be returned.
+If an invalid value is set to the functional option, the `ErrInvalidOption` error defined in the [internal/errors/option.go](https://github.com/vdaas/vald-ci-labs/blob/main/internal/errors/option.go) should be returned.
 
 The name argument (the first argument) of the `ErrInvalidOption` error should be the same as the functional option name without the `With` prefix.
 
@@ -549,7 +549,7 @@ func WithConnectTimeout(dur string) Option {
 
 We need to handle the error returned from the functional option on the caller side.
 
-If the option fails to apply, an error wrapped with `ErrOptionFailed` defined in the [internal/errors/errors.go](https://github.com/vdaas/vald/blob/main/internal/errors/errors.go) should be returned.
+If the option fails to apply, an error wrapped with `ErrOptionFailed` defined in the [internal/errors/errors.go](https://github.com/vdaas/vald-ci-labs/blob/main/internal/errors/errors.go) should be returned.
 
 We recommend the following implementation to apply the options.
 
@@ -632,13 +632,13 @@ The `Godoc` will be generated based on the comment of the source code.
 
 ## Documentation
 
-Documentation is generated from the program comments. Please refer to [Godoc](https://pkg.go.dev/github.com/vdaas/vald) for the program documentation.
+Documentation is generated from the program comments. Please refer to [Godoc](https://pkg.go.dev/github.com/vdaas/vald-ci-labs) for the program documentation.
 
 ## Internal packages
 
 Vald implements its internal package to extend and customize the standard library and third-party library functionality.
 We should use the internal package instead of the standard library to implement Vald.
-Please refer to [Godoc](https://pkg.go.dev/github.com/vdaas/vald/internal) for the internal package document.
+Please refer to [Godoc](https://pkg.go.dev/github.com/vdaas/vald-ci-labs/internal) for the internal package document.
 
 ## Dependency management and Build
 
@@ -957,13 +957,13 @@ Still, in some cases, you may need to change the generated code to meet your req
            defer goleak.VerifyNone(tt, goleakIgnoreOptions...)
    ```
 
-   In Vald, we implemented [internal goleak package](https://github.com/vdaas/vald/blob/main/internal/test/goleak/goleak.go) and wrap the goleak validation logic to ignore the common goleak functions.
+   In Vald, we implemented [internal goleak package](https://github.com/vdaas/vald-ci-labs/blob/main/internal/test/goleak/goleak.go) and wrap the goleak validation logic to ignore the common goleak functions.
    In test implementation, we can easily import the internal goleak package and ignore all the necessary goleak functions by default.
 
    ```go
    // import internal goleak package
    import (
-       "github.com/vdaas/vald/internal/test/goleak"
+       "github.com/vdaas/vald-ci-labs/internal/test/goleak"
    )
 
    ...

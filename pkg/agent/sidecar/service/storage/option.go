@@ -18,11 +18,11 @@
 package storage
 
 import (
-	"github.com/vdaas/vald/internal/db/storage/blob/cloudstorage"
-	"github.com/vdaas/vald/internal/db/storage/blob/cloudstorage/urlopener"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3"
-	"github.com/vdaas/vald/internal/db/storage/blob/s3/session"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/cloudstorage"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/cloudstorage/urlopener"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3"
+	"github.com/vdaas/vald-ci-labs/internal/db/storage/blob/s3/session"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type Option func(b *bs) error

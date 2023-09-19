@@ -20,8 +20,8 @@ package router
 import (
 	"net/http"
 
-	"github.com/vdaas/vald/internal/net/http/routing"
-	"github.com/vdaas/vald/pkg/manager/index/handler/rest"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/routing"
+	"github.com/vdaas/vald-ci-labs/pkg/manager/index/handler/rest"
 )
 
 type router struct {

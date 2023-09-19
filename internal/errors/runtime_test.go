@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestErrPanicRecovered(t *testing.T) {

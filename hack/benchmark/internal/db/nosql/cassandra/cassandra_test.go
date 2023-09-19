@@ -23,9 +23,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/vdaas/vald/internal/db/nosql/cassandra"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/db/nosql/cassandra"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
 )
 
 var (

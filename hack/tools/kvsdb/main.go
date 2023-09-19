@@ -25,8 +25,8 @@ import (
 	"strconv"
 	"unsafe"
 
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/log"
 )
 
 var (

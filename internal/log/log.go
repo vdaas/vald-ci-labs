@@ -17,14 +17,14 @@
 package log
 
 import (
-	"github.com/vdaas/vald/internal/log/format"
-	"github.com/vdaas/vald/internal/log/glg"
-	"github.com/vdaas/vald/internal/log/level"
-	logger "github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/log/nop"
-	"github.com/vdaas/vald/internal/log/retry"
-	"github.com/vdaas/vald/internal/log/zap"
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/log/format"
+	"github.com/vdaas/vald-ci-labs/internal/log/glg"
+	"github.com/vdaas/vald-ci-labs/internal/log/level"
+	logger "github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/log/nop"
+	"github.com/vdaas/vald-ci-labs/internal/log/retry"
+	"github.com/vdaas/vald-ci-labs/internal/log/zap"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 var (

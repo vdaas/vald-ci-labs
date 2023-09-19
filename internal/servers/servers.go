@@ -23,11 +23,11 @@ import (
 	"sort"
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/safety"
-	"github.com/vdaas/vald/internal/servers/server"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/safety"
+	"github.com/vdaas/vald-ci-labs/internal/servers/server"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type Listener interface {

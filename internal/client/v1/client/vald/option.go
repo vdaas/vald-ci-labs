@@ -17,7 +17,7 @@
 // Package vald provides vald gRPC client library
 package vald
 
-import "github.com/vdaas/vald/internal/net/grpc"
+import "github.com/vdaas/vald-ci-labs/internal/net/grpc"
 
 type Option func(*client) error
 

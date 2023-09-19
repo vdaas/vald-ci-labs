@@ -20,7 +20,7 @@ package backoff
 import (
 	"time"
 
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 // Option represents the functional option for backoff.

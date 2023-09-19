@@ -24,10 +24,10 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 const (

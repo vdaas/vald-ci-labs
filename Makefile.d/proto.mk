@@ -155,7 +155,7 @@ $(GOBIN)/swagger:
 $(ROOTDIR)/apis/proto/v1/rpc/error_details.proto:
 	curl -fsSL https://raw.githubusercontent.com/googleapis/googleapis/master/google/rpc/error_details.proto -o $(ROOTDIR)/apis/proto/v1/rpc/error_details.proto
 	sed  -i -e "s/package google.rpc/package rpc.v1/" $(ROOTDIR)/apis/proto/v1/rpc/error_details.proto
-	sed  -i -e "s%google.golang.org/genproto/googleapis/rpc/errdetails;errdetails%github.com/vdaas/vald/apis/grpc/v1/rpc/errdetails%" $(ROOTDIR)/apis/proto/v1/rpc/error_details.proto
+	sed  -i -e "s%google.golang.org/genproto/googleapis/rpc/errdetails;errdetails%github.com/vdaas/vald-ci-labs/apis/grpc/v1/rpc/errdetails%" $(ROOTDIR)/apis/proto/v1/rpc/error_details.proto
 	sed  -i -e "s/com.google.rpc/org.vdaas.vald.api.v1.rpc/" $(ROOTDIR)/apis/proto/v1/rpc/error_details.proto
 
 $(PBGOS): \
@@ -164,10 +164,10 @@ $(PBGOS): \
 	@$(call green, "generating pb.go files...")
 	$(call mkdir, $(dir $@))
 	$(call proto-code-gen, $(patsubst apis/grpc/%.pb.go,apis/proto/%.proto,$@))
-	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%google.golang.org/grpc/codes%github.com/vdaas/vald/internal/net/grpc/codes%g"
-	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%google.golang.org/grpc/status%github.com/vdaas/vald/internal/net/grpc/status%g"
-	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%\"io\"%\"github.com/vdaas/vald/internal/io\"%g"
-	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%\"sync\"%\"github.com/vdaas/vald/internal/sync\"%g"
+	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%google.golang.org/grpc/codes%github.com/vdaas/vald-ci-labs/internal/net/grpc/codes%g"
+	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%google.golang.org/grpc/status%github.com/vdaas/vald-ci-labs/internal/net/grpc/status%g"
+	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%\"io\"%\"github.com/vdaas/vald-ci-labs/internal/io\"%g"
+	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s%\"sync\"%\"github.com/vdaas/vald-ci-labs/internal/sync\"%g"
 	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s/Vector = &Object_Vector\{\}/Vector = Object_VectorFromVTPool\(\)/g"
 	find $(ROOTDIR)/apis/grpc/* -name '*.go' | xargs sed -i -E "s/v := &Object_Vector\{\}/v := Object_VectorFromVTPool\(\)/g"
 

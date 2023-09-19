@@ -18,16 +18,16 @@ import (
 	"math"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/conv"
-	"github.com/vdaas/vald/internal/core/algorithm/ngt"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net/grpc/codes"
-	"github.com/vdaas/vald/internal/net/grpc/status"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/test/data/request"
-	"github.com/vdaas/vald/internal/test/data/vector"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/conv"
+	"github.com/vdaas/vald-ci-labs/internal/core/algorithm/ngt"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/codes"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc/status"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/request"
+	"github.com/vdaas/vald-ci-labs/internal/test/data/vector"
 )
 
 func Test_server_Update(t *testing.T) {

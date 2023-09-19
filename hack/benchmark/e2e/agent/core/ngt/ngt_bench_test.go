@@ -18,14 +18,14 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/vdaas/vald/hack/benchmark/internal/assets"
-	"github.com/vdaas/vald/hack/benchmark/internal/operation"
-	"github.com/vdaas/vald/hack/benchmark/internal/starter/agent/core/ngt"
-	"github.com/vdaas/vald/internal/client/v1/client/agent/core"
-	"github.com/vdaas/vald/internal/log"
-	"github.com/vdaas/vald/internal/log/logger"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/internal/strings"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/assets"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/operation"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/starter/agent/core/ngt"
+	"github.com/vdaas/vald-ci-labs/internal/client/v1/client/agent/core"
+	"github.com/vdaas/vald-ci-labs/internal/log"
+	"github.com/vdaas/vald-ci-labs/internal/log/logger"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
 )
 
 var (

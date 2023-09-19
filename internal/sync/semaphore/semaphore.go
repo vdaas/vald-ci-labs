@@ -36,7 +36,7 @@ import (
 	"container/list"
 	"context"
 
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 type waiter struct {

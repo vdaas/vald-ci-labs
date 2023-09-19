@@ -20,12 +20,12 @@ package starter
 import (
 	"fmt"
 
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/net/http/metrics"
-	"github.com/vdaas/vald/internal/servers"
-	"github.com/vdaas/vald/internal/servers/server"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/metrics"
+	"github.com/vdaas/vald-ci-labs/internal/servers"
+	"github.com/vdaas/vald-ci-labs/internal/servers/server"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 type Server servers.Listener

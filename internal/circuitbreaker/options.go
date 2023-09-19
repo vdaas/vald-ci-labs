@@ -14,8 +14,8 @@
 package circuitbreaker
 
 import (
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 type Option func(*breakerManager) error

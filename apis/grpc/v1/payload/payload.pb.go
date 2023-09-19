@@ -27,7 +27,7 @@ import (
 
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "github.com/planetscale/vtprotobuf/vtproto"
-	sync "github.com/vdaas/vald/internal/sync"
+	sync "github.com/vdaas/vald-ci-labs/internal/sync"
 	status "google.golang.org/genproto/googleapis/rpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

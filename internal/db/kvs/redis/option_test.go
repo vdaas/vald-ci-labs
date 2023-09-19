@@ -25,9 +25,9 @@ import (
 	"time"
 
 	redis "github.com/go-redis/redis/v8"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/test/goleak"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/test/goleak"
 )
 
 func TestWithDialer(t *testing.T) {

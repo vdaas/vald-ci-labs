@@ -24,8 +24,8 @@ import (
 	"sync/atomic"
 	"syscall"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 var cio = NewCopier(0)

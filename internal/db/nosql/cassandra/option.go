@@ -23,10 +23,10 @@ import (
 	"time"
 
 	"github.com/gocql/gocql"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/strings"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/strings"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 // Option represents the functional option for client.

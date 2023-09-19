@@ -13,7 +13,7 @@
 // limitations under the License.
 package gzip
 
-import "github.com/vdaas/vald/internal/io"
+import "github.com/vdaas/vald-ci-labs/internal/io"
 
 // MockReader represents mock of Reader.
 type MockReader struct {

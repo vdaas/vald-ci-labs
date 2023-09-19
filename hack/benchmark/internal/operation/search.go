@@ -19,10 +19,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/hack/benchmark/internal/assets"
-	"github.com/vdaas/vald/internal/io"
-	"github.com/vdaas/vald/internal/sync"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/assets"
+	"github.com/vdaas/vald-ci-labs/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/sync"
 )
 
 func (o *operation) Search(ctx context.Context, b *testing.B, ds assets.Dataset) {

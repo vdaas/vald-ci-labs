@@ -21,10 +21,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/vdaas/vald/internal/backoff"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/net"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/backoff"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 // Option represent the functional option for transport.

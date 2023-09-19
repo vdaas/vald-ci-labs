@@ -17,10 +17,10 @@ import (
 	"context"
 	"sync/atomic"
 
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/apis/grpc/v1/vald"
-	"github.com/vdaas/vald/internal/net/grpc"
-	"github.com/vdaas/vald/pkg/tools/cli/loadtest/assets"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/pkg/tools/cli/loadtest/assets"
 )
 
 func searchRequestProvider(dataset assets.Dataset) (func() interface{}, int, error) {

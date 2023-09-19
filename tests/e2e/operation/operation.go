@@ -21,9 +21,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vdaas/vald/apis/grpc/v1/agent/core"
-	"github.com/vdaas/vald/apis/grpc/v1/payload"
-	"github.com/vdaas/vald/apis/grpc/v1/vald"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/core"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/payload"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/vald"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 )

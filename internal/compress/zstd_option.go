@@ -18,7 +18,7 @@
 package compress
 
 import (
-	"github.com/vdaas/vald/internal/compress/zstd"
+	"github.com/vdaas/vald-ci-labs/internal/compress/zstd"
 )
 
 // ZstdOption represents the functional option for zstdCompressor.

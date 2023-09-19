@@ -33,8 +33,8 @@ The filtering vector allows you to filter out vectors that contain outliers so t
 
 Vald officially offers two types of ingress filter components.
 
-- [vald-onnx-ingress-filter](https://github.com/vdaas/vald-onnx-ingress-filter)
-- [vald-tensorflow-ingress-filter](https://github.com/vdaas/vald-tensorflow-ingress-filter)
+- [vald-onnx-ingress-filter](https://github.com/vdaas/vald-ci-labs-onnx-ingress-filter)
+- [vald-tensorflow-ingress-filter](https://github.com/vdaas/vald-ci-labs-tensorflow-ingress-filter)
 
 Of course, you can use your own implemented ingress filter component.
 When using it, please make sure to meet the following interface.
@@ -42,7 +42,7 @@ When using it, please make sure to meet the following interface.
 - The scheme of ingress filter service
 
   ```rpc
-  // https://github.com/vdaas/vald/blob/main/apis/proto/v1/filter/ingress/ingress_filter.proto
+  // https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/filter/ingress/ingress_filter.proto
   service Filter {
     // Represent the RPC to generate the vector.
     rpc GenVector(payload.v1.Object.Blob) returns (payload.v1.Object.Vector) {
@@ -66,7 +66,7 @@ When using it, please make sure to meet the following interface.
 - The scheme of `payload.v1.Object.Blob` and `payload.v1.Object.Vector`
 
   ```rpc
-  // https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto
+  // https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto
   // Represent the binary object.
   message Blob {
     // The object ID.
@@ -108,7 +108,7 @@ If you want to use this feature, please deploy your own egress filter component,
 - The scheme of egress filter service
 
   ```rpc
-  // https://github.com/vdaas/vald/blob/main/apis/proto/v1/filter/ingress/egress_filter.proto
+  // https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/filter/ingress/egress_filter.proto
   service Filter {
 
     // Represent the RPC to filter the distance.
@@ -134,7 +134,7 @@ If you want to use this feature, please deploy your own egress filter component,
 - The scheme of `payload.v1.Object.Distance` and `payload.v1.Object.Vector`
 
   ```rpc
-  // https://github.com/vdaas/vald/blob/main/apis/proto/v1/payload/payload.proto
+  // https://github.com/vdaas/vald-ci-labs/blob/main/apis/proto/v1/payload/payload.proto
   // Represent the ID and distance pair.
   message Distance {
     // The vector ID.

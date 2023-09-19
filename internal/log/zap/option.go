@@ -14,8 +14,8 @@
 package zap
 
 import (
-	"github.com/vdaas/vald/internal/log/format"
-	"github.com/vdaas/vald/internal/log/level"
+	"github.com/vdaas/vald-ci-labs/internal/log/format"
+	"github.com/vdaas/vald-ci-labs/internal/log/level"
 )
 
 type Option func(l *logger)

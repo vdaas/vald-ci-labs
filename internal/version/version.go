@@ -21,7 +21,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/go-version"
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 func Check(cur, max, min string) error {

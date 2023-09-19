@@ -16,7 +16,7 @@ package assets
 import (
 	"testing"
 
-	"github.com/vdaas/vald/pkg/tools/cli/loadtest/assets"
+	"github.com/vdaas/vald-ci-labs/pkg/tools/cli/loadtest/assets"
 )
 
 type Dataset = assets.Dataset

@@ -18,7 +18,7 @@
 package config
 
 import (
-	"github.com/vdaas/vald/internal/net"
+	"github.com/vdaas/vald-ci-labs/internal/net"
 )
 
 // Meta represents the configurations for vald meta.

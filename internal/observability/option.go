@@ -14,11 +14,11 @@
 package observability
 
 import (
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/observability/exporter"
-	"github.com/vdaas/vald/internal/observability/metrics"
-	"github.com/vdaas/vald/internal/observability/trace"
-	"github.com/vdaas/vald/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/observability/exporter"
+	"github.com/vdaas/vald-ci-labs/internal/observability/metrics"
+	"github.com/vdaas/vald-ci-labs/internal/observability/trace"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
 )
 
 type Option func(*observability) error

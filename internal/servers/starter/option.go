@@ -18,8 +18,8 @@
 package starter
 
 import (
-	"github.com/vdaas/vald/internal/config"
-	"github.com/vdaas/vald/internal/servers/server"
+	"github.com/vdaas/vald-ci-labs/internal/config"
+	"github.com/vdaas/vald-ci-labs/internal/servers/server"
 )
 
 type Option func(*srvs)

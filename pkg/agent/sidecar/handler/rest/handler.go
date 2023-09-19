@@ -20,9 +20,9 @@ package rest
 import (
 	"net/http"
 
-	"github.com/vdaas/vald/apis/grpc/v1/agent/sidecar"
-	"github.com/vdaas/vald/internal/net/http/dump"
-	"github.com/vdaas/vald/internal/net/http/json"
+	"github.com/vdaas/vald-ci-labs/apis/grpc/v1/agent/sidecar"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/dump"
+	"github.com/vdaas/vald-ci-labs/internal/net/http/json"
 )
 
 type Handler interface {

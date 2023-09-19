@@ -14,7 +14,7 @@
 package trace
 
 import (
-	"github.com/vdaas/vald/internal/net/grpc"
+	"github.com/vdaas/vald-ci-labs/internal/net/grpc"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 )
 

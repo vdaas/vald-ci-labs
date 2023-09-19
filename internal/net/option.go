@@ -21,9 +21,9 @@ import (
 	"crypto/tls"
 	"time"
 
-	"github.com/vdaas/vald/internal/cache/cacher"
-	"github.com/vdaas/vald/internal/net/control"
-	"github.com/vdaas/vald/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/internal/cache/cacher"
+	"github.com/vdaas/vald-ci-labs/internal/net/control"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
 )
 
 // DialerOption represent the functional option for dialer.

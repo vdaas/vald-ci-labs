@@ -21,7 +21,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/vdaas/vald/hack/benchmark/internal/assets"
+	"github.com/vdaas/vald-ci-labs/hack/benchmark/internal/assets"
 )
 
 // Benchmark is an interface for NGT benchmark.

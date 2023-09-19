@@ -18,11 +18,11 @@
 package observer
 
 import (
-	"github.com/vdaas/vald/internal/file"
-	"github.com/vdaas/vald/internal/sync/errgroup"
-	"github.com/vdaas/vald/internal/timeutil"
-	"github.com/vdaas/vald/pkg/agent/internal/metadata"
-	"github.com/vdaas/vald/pkg/agent/sidecar/service/storage"
+	"github.com/vdaas/vald-ci-labs/internal/file"
+	"github.com/vdaas/vald-ci-labs/internal/sync/errgroup"
+	"github.com/vdaas/vald-ci-labs/internal/timeutil"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/internal/metadata"
+	"github.com/vdaas/vald-ci-labs/pkg/agent/sidecar/service/storage"
 )
 
 type Option func(o *observer) error

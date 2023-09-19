@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/tls"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/tls"
 )
 
 func TestTLS_Bind(t *testing.T) {

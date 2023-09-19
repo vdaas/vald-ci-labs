@@ -26,8 +26,8 @@
 <!-- For completed items, change [ ] to [x]. -->
 <!-- NOTE: these things are not required to open a PR and can be done afterwards / while the PR is open. -->
 
-- [ ] I have read the [CONTRIBUTING](https://github.com/vdaas/vald/blob/main/CONTRIBUTING.md) document and completed [our CLA agreement](https://cla-assistant.io/vdaas/vald).
-- [ ] I have checked open [Pull Requests](https://github.com/vdaas/vald/pulls) for the similar feature or fixes?
+- [ ] I have read the [CONTRIBUTING](https://github.com/vdaas/vald-ci-labs/blob/main/CONTRIBUTING.md) document and completed [our CLA agreement](https://cla-assistant.io/vdaas/vald-ci-labs).
+- [ ] I have checked open [Pull Requests](https://github.com/vdaas/vald-ci-labs/pulls) for the similar feature or fixes?
 
 ### Special notes for your reviewer:
 

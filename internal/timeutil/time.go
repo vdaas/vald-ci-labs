@@ -19,7 +19,7 @@ package timeutil
 import (
 	"time"
 
-	"github.com/vdaas/vald/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
 )
 
 // ParseTime parses string to time.Duration.

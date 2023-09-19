@@ -21,9 +21,9 @@ import (
 	"bytes"
 	"reflect"
 
-	"github.com/vdaas/vald/internal/compress/zstd"
-	"github.com/vdaas/vald/internal/errors"
-	"github.com/vdaas/vald/internal/io"
+	"github.com/vdaas/vald-ci-labs/internal/compress/zstd"
+	"github.com/vdaas/vald-ci-labs/internal/errors"
+	"github.com/vdaas/vald-ci-labs/internal/io"
 )
 
 type zstdCompressor struct {
