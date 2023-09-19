@@ -87,6 +87,8 @@ jobs:
         env:
           RELEASE_TAG: ${{ steps.upgrade_semver.outputs.RELEASE_TAG }}
           RELEASE_BRANCH_NAME: ${{ steps.upgrade_semver.outputs.RELEASE_BRANCH_NAME }}
+          GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
         run: |
           git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
           gh label create "${BACKPORT_LABEL_PREFIX}${RELEASE_BRANCH_NAME}" # e.g) actions/backport/release/v1.8
