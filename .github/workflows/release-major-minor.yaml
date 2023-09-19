@@ -67,7 +67,7 @@ jobs:
           LATEST_TAG: ${{ steps.set_context.outputs.LATEST_TAG }}
           RELEASE_KIND: ${{ steps.set_context.outputs.RELEASE_KIND }}
         run: |
-          IFS=. read -r version minor patch <<< `echo "${LATEST_TAG}" | sed -e 's:^v::'`
+          IFS=. read -r version minor patch <<< `echo "${LATEST_TAG}" | sed -e 's:^v::'` # e.g) version=1, minor=7, patch=7
 
           case ${RELEASE_KIND} in
           major) RELEASE_TAG="v$((version+1)).0.0";      RELEASE_BRANCH_NAME="release/v$((version+1)).0";       ;;
