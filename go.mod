@@ -1,4 +1,4 @@
-module github.com/vdaas/vald
+module github.com/vdaas/vald-ci-labs
 
 go 1.21
 
