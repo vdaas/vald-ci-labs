@@ -78,7 +78,7 @@ jobs:
               git checkout -b ${BACKPORT_BRANCH_NAME}
 
               # Force cherry-pick. The conflicts will be modified within the backport PR.
-              git cherry-pick $GITHUB_SHA
+              git cherry-pick $GITHUB_SHA || (git add -A && git cherry-pick --continue --no-edit)
               git push origin ${BACKPORT_BRANCH_NAME}
 
               gh pr create --base ${BRANCH_NAME} \
