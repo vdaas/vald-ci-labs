@@ -127,10 +127,6 @@ jobs:
             --data "{\"title\": \"Release ${RELEASE_TAG}\", \"head\": \"${PREPARE_RELEASE_BRANCH_NAME}\", \"base\": \"${RELEASE_BRANCH_NAME}\", \"body\": \"Release PR for ${RELEASE_TAG}.\", \"maintainer_can_modify\": true}" \
             $API_URL
 
-          # gh pr create --base ${BRANCH_NAME} \
-          #              --title ":bookmark: :robot: Release ${RELEASE_TAG}" \
-          #              --body-file .github/PULL_REQUEST_TEMPLATE.md
-
         env:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
