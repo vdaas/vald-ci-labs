@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 
-
 find ./ -name '*.go' -exec sed -i 's/vdaas\/vald\//vdaas\/vald-ci-labs\//g' {} \;
 
 find ./ -name '*.mk' -exec sed -i 's/vdaas\/vald/vdaas\/vald-ci-labs/g' {} \;
