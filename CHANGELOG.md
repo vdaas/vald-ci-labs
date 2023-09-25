@@ -1,5 +1,74 @@
 # CHANGELOG
 
+## v1.9.1
+
+### Docker images
+
+<table>
+  <tr>
+    <th>component</th>
+    <th>Docker pull</th>
+  </tr>
+  <tr>
+    <td>Agent NGT</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-agent-ngt:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-ngt:v1.9.1</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Agent sidecar</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-agent-sidecar:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-sidecar:v1.9.1</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Discoverers</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-discoverer-k8s:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-discoverer-k8s:v1.9.1</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Gateways</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-lb-gateway:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-lb-gateway:v1.9.1</code><br/>
+      <code>docker pull vdaas/vald-ci-labs-filter-gateway:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-filter-gateway:v1.9.1</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Index Manager</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-manager-index:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-manager-index:v1.9.1</code>
+    </td>
+  </tr>
+  <tr>
+    <td>Helm Operator</td>
+    <td>
+      <code>docker pull vdaas/vald-ci-labs-helm-operator:v1.9.1</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-helm-operator:v1.9.1</code>
+    </td>
+  </tr>
+</table>
+
+### Documents
+
+- [GoDoc](https://pkg.go.dev/github.com/vdaas/vald-ci-labs@v1.9.1)
+- [Helm Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.9.1/charts/vald/README.md)
+- [Helm Operator Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.9.1/charts/vald-helm-operator/README.md)
+
+### Changes
+
+♻️ Refactor
+
+- change default creation poolsize [#2190](https://github.com/vdaas/vald/pull/2190)
+- List kvs and vqueue data [#2188](https://github.com/vdaas/vald/pull/2188)
+- refactor semver ci [#2189](https://github.com/vdaas/vald/pull/2189)
+
 ## v1.9.0
 
 ### Docker images
