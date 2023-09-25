@@ -92,6 +92,7 @@
   - [Upsert.MultiRequest](#payload-v1-Upsert-MultiRequest)
   - [Upsert.ObjectRequest](#payload-v1-Upsert-ObjectRequest)
   - [Upsert.Request](#payload-v1-Upsert-Request)
+
   - [Remove.Timestamp.Operator](#payload-v1-Remove-Timestamp-Operator)
   - [Search.AggregationAlgorithm](#payload-v1-Search-AggregationAlgorithm)
 
@@ -755,6 +756,7 @@ Represent search configuration.
 | egress_filters        | [Filter.Config](#payload-v1-Filter-Config)                             |       | Egress filter configurations.            |
 | min_num               | [uint32](#uint32)                                                      |       | Minimum number of result to be returned. |
 | aggregation_algorithm | [Search.AggregationAlgorithm](#payload-v1-Search-AggregationAlgorithm) |       | Aggregation Algorithm                    |
+| test_flag             | [bool](#bool)                                                          |       | Test flag                                |
 
 <a name="payload-v1-Search-IDRequest"></a>
 
