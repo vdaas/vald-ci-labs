@@ -58,21 +58,22 @@ jobs:
           make helm/package/vald
           make helm/package/vald-helm-operator
 
-      - name: Push to gh-pages
-        run: |
-          git checkout .
-          git checkout gh-pages
-          mv -f vald-*.tgz charts/
-          helm repo index --url https://vald.vdaas.org/charts charts/
-
-          git add charts
-          git commit -S --signoff -m ":robot: Automatically update Helm charts"
-
-          git remote set-url origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push origin gh-pages
-        env:
-          GITHUB_USER: ${{ secrets.DISPATCH_USER }}
-          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      # TODO: Delete comment
+      # - name: Push to gh-pages
+      #   run: |
+      #     git checkout .
+      #     git checkout gh-pages
+      #     mv -f vald-*.tgz charts/
+      #     helm repo index --url https://vald.vdaas.org/charts charts/
+      #
+      #     git add charts
+      #     git commit -S --signoff -m ":robot: Automatically update Helm charts"
+      #
+      #     git remote set-url origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+      #     git push origin gh-pages
+      #   env:
+      #     GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+      #     GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   crud-on-remote-helm-chart:
     name: CRUD test on remote Helm chart
