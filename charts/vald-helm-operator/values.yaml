@@ -29,7 +29,11 @@ image:
   repository: vdaas/vald-helm-operator
   # @schema {"name": "image.tag", "type": "string"}
   # image.tag -- image tag
+<<<<<<< HEAD
   tag: v1.9.0
+=======
+  tag: v1.8.2
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
   # @schema {"name": "image.pullPolicy", "type": "string", "enum": ["Always", "Never", "IfNotPresent"]}
   # image.pullPolicy -- image pull policy
   pullPolicy: Always

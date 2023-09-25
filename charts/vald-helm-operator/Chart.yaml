@@ -16,7 +16,11 @@
 
 apiVersion: v2
 name: vald-helm-operator
+<<<<<<< HEAD
 version: v1.9.0
+=======
+version: v1.8.2
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 description: A Helm chart for vald-helm-operator
 type: application
 keywords:

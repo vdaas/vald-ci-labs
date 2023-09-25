@@ -2,7 +2,11 @@
 
 This is a Helm chart to install vald-helm-operator.
 
+<<<<<<< HEAD
 Current chart version is `v1.9.0`
+=======
+Current chart version is `v1.8.2`
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 
 ## Table of Contents
 
@@ -26,13 +30,22 @@ Run the following command to install the chart,
 
 Please upgrade the CRDs first because Helm doesn't have a support to upgrade CRDs.
 
+<<<<<<< HEAD
     $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/v1.9.0/charts/vald-helm-operator/crds/valdrelease.yaml
     $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/v1.9.0/charts/vald-helm-operator/crds/valdhelmoperatorrelease.yaml
+=======
+    $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/v1.8.2/charts/vald-helm-operator/crds/valdrelease.yaml
+    $ kubectl replace -f https://raw.githubusercontent.com/vdaas/vald/v1.8.2/charts/vald-helm-operator/crds/valdhelmoperatorrelease.yaml
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 
 After upgrading CRDs, you can upgrade the operator.
 If you're using `valdhelmoperatorrelease` (or `vhor`) resource, please update the `spec.image.tag` field of it.
 
+<<<<<<< HEAD
     $ kubectl patch vhor vhor-release -p '{"spec":{"image":{"tag":"v1.9.0"}}}'
+=======
+    $ kubectl patch vhor vhor-release -p '{"spec":{"image":{"tag":"v1.8.2"}}}'
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 
 On the other hand, please update the operator's deployment manually.
 
@@ -79,7 +92,11 @@ spec: {}
 | healthPort                         | int    | `8081`                                                                                                                                                                         | port of health endpoint                                                                                                          |
 | image.pullPolicy                   | string | `"Always"`                                                                                                                                                                     | image pull policy                                                                                                                |
 | image.repository                   | string | `"vdaas/vald-helm-operator"`                                                                                                                                                   | image repository                                                                                                                 |
+<<<<<<< HEAD
 | image.tag                          | string | `"v1.9.0"`                                                                                                                                                                     | image tag                                                                                                                        |
+=======
+| image.tag                          | string | `"v1.8.2"`                                                                                                                                                                     | image tag                                                                                                                        |
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 | leaderElectionID                   | string | `"vald-helm-operator"`                                                                                                                                                         | name of the configmap that is used for holding the leader lock.                                                                  |
 | livenessProbe.enabled              | bool   | `true`                                                                                                                                                                         | enable liveness probe.                                                                                                           |
 | livenessProbe.failureThreshold     | int    | `2`                                                                                                                                                                            | liveness probe failure threshold                                                                                                 |

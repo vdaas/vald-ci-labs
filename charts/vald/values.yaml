@@ -38,7 +38,11 @@ defaults:
   image:
     # @schema {"name": "defaults.image.tag", "type": "string"}
     # defaults.image.tag -- docker image tag
+<<<<<<< HEAD
     tag: v1.9.0
+=======
+    tag: v1.8.2
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
   # @schema {"name": "defaults.server_config", "type": "object", "anchor": "server_config"}
   server_config:
     # @schema {"name": "defaults.server_config.servers", "type": "object"}

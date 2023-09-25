@@ -1,6 +1,10 @@
 # CHANGELOG
 
+<<<<<<< HEAD
 ## v1.9.0
+=======
+## v1.8.2
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 
 ### Docker images
 
@@ -12,60 +16,104 @@
   <tr>
     <td>Agent NGT</td>
     <td>
+<<<<<<< HEAD
       <code>docker pull vdaas/vald-ci-labs-agent-ngt:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-ngt:v1.9.0</code>
+=======
+      <code>docker pull vdaas/vald-ci-labs-agent-ngt:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-ngt:v1.8.2</code>
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
     </td>
   </tr>
   <tr>
     <td>Agent sidecar</td>
     <td>
+<<<<<<< HEAD
       <code>docker pull vdaas/vald-ci-labs-agent-sidecar:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-sidecar:v1.9.0</code>
+=======
+      <code>docker pull vdaas/vald-ci-labs-agent-sidecar:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-agent-sidecar:v1.8.2</code>
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
     </td>
   </tr>
   <tr>
     <td>Discoverers</td>
     <td>
+<<<<<<< HEAD
       <code>docker pull vdaas/vald-ci-labs-discoverer-k8s:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-discoverer-k8s:v1.9.0</code>
+=======
+      <code>docker pull vdaas/vald-ci-labs-discoverer-k8s:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-discoverer-k8s:v1.8.2</code>
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
     </td>
   </tr>
   <tr>
     <td>Gateways</td>
     <td>
+<<<<<<< HEAD
       <code>docker pull vdaas/vald-ci-labs-lb-gateway:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-lb-gateway:v1.9.0</code><br/>
       <code>docker pull vdaas/vald-ci-labs-filter-gateway:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-filter-gateway:v1.9.0</code>
+=======
+      <code>docker pull vdaas/vald-ci-labs-lb-gateway:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-lb-gateway:v1.8.2</code><br/>
+      <code>docker pull vdaas/vald-ci-labs-filter-gateway:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-filter-gateway:v1.8.2</code>
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
     </td>
   </tr>
   <tr>
     <td>Index Manager</td>
     <td>
+<<<<<<< HEAD
       <code>docker pull vdaas/vald-ci-labs-manager-index:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-manager-index:v1.9.0</code>
+=======
+      <code>docker pull vdaas/vald-ci-labs-manager-index:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-manager-index:v1.8.2</code>
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
     </td>
   </tr>
   <tr>
     <td>Helm Operator</td>
     <td>
+<<<<<<< HEAD
       <code>docker pull vdaas/vald-ci-labs-helm-operator:v1.9.0</code><br/>
       <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-helm-operator:v1.9.0</code>
+=======
+      <code>docker pull vdaas/vald-ci-labs-helm-operator:v1.8.2</code><br/>
+      <code>docker pull ghcr.io/vdaas/vald-ci-labs/vald-helm-operator:v1.8.2</code>
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
     </td>
   </tr>
 </table>
 
 ### Documents
 
+<<<<<<< HEAD
 - [GoDoc](https://pkg.go.dev/github.com/vdaas/vald-ci-labs@v1.9.0)
 - [Helm Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.9.0/charts/vald/README.md)
 - [Helm Operator Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.9.0/charts/vald-helm-operator/README.md)
+=======
+- [GoDoc](https://pkg.go.dev/github.com/vdaas/vald-ci-labs@v1.8.2)
+- [Helm Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.8.2/charts/vald/README.md)
+- [Helm Operator Chart Reference](https://github.com/vdaas/vald-ci-labs/blob/v1.8.2/charts/vald-helm-operator/README.md)
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 
 ### Changes
 
 ♻️ Refactor
 
+<<<<<<< HEAD
 - Add test flag and make proto/all format [#121](https://github.com/vdaas/vald-ci-labs/pull/121)
+=======
+- change default creation poolsize [#2190](https://github.com/vdaas/vald/pull/2190)
+- List kvs and vqueue data [#2188](https://github.com/vdaas/vald/pull/2188)
+- refactor semver ci [#2189](https://github.com/vdaas/vald/pull/2189)
+>>>>>>> 76f4ba8 (:bookmark: :robot: Release v1.8.2 (#130))
 
 ## v1.8.1
 
