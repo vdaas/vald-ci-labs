@@ -577,10 +577,6 @@
         "aggregationAlgorithm": {
           "$ref": "#/definitions/SearchAggregationAlgorithm",
           "title": "Aggregation Algorithm"
-        },
-        "testFlag": {
-          "type": "boolean",
-          "title": "Test flag"
         }
       },
       "description": "Represent search configuration."
