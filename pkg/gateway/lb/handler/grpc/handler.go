@@ -75,6 +75,8 @@ func (s *server) exists(ctx context.Context, uuid string) (id *payload.Object_ID
 			span.End()
 		}
 	}()
+	// NOTE: test for two version deploy.
+	_ = ctx
 
 	if len(uuid) == 0 {
 		err = errors.ErrInvalidUUID(uuid)
