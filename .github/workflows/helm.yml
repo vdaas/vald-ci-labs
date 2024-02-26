@@ -21,6 +21,8 @@ on:
       - "v*.*.*"
       - "*.*.*-*"
       - "v*.*.*-*"
+  # NOTE For verification purposes
+  pull_request:
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
