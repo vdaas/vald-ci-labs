@@ -47,10 +47,10 @@ runs:
         tag=$(echo $GITHUB_REF | sed -e 's:^refs/tags/::') # e.g) v1.7.6
         tags="${tag}"
 
+        major_minor_tag="$(echo "${tag}" | sed -E 's/^v?([0-9]+\.[0-9]+).*$/v\1/')" # e.g) v.1.7
+
         release_branch_tag="release/${major_minor_tag}" # e.g) release/v1.7
         tags="${tags} ${release_branch_tag}"
-
-        major_minor_tag="$(echo "${tag}" | sed -E 's/^v?([0-9]+\.[0-9]+).*$/v\1/')" # e.g) v.1.7
         tags="${tags} ${major_minor_tag}"
 
         commit_hash_tag=${GITHUB_SHA::8}
