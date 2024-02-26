@@ -13,14 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-.PHONY: git/config/init
-## add git configs required for development
-git/config/init:
-	git config commit.template ".commit_template"
-	git config core.fileMode false
 
-.PHONY: git/hooks/init
-## add configs for registering pre-defined git hooks
-git/hooks/init:
-	ln -sf $(ROOTDIR)/hack/git/hooks/pre-commit $(ROOTDIR)/.git/hooks/pre-commit
-	chmod a+x $(ROOTDIR)/.git/hooks/pre-commit
+ACTIONS_LIST := $(eval ACTIONS_LIST := $(shell grep -r -h -o -P "(?<=- uses: ).*?(?=@)" $(ROOTDIR)/.github/ | sort | uniq))$(ACTIONS_LIST)
+
+.PHONY: list/actions
+## show variation of external actions
+list/actions:
+	@echo $(ACTIONS_LIST)
+
+.PHONY: update/actions
+# update github actions version
+update/actions:
+	$(call update-github-actions, $(ACTIONS_LIST))

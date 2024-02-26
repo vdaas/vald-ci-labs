@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2023 vdaas.org vald team <vald@vdaas.org>
+# Copyright (C) 2019-2024 vdaas.org vald team <vald@vdaas.org>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # You may not use this file except in compliance with the License.
@@ -18,6 +18,16 @@
 ## run e2e
 e2e:
 	$(call run-e2e-crud-test,-run TestE2EStandardCRUD)
+
+.PHONY: e2e/faiss
+## run e2e/faiss
+e2e/faiss:
+	#$(call run-e2e-crud-faiss-test,-run TestE2EInsertOnly)
+	#$(call run-e2e-crud-faiss-test,-run TestE2ESearchOnly)
+	#$(call run-e2e-crud-faiss-test,-run TestE2EUpdateOnly)
+	#$(call run-e2e-crud-faiss-test,-run TestE2ERemoveOnly)
+	#$(call run-e2e-crud-faiss-test,-run TestE2EInsertAndSearch)
+	$(call run-e2e-crud-faiss-test,-run TestE2EStandardCRUD)
 
 .PHONY: e2e/skip
 ## run e2e with skip exists operation
@@ -69,6 +79,16 @@ e2e/remove/timestamp:
 e2e/insert/search:
 	$(call run-e2e-crud-test,-run TestE2EInsertAndSearch)
 
+.PHONY: e2e/index/job/correction
+## run index correction job e2e
+e2e/index/job/correction:
+	$(call run-e2e-crud-test,-run TestE2EIndexJobCorrection)
+
+.PHONY: e2e/readreplica
+## run readreplica e2e
+e2e/readreplica:
+	$(call run-e2e-crud-test,-run TestE2EReadReplica)
+
 .PHONY: e2e/maxdim
 ## run e2e/maxdim
 e2e/maxdim:
@@ -78,5 +98,4 @@ e2e/maxdim:
 ## run e2e with sidecar operation
 e2e/sidecar:
 	$(call run-e2e-sidecar-test,-run TestE2EForSidecar)
-
 
