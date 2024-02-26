@@ -13,8 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-kubeval:
-  - files:
-      - k8s/**/*.yaml
-    strict: true
-    ignoreMissingSchemas: true
+apiVersion: vald.vdaas.org/v1
+kind: ValdMirrorTarget
+metadata:
+  name: mirror-target-02
+spec:
+  colocation: dc1
+  target:
+    host: vald-mirror-gateway.vald-02.svc.cluster.local
+    port: 8081
