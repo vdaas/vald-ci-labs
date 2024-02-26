@@ -367,7 +367,7 @@ require (
 	github.com/leanovate/gopter v0.0.0-00010101000000-000000000000
 	github.com/lucasb-eyer/go-colorful v0.0.0-00010101000000-000000000000
 	github.com/pierrec/lz4/v3 v3.0.0-00010101000000-000000000000
-	github.com/planetscale/vtprotobuf v0.5.0
+	github.com/planetscale/vtprotobuf v0.6.0
 	github.com/quasilyte/go-ruleguard v0.0.0-00010101000000-000000000000
 	github.com/quasilyte/go-ruleguard/dsl v0.3.22
 	github.com/scylladb/gocqlx v0.0.0-00010101000000-000000000000
@@ -397,7 +397,7 @@ require (
 	gonum.org/v1/plot v0.10.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20230822172742-b8732ec3820d
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230911183012-2d3300fd4832
-	google.golang.org/grpc v1.58.0
+	google.golang.org/grpc v1.58.2
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.27.3
