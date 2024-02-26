@@ -13,8 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-kubeval:
-  - files:
-      - k8s/**/*.yaml
-    strict: true
-    ignoreMissingSchemas: true
+
+agent:
+  ngt:
+    auto_index_duration_limit: 1000h
+    auto_index_check_duration: 1000h
+    auto_save_index_duration: 1000h
+manager:
+  index:
+    enabled: false
+    creator:
+      enabled: true
+      schedule: "* * * * *"
+    saver:
+      enabled: false
+      schedule: "2 * * * *"

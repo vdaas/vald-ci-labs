@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-kubeval:
-  - files:
-      - k8s/**/*.yaml
-    strict: true
-    ignoreMissingSchemas: true
+label-alias:
+  bug: "type/bug"
+  feature_request: "type/feature"
+  question: "type/question"

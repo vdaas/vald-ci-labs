@@ -15,32 +15,20 @@
 #
 
 defaults:
-  grpc:
-    client:
-      health_check_duration: 50ms
-      dial_option:
-        enable_backoff: true
-  server_config:
-    healths:
-      liveness:
-        livenessProbe:
-          timeoutSeconds: 10
-          failureThreshold: 5
-      readiness:
-        readinessProbe:
-          timeoutSeconds: 10
-          failureThreshold: 5
+  logging:
+    level: info
+  networkPolicy:
+    enabled: false
 gateway:
+  mirror:
+    enabled: true
+    clusterRoleBinding:
+      name: vald-mirror-01
+    serviceAccount:
+      name: vald-mirror-01
   lb:
     enabled: true
-    ingress:
-      enabled: true
-      host: "localhost"
-    service:
-      # NOTE: https://doc.traefik.io/traefik/routing/providers/kubernetes-ingress/#on-service
-      annotations:
-        traefik.ingress.kubernetes.io/service.serversscheme: h2c
-    minReplicas: 2
+    minReplicas: 1
     hpa:
       enabled: false
     resources:
@@ -49,17 +37,10 @@ gateway:
         memory: 50Mi
     gateway_config:
       index_replica: 3
-      discoverer:
-        duration: 50ms
 agent:
-  minReplicas: 5
+  minReplicas: 3
   maxReplicas: 10
   podManagementPolicy: Parallel
-  persistentVolume:
-    enabled: true
-    storageClass: local-path
-    accessMode: ReadWriteOnce
-    size: 200Mi
   hpa:
     enabled: false
   resources:
@@ -67,26 +48,30 @@ agent:
       cpu: 100m
       memory: 50Mi
   ngt:
-    index_path: "/var/ngt/index"
-    enable_in_memory_mode: false
-    auto_index_duration_limit: 3m
-    auto_index_check_duration: 1m
+    auto_index_duration_limit: 2m
+    auto_index_check_duration: 30s
     auto_index_length: 1000
     dimension: 784
 discoverer:
-  minReplicas: 2
+  minReplicas: 1
   hpa:
     enabled: false
   resources:
     requests:
       cpu: 100m
       memory: 50Mi
-  discoverer:
-    discovery_duration: 50ms
+  clusterRoleBinding:
+    name: vald-01
+  serviceAccount:
+    name: vald-01
 manager:
   index:
-    replicas: 2
+    replicas: 1
     resources:
       requests:
         cpu: 100m
         memory: 30Mi
+    indexer:
+      auto_index_duration_limit: 2m
+      auto_index_check_duration: 30s
+      auto_index_length: 1000
