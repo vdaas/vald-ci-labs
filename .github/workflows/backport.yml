@@ -21,7 +21,6 @@ on:
 env:
   TARGET_LABEL_NAME_PREFIX: "actions/backport/"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
-
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
