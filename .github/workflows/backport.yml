@@ -34,7 +34,6 @@ env:
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
-    # if: ${{ github.event.pull_request.merged == true }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/dump-context
