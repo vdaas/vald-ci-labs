@@ -57,7 +57,9 @@ jobs:
           # gh pr view ${TARGET_BRANCH} title  --json
           # gh pr view ${TARGET_BRANCH} body  --json
           # gh pr view ${TARGET_BRANCH} | grep url | awk '{print $2}'
-
+        env:
+          GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
       - name: Set context
         id: set_context
         run: |
