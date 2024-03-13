@@ -53,7 +53,7 @@ jobs:
           git_commit_gpgsign: true
       - name: Fetch PR info
         run: |
-          gh pr list --limit 1 --json number,title,body,labels --state merged --base ${TARGET_BRANCH} | jq jq '.[0]' > ${FETCHED_GITHUB_INFO_PATH}
+          gh pr list --limit 1 --json number,title,body,labels --state merged --base ${TARGET_BRANCH} | jq '.[0]' > ${FETCHED_GITHUB_INFO_PATH}
           echo ${FETCHED_GITHUB_INFO_PATH}
           echo ${GITHUB_HEAD_REF}
         env:
