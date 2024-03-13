@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 name: "Run backport PR"
 on:
   push:
@@ -21,9 +20,6 @@ on:
       - main
       - "release/v*.*"
       - "!release/v*.*.*"
-  # pull_request_target:
-  #   types:
-  #     - "closed"
 env:
   BASE_BRANCH: "main"
   TARGET_LABEL_NAME_PREFIX: "actions/backport/"
