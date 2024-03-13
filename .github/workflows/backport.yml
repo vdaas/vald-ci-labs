@@ -52,7 +52,7 @@ jobs:
           git_commit_gpgsign: true
       - name: Fetch PR info
         run: |
-          gh pr list --json number,title,merged_at --state merged --base ${TARGET_BRANCH}
+          gh pr list --json number,title,labels,body --state merged --base ${TARGET_BRANCH}
           gh pr view ${TARGET_BRANCH} --json number,title,body
           # gh pr view ${TARGET_BRANCH} labels --json
           # gh pr view ${TARGET_BRANCH} title  --json
