@@ -76,22 +76,24 @@ jobs:
           PR_TITLE=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".title"`
           PR_BODY=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".body"`
           PR_NUM=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".number"`
+          PR_BRANCH_NAME=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".headRefName"`
+          PR_BRANCH_HEAD_REF=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".headRefOid"`
 
           echo "${PR_NUM} ${PR_TITLE}: ${PR_BODY}"
 
           for LABEL_NAME in ${LABEL_NAMES}; do
               BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`           # e.g) release/vx.x, main
-              BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${GITHUB_HEAD_REF}"  # e.g) backport/release/vx.x/{current branch name}
+              BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${PR_BRANCH_NAME}"   # e.g) backport/release/vx.x/{current branch name}
 
               echo "BRANCH_NAME=${BRANCH_NAME}"
               echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
-              echo "SHA=${GITHUB_SHA}"
+              echo "SHA=${PR_BRANCH_HEAD_REF}"
 
               git checkout ${BRANCH_NAME}
               git checkout -b ${BACKPORT_BRANCH_NAME}
 
               # Force cherry-pick. The conflicts will be modified within the backport PR.
-              git cherry-pick $GITHUB_SHA || (git add -A && git cherry-pick --continue --no-edit)
+              git cherry-pick $PR_BRANCH_HEAD_REF || (git add -A && git cherry-pick --continue --no-edit)
               git push origin ${BACKPORT_BRANCH_NAME}
 
               gh pr create --base ${BRANCH_NAME} \
