@@ -27,6 +27,7 @@ env:
   TARGET_BRANCH: "main"
   TARGET_LABEL_NAME_PREFIX: "actions/backport/"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
+  FETCHED_GITHUB_INFO_PATH: github_info.json
 jobs:
   dump-contexts-to-log:
     runs-on: ubuntu-latest
@@ -52,20 +53,16 @@ jobs:
           git_commit_gpgsign: true
       - name: Fetch PR info
         run: |
-          # gh pr list --json number,title,labels,body --state merged --base ${TARGET_BRANCH} | jq
-          gh pr list --limit 1 --json number,title,labels --state merged --base ${TARGET_BRANCH} | jq
-          gh pr view ${TARGET_BRANCH} --json number,title,body
-          # gh pr view ${TARGET_BRANCH} labels --json
-          # gh pr view ${TARGET_BRANCH} title  --json
-          # gh pr view ${TARGET_BRANCH} body  --json
-          # gh pr view ${TARGET_BRANCH} | grep url | awk '{print $2}'
+          gh pr list --limit 1 --json number,title,body,labels --state merged --base ${TARGET_BRANCH} | jq jq '.[0]' > ${FETCHED_GITHUB_INFO_PATH}
+          echo ${FETCHED_GITHUB_INFO_PATH}
+          echo ${GITHUB_HEAD_REF}
         env:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
       - name: Set context
         id: set_context
         run: |
-          LABEL_NAMES=`cat ${GITHUB_EVENT_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.pull_request.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
+          LABEL_NAMES=`cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
           echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
           echo "${LABEL_NAMES}"
       - name: Create PR
@@ -75,9 +72,9 @@ jobs:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
         run: |
-          PR_TITLE=`cat $GITHUB_EVENT_PATH | jq -r ".pull_request.title"`
-          PR_BODY=`cat $GITHUB_EVENT_PATH | jq -r ".pull_request.body"`
-          PR_NUM=`cat $GITHUB_EVENT_PATH | jq -r ".pull_request.number"`
+          PR_TITLE=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".title"`
+          PR_BODY=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".body"`
+          PR_NUM=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".number"`
 
           echo "${PR_NUM} ${PR_TITLE}: ${PR_BODY}"
 
