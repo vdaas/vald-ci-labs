@@ -112,7 +112,7 @@ jobs:
           git push -u origin ${PREPARE_RELEASE_BRANCH_NAME}
 
           # NOTE: add jq command for debug.
-          PR_NUM=$(curl --include --verbose --fail \
+          PR_NUM=$(curl --fail \
             -H "Accept: application/json" \
             -H "Content-Type:application/json" \
             -H "Authorization: token ${GITHUB_TOKEN}" \
