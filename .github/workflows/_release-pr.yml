@@ -118,14 +118,20 @@ jobs:
             -H "Authorization: token ${GITHUB_TOKEN}" \
             --request POST \
             --data "{\"title\": \":bookmark: :robot: Release ${RELEASE_TAG}\", \"head\": \"${PREPARE_RELEASE_BRANCH_NAME}\", \"base\": \"${RELEASE_BRANCH_NAME}\", \"body\": \"Release PR for ${RELEASE_TAG}.\", \"maintainer_can_modify\": true}" \
-            $API_URL | jq '.number' )
-          echo $PR_NUM
+            ${API_BASE_URL}/pulls | jq '.number' )
+          echo ${PR_NUM}
 
-          gh pr edit ${NUM} --add-label ${BACKPORT_TO_MAIN_LABEL_NAME}
+          curl --fail \
+            -H "Accept: application/json" \
+            -H "Content-Type:application/json" \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            --request POST \
+            --data "{\"labels\":[\"${BACKPORT_MAIN_LABEL_NAME}\"]}" \
+            ${API_BASE_URL}/issues/${PR_NUM}/labels
         env:
           GITHUB_USER: ${{ secrets.DISPATCH_USER }}
           GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
           BACKPORT_MAIN_LABEL_NAME: "actions/backport/main"
           # TODO:
-          # API_URL: https://api.github.com/repos/vdaas/vald/pulls
-          API_URL: https://api.github.com/repos/vdaas/vald-ci-labs/pulls
+          # API_URL: https://api.github.com/repos/vdaas/vald
+          API_BASE_URL: https://api.github.com/repos/vdaas/vald-ci-labs
