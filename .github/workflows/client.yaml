@@ -78,19 +78,19 @@ jobs:
         id: check_upgrade
         run: |
           if [ "${SUPPORTED_LAST_VALD_VERSION}" != "${SUPPORTED_LAST_CLIENT_VERSION}" ]; then
-            RELEASE_BRANCH_NAME=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $2}')
+            RELEASE_BRANCH_NAME_SUFFIX=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $2}') # e.g) v1.7
 
-            echo "UPGRADE_SUPPORTED_LAST_CLIENT_VERSION=true" >> $GITHUB_OUTPUT
-            echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
+            echo "UPGRADE_SUPPORTED_LAST_CLIENT_VERSION=true"               >> $GITHUB_OUTPUT
+            echo "RELEASE_BRANCH_NAME_SUFFIX=${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT
             echo "Upgrade supported last client version"
             exit 0
           fi
 
           if [ "${SUPPORTED_LATEST_VALD_VERSION}" != "${SUPPORTED_LATEST_CLIENT_VERSION}" ]; then
-            RELEASE_BRANCH_NAME=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $1}')
+            RELEASE_BRANCH_NAME_SUFFIX=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $1}')  # e.g) v1.8
 
-            echo "UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION=true" >> $GITHUB_OUTPUT
-            echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"   >> $GITHUB_OUTPUT
+            echo "UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION=true"             >> $GITHUB_OUTPUT
+            echo "RELEASE_BRANCH_NAME_SUFFIX=${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT
             echo "Upgrade supported latest client latest"
             exit 0
           fi
@@ -103,14 +103,16 @@ jobs:
 
       # NOTE: For debug
       - name: Prepare to upgrade supported last client version
-        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LAST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME != '' }}
+        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LAST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME_SUFFIX != '' }}
         run: |
-          echo aaaaaaaa
+          echo "${RELEASE_BRANCH_NAME}"
         env:
-          RELEASE_BRANCH_NAME: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME }}
+          RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
+          RELEASE_BRANCH_NAME: release/${{ env.RELEASE_BRANCH_NAME_SUFFIX }}
       - name: Prepare to upgrade supported last client version
-        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME != '' }}
+        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME_SUFFIX != '' }}
         run: |
-          echo bbbbbbbb
+          echo "${RELEASE_BRANCH_NAME}"
         env:
-          RELEASE_BRANCH_NAME: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME }}
+          RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
+          RELEASE_BRANCH_NAME: release/${{ env.RELEASE_BRANCH_NAME_SUFFIX }}
