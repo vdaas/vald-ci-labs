@@ -30,8 +30,8 @@ jobs:
     outputs:
       SUPPORTED_LATEST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LATEST_VALD_VERSION }}
       SUPPORTED_LAST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LAST_VALD_VERSION }}
-      SUPPORTED_CLIENT_LATEST_VERSION_UPGRADE: ${{ steps.check_upgrade.outputs.SUPPORTED_CLIENT_LATEST_VERSION_UPGRADE }}
-      SUPPORTED_CLIENT_LAST_VERSION_UPGRADE: ${{ steps.check_upgrade.outputs.SUPPORTED_CLIENT_LAST_VERSION_UPGRADE }}
+      UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION }}
+      UPGRADE_SUPPORTED_LAST_CLIENT_VERSION: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LAST_CLIENT_VERSION }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,14 +76,14 @@ jobs:
         id: check_upgrade
         run: |
           if [ "${SUPPORTED_LAST_VALD_VERSION}" != "${SUPPORTED_LAST_CLIENT_VERSION}" ]; then
-            echo "SUPPORTED_CLIENT_LAST_VERSION_UPGRADE=true"   >> $GITHUB_OUTPUT
-            echo "Upgrade supported client last version"
+            echo "UPGRADE_SUPPORTED_LAST_CLIENT_VERSION=true"   >> $GITHUB_OUTPUT
+            echo "Upgrade supported last client version"
             exit 0
           fi
 
           if [ "${SUPPORTED_LATEST_VALD_VERSION}" != "${SUPPORTED_LATEST_CLIENT_VERSION}" ]; then
-            echo "SUPPORTED_CLIENT_LATEST_VERSION_UPGRADE=true" >> $GITHUB_OUTPUT
-            echo "Upgrade supported client latest version"
+            echo "UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION=true" >> $GITHUB_OUTPUT
+            echo "Upgrade supported latest client latest"
             exit 0
           fi
         env:
@@ -91,3 +91,13 @@ jobs:
           SUPPORTED_LAST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LAST_VALD_VERSION }}
           SUPPORTED_LATEST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LATEST_CLIENT_VERSION }}
           SUPPORTED_LAST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LAST_CLIENT_VERSION }}
+
+      # NOTE: For debug
+      - name: Prepare to upgrade supported last client version
+        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LAST_CLIENT_VERSION != '' }}
+        run: |
+          echo aaaaaaaa
+      - name: Prepare to upgrade supported last client version
+        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION != '' }}
+        run: |
+          echo bbbbbbbb
