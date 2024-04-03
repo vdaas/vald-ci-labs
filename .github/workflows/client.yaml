@@ -46,7 +46,6 @@ jobs:
           SUPPORTED_LATEST_VALD_VERSION=$(echo "${VALD_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | head -n 1) | head -n 1)
           SUPPORTED_LAST_VALD_VERSION=$(echo "${VALD_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | tail -n 1) | head -n 1)
 
-          echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"     >> $GITHUB_OUTPUT # e.g) v1.8\nv1.7
           echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}" >> $GITHUB_OUTPUT # e.g) v1.8.9
           echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"     >> $GITHUB_OUTPUT # e.g) v1.7.12
 
