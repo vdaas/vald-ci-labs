@@ -23,7 +23,9 @@ on:
   pull_request:
   # schedule:
   #   - cron: "*/10 * * * *"
-
+env:
+  GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+  GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 jobs:
   semver-auto:
     runs-on: ubuntu-latest
