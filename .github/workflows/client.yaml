@@ -78,7 +78,7 @@ jobs:
         id: check_upgrade
         run: |
           if [ "${SUPPORTED_LAST_VALD_VERSION}" != "${SUPPORTED_LAST_CLIENT_VERSION}" ]; then
-            RELEASE_BRANCH_NAME=$(cat ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $2}')
+            RELEASE_BRANCH_NAME=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $2}')
 
             echo "UPGRADE_SUPPORTED_LAST_CLIENT_VERSION=true" >> $GITHUB_OUTPUT
             echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
@@ -87,7 +87,7 @@ jobs:
           fi
 
           if [ "${SUPPORTED_LATEST_VALD_VERSION}" != "${SUPPORTED_LATEST_CLIENT_VERSION}" ]; then
-            RELEASE_BRANCH_NAME=$(cat ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $1}')
+            RELEASE_BRANCH_NAME=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $1}')
 
             echo "UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION=true" >> $GITHUB_OUTPUT
             echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"   >> $GITHUB_OUTPUT
