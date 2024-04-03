@@ -41,11 +41,18 @@ jobs:
       - name: Set Vald context
         working-directory: vald
         run: |
-          LATEST_VALD_VERSION=$(git tag --sort=-v:refname | head -n 1)
+          VALD_TAG_LIST=$(git tag --sort=-v:refname)
+          SUPPORTED_TWO_VALD_VERSIONS=$(echo "${VALD_TAG_LIST}"   | awk -F. '{print $1"."$2}' | uniq | head -n 2)
+          SUPPORTED_LATEST_VALD_VERSION=$(echo "${VALD_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | head -n 1) | head -n 1)
+          SUPPORTED_LAST_VALD_VERSION=$(echo "${VALD_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | tail -n 1) | head -n 1)
 
-          echo "LATEST_VALD_VERSION=${LATEST_VALD_VERSION}" >> $GITHUB_OUTPUT # e.g) vx.x.x
+          echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"     >> $GITHUB_OUTPUT # e.g) v1.8\nv1.7
+          echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}" >> $GITHUB_OUTPUT # e.g) v1.8.9
+          echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"     >> $GITHUB_OUTPUT # e.g) v1.7.12
 
-          echo "LATEST_VALD_VERSION=${LATEST_VALD_VERSION}"
+          echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"
+          echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}"
+          echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"
       - name: Set client context
         run: |
           LATEST_CLIENT_VERSION=$(git tag --sort=-v:refname | head -n 1)
