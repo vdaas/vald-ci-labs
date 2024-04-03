@@ -15,7 +15,14 @@
 #
 name: "Run prepare for client release"
 on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Released Vald version"
+        type: string
   pull_request:
+  # schedule:
+  #   - cron: "*/10 * * * *"
 
 jobs:
   build:
@@ -31,5 +38,18 @@ jobs:
       - name: Clone Vald repository
         run: |
           git clone https://github.com/vdaas/vald.git
-          cd vald
-          git tag --sort=-v:refname
+      - name: Set Vald context
+        working-directory: vald
+        run: |
+          LATEST_VALD_VERSION=$(git tag --sort=-v:refname | head -n 1)
+
+          echo "LATEST_VALD_VERSION=${LATEST_VALD_VERSION}" >> $GITHUB_OUTPUT # e.g) vx.x.x
+
+          echo "LATEST_VALD_VERSION=${LATEST_VALD_VERSION}"
+      - name: Set client context
+        run: |
+          LATEST_CLIENT_VERSION=$(git tag --sort=-v:refname | head -n 1)
+
+          echo "LATEST_CLIENT_VERSION=${LATEST_CLIENT_VERSION}" >> $GITHUB_OUTPUT # e.g) vx.x.x
+
+          echo "LATEST_CLIENT_VERSION=${LATEST_CLIENT_VERSION}"
