@@ -30,8 +30,8 @@ jobs:
     outputs:
       SUPPORTED_LATEST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LATEST_VALD_VERSION }}
       SUPPORTED_LAST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LAST_VALD_VERSION }}
-      SUPPORTED_LATEST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LATEST_CLIENT_VERSION }}
-      SUPPORTED_LAST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LAST_CLIENT_VERSION }}
+      SUPPORTED_CLIENT_LATEST_VERSION_UPGRADE: ${{ steps.check_upgrade.outputs.SUPPORTED_CLIENT_LATEST_VERSION_UPGRADE }}
+      SUPPORTED_CLIENT_LAST_VERSION_UPGRADE: ${{ steps.check_upgrade.outputs.SUPPORTED_CLIENT_LAST_VERSION_UPGRADE }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,3 +72,22 @@ jobs:
           echo "SUPPORTED_TWO_CLIENT_VERSIONS=${SUPPORTED_TWO_CLIENT_VERSIONS}"
           echo "SUPPORTED_LATEST_CLIENT_VERSION=${SUPPORTED_LATEST_CLIENT_VERSION}"
           echo "SUPPORTED_LAST_CLIENT_VERSION=${SUPPORTED_LAST_CLIENT_VERSION}"
+      - name: Check upgrade
+        id: check_upgrade
+        run: |
+          if [ "${SUPPORTED_LATEST_VALD_VERSION}" != "${SUPPORTED_LATEST_CLIENT_VERSION}" ]; then
+            echo "SUPPORTED_CLIENT_LATEST_VERSION_UPGRADE=true" >> $GITHUB_OUTPUT
+            echo "Upgrade supported client latest version"
+            exit 0
+          fi
+
+          if [ "${SUPPORTED_LAST_VALD_VERSION}" != "${SUPPORTED_LAST_CLIENT_VERSION}" ]; then
+            echo "SUPPORTED_CLIENT_LAST_VERSION_UPGRADE=true"   >> $GITHUB_OUTPUT
+            echo "Upgrade supported client last version"
+            exit 0
+          fi
+        env:
+          SUPPORTED_LATEST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LATEST_VALD_VERSION }}
+          SUPPORTED_LAST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LAST_VALD_VERSION }}
+          SUPPORTED_LATEST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LATEST_CLIENT_VERSION }}
+          SUPPORTED_LAST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LAST_CLIENT_VERSION }}
