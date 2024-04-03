@@ -108,11 +108,11 @@ jobs:
           echo "${RELEASE_BRANCH_NAME}"
         env:
           RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-          RELEASE_BRANCH_NAME: release/${{ env.RELEASE_BRANCH_NAME_SUFFIX }}
+          RELEASE_BRANCH_NAME: release/${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
       - name: Prepare to upgrade supported last client version
         if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME_SUFFIX != '' }}
         run: |
           echo "${RELEASE_BRANCH_NAME}"
         env:
           RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-          RELEASE_BRANCH_NAME: release/${{ env.RELEASE_BRANCH_NAME_SUFFIX }}
+          RELEASE_BRANCH_NAME: release/${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
