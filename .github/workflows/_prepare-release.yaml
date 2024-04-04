@@ -22,7 +22,7 @@ on:
         type: string
         required: false
         default: "vdaas/vald-agent-ngt vdaas/vald-agent-faiss vdaas/vald-agent-sidecar vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-filter-gateway vdaas/vald-mirror-gateway vdaas/vald-manager-index vdaas/vald-index-operator vdaas/vald-readreplica-rotate"
-      TAG:
+      IMAGE_TAG:
         description: "image tag name"
         type: string
         required: false
@@ -42,7 +42,7 @@ jobs:
         run: |
           for image in ${IMAGES}; do
             echo "Search image: ${image}:${tag}"
-            if ! curl -s "https://registry.hub.docker.com/v2/repositories/${image}/tags/${tag}" | jq '.name' | grep -v "null" > /dev/null ; then
+            if ! curl -s "https://registry.hub.docker.com/v2/repositories/${image}/tags/${IMAGE_TAG}" | jq '.name' | grep -v "null" > /dev/null ; then
               echo "Image ${image}:${tag} not Found. Existing..."
               exit 0
             else
@@ -52,4 +52,4 @@ jobs:
           echo "All images found."
         env:
           IMAGES: ${{ inputs.IMAGES }}
-          TAG: ${{ inputs.TAG }}
+          IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
