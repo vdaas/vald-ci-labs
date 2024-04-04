@@ -32,11 +32,12 @@ jobs:
     uses: ./.github/workflows/_semver-auto.yaml
     secrets: inherit
 
-  # prepare-release:
-  #   needs:
-  #     - semver-auto
-  #   uses: ./.github/workflows/_prepare-release.yaml
-  #   secrets: inherit
+  prepare-release:
+    if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
+    needs:
+      - semver-auto
+    uses: ./.github/workflows/_prepare-release.yaml
+    secrets: inherit
   #
   # build:
   #   needs:
