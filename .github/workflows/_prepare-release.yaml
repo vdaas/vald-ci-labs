@@ -42,12 +42,12 @@ jobs:
       - name: Search docker image
         run: |
           for image in ${IMAGES}; do
-            echo "Search image: ${image}:${tag}"
+            echo "Search image: ${image}:${IMAGE_TAG}"
             if ! curl -s "https://registry.hub.docker.com/v2/repositories/${image}/tags/${IMAGE_TAG}" | jq '.name' | grep -v "null" > /dev/null ; then
-              echo "Image ${image}:${tag} not Found. Existing..."
+              echo "Image ${image}:${IMAGE_TAG} not Found. Existing..."
               exit 0
             else
-              echo "Image ${image}:${tag} Found"
+              echo "Image ${image}:${IMAGE_TAG} Found"
             fi
           done
           echo "All images found."
