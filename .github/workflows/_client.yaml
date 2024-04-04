@@ -98,14 +98,19 @@ jobs:
       - name: Prepare to upgrade supported last client version
         if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LAST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME_SUFFIX != '' }}
         run: |
-          # git checkout -B ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
+          EXIST_BRANCH=$(git fetch origin "${RELEASE_BRANCH_NAME}" && echo true || echo false)
+          if [ "${EXIST_BRANCH}" != "true" ]; then
+            git checkout main && git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
+          else
+            git checkout ${RELEASE_BRANCH_NAME}
+          fi
         env:
           RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
           RELEASE_BRANCH_NAME: release/${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-      - name: Prepare to upgrade supported last client version
-        if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME_SUFFIX != '' }}
-        run: |
-          echo "${RELEASE_BRANCH_NAME}"
-        env:
-          RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
-          RELEASE_BRANCH_NAME: release/${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
+      # - name: Prepare to upgrade supported last client version
+      #   if: ${{ steps.check_upgrade.outputs.UPGRADE_SUPPORTED_LATEST_CLIENT_VERSION != '' && env.RELEASE_BRANCH_NAME_SUFFIX != '' }}
+      #   run: |
+      #     echo "${RELEASE_BRANCH_NAME}"
+      #   env:
+      #     RELEASE_BRANCH_NAME_SUFFIX: ${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
+      #     RELEASE_BRANCH_NAME: release/${{ steps.check_upgrade.outputs.RELEASE_BRANCH_NAME_SUFFIX }}
