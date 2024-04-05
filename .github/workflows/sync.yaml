@@ -19,21 +19,24 @@ on:
   # schedule:
   #   - cron: "*/10 * * * *"
 jobs:
-  sync-main:
-    uses: ./.github/workflows/_build.yaml
+  sync:
+    uses: ./.github/workflows/_build.yaml # reusable workflow of self repository
     secrets: inherit
+    with:
+      vald_checkout_target_name: main
 
   semver-auto:
     needs:
-      - sync-main
-    uses: ./.github/workflows/_semver-auto.yaml
+      - sync
+    # uses: ./.github/workflows/_semver-auto.yaml # reusable workflow of external repository
+    uses:  vdaas/vald-ci-labs/.github/workflows/_build.yaml@fix/ci/two-version-support-for-client
     secrets: inherit
 
-  prepare-release:
+  prepare:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     needs:
       - semver-auto
-    uses: ./.github/workflows/_prepare-release.yaml
+    uses: ./.github/workflows/_prepare-release.yaml # reusable workflow of external repository
     with:
       IMAGE_TAG: ${{ needs.semver-auto.outputs.VERSION }}
     secrets: inherit
