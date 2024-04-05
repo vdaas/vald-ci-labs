@@ -30,7 +30,7 @@ jobs:
         run: |
           make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
         env:
-          CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
+          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
       # - run: |
       #     echo "build"
       #     export GOPATH=$HOME/go
