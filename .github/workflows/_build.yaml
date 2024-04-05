@@ -36,16 +36,27 @@ jobs:
         env:
           VALD_CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
       - name: Check SHA
+        id: check_sha
         working-directory: .github/workflows # NOTE: For debug.
         run: |
           ORIGIN_VALD_SHA=$(make vald/origin/sha/print)
           CURRENT_VALD_SHA="18786bf03a1a47d7c24afae496ad1c839c1aca1e"
-          # CURRENT_VALD_SHA=$(make vald/sha/print)
 
-          echo ${ORIGIN_VALD_SHA}
-          echo ${CURRENT_VALD_SHA}
-        env:
-          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
+          if [ "${ORIGIN_VALD_SHA}" == "${CURRENT_VALD_SHA}" ]; then
+            echo "There is no need to update"
+          fi
+
+          echo "UPDATE=true"                          >> $GITHUB_OUTPUT
+          echo "ORIGIN_VALD_SHA=${ORIGIN_VALD_SHA}"   >> $GITHUB_OUTPUT
+          echo "CURRENT_VALD_SHA=${CURRENT_VALD_SHA}" >> $GITHUB_OUTPUT
+
+          echo "UPDATE=true"
+          echo "ORIGIN_VALD_SHA=${ORIGIN_VALD_SHA}"
+          echo "CURRENT_VALD_SHA=${CURRENT_VALD_SHA}"
+      - name: Build and Push
+        if: ${{ steps.check_sha.outputs.UPDATE == 'true' }}
+        run: |
+          echo "aaa"
 
       # - name: Build and Push
       #   run: |
