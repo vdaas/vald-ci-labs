@@ -27,6 +27,10 @@ on:
         type: string
         required: false
         default: "nightly"
+      release_branch_name:
+        description: "release branch name"
+        type: string
+        required: true
 
 jobs:
   prepare:
@@ -53,3 +57,11 @@ jobs:
         env:
           IMAGES: ${{ inputs.images }}
           IMAGE_TAG: ${{ inputs.images }}
+      - name: Create release branch
+        run: |
+          BRANCH_EXIST=$(git fetch origin "${RELEASE_BRANCH_NAME}" && echo true || echo false)
+          if [ "${BRANCH_EXIST}" != "true" ]; then
+            git checkout main && git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
+          fi
+        env:
+          RELEASE_BRANCH_NAME: ${{ inputs.release_branch_name }}
