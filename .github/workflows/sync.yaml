@@ -19,12 +19,9 @@ on:
   # schedule:
   #   - cron: "*/10 * * * *"
 jobs:
-  sync:
+  sync-main:
     uses: ./.github/workflows/_build.yaml
     secrets: inherit
-    with:
-      vald_checkout_target_name: main
-      enable_tag_push: false
 
   semver-auto:
     needs:

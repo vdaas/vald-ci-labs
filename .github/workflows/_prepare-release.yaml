@@ -18,7 +18,7 @@ on:
   workflow_call:
     inputs:
       images:
-        description: "image names"
+        description: "docker image names used in E2E test before release"
         type: string
         required: false
         default: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
@@ -38,7 +38,7 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-      - name: Search docker image
+      - name: Search docker image tag
         run: |
           for image in ${IMAGES}; do
             echo "Search image: ${image}:${IMAGE_TAG}"
