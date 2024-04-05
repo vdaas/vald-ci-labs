@@ -23,7 +23,8 @@ jobs:
     uses: ./.github/workflows/_build.yaml
     secrets: inherit
     with:
-      vald_checkout_target_name: main # sync based on vald main branch.
+      vald_checkout_target_name: main    # sync based on vald main branch.
+      client_checkout_target_name: main
       enable_tag_push: true
 
   semver-auto:
@@ -41,12 +42,13 @@ jobs:
       IMAGE_TAG: ${{ needs.semver-auto.outputs.VERSION }}
     secrets: inherit
 
-  build:
-    needs:
-     - semver-auto
-     - prepare
-    uses: ./.github/workflows/_build.yaml
-    secrets: inherit
-    with:
-      vald_checkout_target_name: ${{ needs.semver-auto.outputs.VERSION }} # sync based on vald released version.
-      enable_tag_push: true
+  # build:
+  #   needs:
+  #    - semver-auto
+  #    - prepare
+  #   uses: ./.github/workflows/_build.yaml
+  #   secrets: inherit
+  #   with:
+  #     vald_checkout_target_name: ${{ needs.semver-auto.outputs.VERSION }} # sync based on vald released version.
+  #     client_checkout_target_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
+  #     enable_tag_push: true

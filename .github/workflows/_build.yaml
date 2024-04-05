@@ -7,6 +7,11 @@ on:
         type: string
         default: main
         required: false
+      client_checkout_target_name:
+        description: "Switch branches or restore working tree files to build vald"
+        type: string
+        default: main
+        required: false
       enable_tag_push:
         description: "Whether or not to push tag"
         type: boolean
@@ -26,6 +31,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.client_checkout_target_name }}
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
