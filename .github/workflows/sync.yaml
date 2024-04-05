@@ -24,7 +24,7 @@ jobs:
     secrets: inherit
     with:
       vald_checkout_target_name: main    # sync based on vald main branch.
-      client_checkout_target_name: main
+      client_checkout_target_name: fix/ci/two-version-support-for-client # NOTE: change to man
       enable_tag_push: true
 
   semver-auto:
