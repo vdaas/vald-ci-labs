@@ -22,12 +22,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-20.04
     steps:
-      - name: Install dependencies
-        run: |
-          echo "Install dependencies"
-          sudo apt-get update
-          sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
-          pip3 install grpcio-tools
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -62,7 +56,12 @@ jobs:
       - name: Build and Push
         if: ${{ steps.check_sha.outputs.UPDATE == 'true' }}
         run: |
-          echo "build"
+          echo "Install dependencies"
+          sudo apt-get update
+          sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
+          pip3 install grpcio-tools
+
+          echo "Build"
           # export GOPATH=$HOME/go
           # make PYTHON=python3 all
           # make vald/sha/update
@@ -79,9 +78,10 @@ jobs:
         env:
           GITHUB_USER: ${{ secrets.CI_USER }}
           GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
-      # - name: tag
-      #   continue-on-error: true
-      #   run: |
-      #     version=`make vald/client/python/version/print`
-      #     git tag ${version}
-      #     git push --tags
+      - name: Create tag
+        if: ${{ steps.check_sha.outputs.UPDATE == 'true' && inputs.enable_tag_push == true }}
+        continue-on-error: true
+        run: |
+          version=`make vald/client/python/version/print`
+          # git tag ${version}
+          # git push --tags
