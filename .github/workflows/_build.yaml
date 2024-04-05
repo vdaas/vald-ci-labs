@@ -35,7 +35,7 @@ jobs:
           make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
         env:
           VALD_CHECKOUT_TARGET_NAME: ${{ inputs.vald_checkout_target_name }}
-      - name: Check SHA
+      - name: Check SHA difference
         id: check_sha
         working-directory: .github/workflows # NOTE: For debug.
         run: |
