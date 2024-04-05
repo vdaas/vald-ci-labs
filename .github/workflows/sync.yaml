@@ -20,16 +20,16 @@ on:
   #   - cron: "*/10 * * * *"
 jobs:
   sync:
-    uses: ./.github/workflows/_build.yaml # reusable workflow of self repository
+    uses: ./.github/workflows/_build.yaml
     secrets: inherit
     with:
-      vald_checkout_target_name: main
+      vald_checkout_target_name: main # sync based on vald main branch.
+      enable_tag_push: true
 
   semver-auto:
     needs:
       - sync
-    # uses: ./.github/workflows/_semver-auto.yaml # reusable workflow of external repository
-    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@fix/ci/two-version-support-for-client
+    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@fix/ci/two-version-support-for-client # TODO: to main branch.
     secrets: inherit
 
   prepare:
@@ -40,3 +40,13 @@ jobs:
     with:
       IMAGE_TAG: ${{ needs.semver-auto.outputs.VERSION }}
     secrets: inherit
+
+  build:
+    needs:
+     - semver-auto
+     - prepare
+    uses: ./.github/workflows/_build.yaml
+    secrets: inherit
+    with:
+      vald_checkout_target_name: ${{ needs.semver-auto.outputs.VERSION }} # sync based on vald released version.
+      enable_tag_push: true
