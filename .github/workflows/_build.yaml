@@ -40,7 +40,7 @@ jobs:
         run: |
           ORIGIN_VALD_SHA=$(make vald/origin/sha/print)
           CURRENT_VALD_SHA="18786bf03a1a47d7c24afae496ad1c839c1aca1e"
-          CURRENT_VALD_SHA=$(make vald/sha/print)
+          # CURRENT_VALD_SHA=$(make vald/sha/print)
 
           echo ${ORIGIN_VALD_SHA}
           echo ${CURRENT_VALD_SHA}
