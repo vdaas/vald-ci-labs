@@ -26,6 +26,8 @@ on:
       RELEASE_BRANCH_NAME:
         description: "Release branch name"
         value: ${{ jobs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
+env:
+  VALD_TAG_LIST_API_URL: https://api.github.com/repos/vdaas/vald/tags
 
 jobs:
   semver-auto:
@@ -41,14 +43,10 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-      - name: Clone Vald repository
-        run: |
-          git clone https://github.com/vdaas/vald.git
       - name: Set Vald context
         id: set_vald_context
-        working-directory: vald
         run: |
-          VALD_TAG_LIST=$(git tag --sort=-v:refname)
+          VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name')
           SUPPORTED_TWO_VALD_VERSIONS=$(echo "${VALD_TAG_LIST}"   | awk -F. '{print $1"."$2}' | uniq | head -n 2)
           SUPPORTED_LATEST_VALD_VERSION=$(echo "${VALD_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | head -n 1) | head -n 1)
           SUPPORTED_LAST_VALD_VERSION=$(echo "${VALD_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | tail -n 1) | head -n 1)
