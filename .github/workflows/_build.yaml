@@ -56,27 +56,23 @@ jobs:
       - name: Build and Push
         if: ${{ steps.check_sha.outputs.UPDATE == 'true' }}
         run: |
-          echo "aaa"
-
-      # - name: Build and Push
-      #   run: |
-      #     echo "build"
-      #     export GOPATH=$HOME/go
-      #     make PYTHON=python3 all
-      #     make vald/sha/update
-      #     make vald/client/python/version/update
-      #
-      #     echo "commit and push"
-      #     sha=`make vald/sha/print`
-      #     git config --global user.name 'VDaaS org'
-      #     git config --global user.email 'ci@vdaas.org'
-      #     git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
-      #     git add .
-      #     git commit -m "Update [vald sha: ${sha}]"
-      #     git push
-      #   env:
-      #     GITHUB_USER: ${{ secrets.CI_USER }}
-      #     GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+          echo "build"
+          # export GOPATH=$HOME/go
+          # make PYTHON=python3 all
+          # make vald/sha/update
+          # make vald/client/python/version/update
+          #
+          # echo "commit and push"
+          # sha=`make vald/sha/print`
+          # git config --global user.name 'VDaaS org'
+          # git config --global user.email 'ci@vdaas.org'
+          # git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+          # git add .
+          # git commit -m "Update [vald sha: ${sha}]"
+          # git push
+        env:
+          GITHUB_USER: ${{ secrets.CI_USER }}
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
       # - name: tag
       #   continue-on-error: true
       #   run: |

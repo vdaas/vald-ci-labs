@@ -15,11 +15,11 @@
 #
 name: "Run prepare for client release"
 on:
-  workflow_dispatch:
-    inputs:
-      release_version:
-        description: "Released Vald version"
-        type: string
+  # workflow_dispatch:
+  #   inputs:
+  #     release_version:
+  #       description: "Released Vald version"
+  #       type: string
   pull_request:
   # schedule:
   #   - cron: "*/10 * * * *"
