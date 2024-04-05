@@ -25,7 +25,7 @@ jobs:
 
   semver-auto:
     needs:
-      - sync
+      - sync-main
     uses: ./.github/workflows/_semver-auto.yaml
     secrets: inherit
 
