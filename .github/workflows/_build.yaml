@@ -7,10 +7,14 @@ on:
         type: string
         default: main
         required: false
+      ENABLE_TAG_PUSH:
+        description: "Whether or not to push tag"
+        type: boolean
+        default: false
+        required: false
 
 jobs:
-  build:
-    name: build
+  build-and-push:
     runs-on: ubuntu-20.04
     steps:
       - name: Install dependencies
@@ -31,13 +35,26 @@ jobs:
           make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
         env:
           VALD_CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
-      # - run: |
+      - name: Check SHA
+        working-directory: .github/workflows # NOTE: For debug.
+        run: |
+          ORIGIN_VALD_SHA=$(make vald/origin/sha/print)
+          CURRENT_VALD_SHA="18786bf03a1a47d7c24afae496ad1c839c1aca1e"
+          CURRENT_VALD_SHA=$(make vald/sha/print)
+
+          echo ${ORIGIN_VALD_SHA}
+          echo ${CURRENT_VALD_SHA}
+        env:
+          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
+
+      # - name: Build and Push
+      #   run: |
       #     echo "build"
       #     export GOPATH=$HOME/go
       #     make PYTHON=python3 all
       #     make vald/sha/update
       #     make vald/client/python/version/update
-      # - run: |
+      #
       #     echo "commit and push"
       #     sha=`make vald/sha/print`
       #     git config --global user.name 'VDaaS org'
