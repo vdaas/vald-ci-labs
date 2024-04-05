@@ -2,12 +2,12 @@ name: build protobuf
 on:
   workflow_call:
     inputs:
-      VALD_CHECKOUT_TARGET_NAME:
+      vald_checkout_target_name:
         description: "Switch branches or restore working tree files to build vald"
         type: string
         default: main
         required: false
-      ENABLE_TAG_PUSH:
+      enable_tag_push:
         description: "Whether or not to push tag"
         type: boolean
         default: false
@@ -34,13 +34,13 @@ jobs:
         run: |
           make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
         env:
-          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.VALD_CHECKOUT_TARGET_NAME }}
+          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.vald_checkout_target_name }}
       - name: Check SHA
         id: check_sha
         working-directory: .github/workflows # NOTE: For debug.
         run: |
           ORIGIN_VALD_SHA=$(make vald/origin/sha/print)
-          CURRENT_VALD_SHA="18786bf03a1a47d7c24afae496ad1c839c1aca1e"
+          CURRENT_VALD_SHA="18786bf03a1a47d7c24afae496ad1c839c1aca1e" # TODO: make vald/sha/print
 
           if [ "${ORIGIN_VALD_SHA}" == "${CURRENT_VALD_SHA}" ]; then
             echo "There is no need to update"

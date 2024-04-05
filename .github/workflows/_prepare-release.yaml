@@ -17,13 +17,12 @@ name: "Prepare for release"
 on:
   workflow_call:
     inputs:
-      IMAGES:
+      images:
         description: "image names"
         type: string
         required: false
-        # default: "vdaas/vald-agent-ngt vdaas/vald-agent-faiss vdaas/vald-agent-sidecar vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-filter-gateway vdaas/vald-mirror-gateway vdaas/vald-manager-index vdaas/vald-index-operator vdaas/vald-readreplica-rotate"
         default: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
-      IMAGE_TAG:
+      image_tag:
         description: "image tag name"
         type: string
         required: false
@@ -52,5 +51,5 @@ jobs:
           done
           echo "All images found."
         env:
-          IMAGES: ${{ inputs.IMAGES }}
-          IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
+          IMAGES: ${{ inputs.images }}
+          IMAGE_TAG: ${{ inputs.images }}

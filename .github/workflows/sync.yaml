@@ -19,6 +19,24 @@ on:
   # schedule:
   #   - cron: "*/10 * * * *"
 jobs:
-  build:
+  sync:
     uses: ./.github/workflows/_build.yaml
+    secrets: inherit
+    with:
+      vald_checkout_target_name: main
+      enable_tag_push: false
+
+  semver-auto:
+    needs:
+      - sync
+    uses: ./.github/workflows/_semver-auto.yaml
+    secrets: inherit
+
+  prepare-release:
+    if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
+    needs:
+      - semver-auto
+    uses: ./.github/workflows/_prepare-release.yaml
+    with:
+      IMAGE_TAG: ${{ needs.semver-auto.outputs.VERSION }}
     secrets: inherit
