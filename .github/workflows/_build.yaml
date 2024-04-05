@@ -2,8 +2,8 @@ name: build protobuf
 on:
   workflow_call:
     inputs:
-      BRANCH_NAME:
-        description: "Build target branch"
+      CHECKOUT_TARGET_NAME:
+        description: "Switch branches or restore working tree files to build"
         type: string
         default: main
         required: false
@@ -25,6 +25,12 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Clone Vald repository
+        working-directory: .github/workflows # NOTE: For debug.
+        run: |
+          make vald/clone && make CHECKOUT_TARGET_NAME=${CHECKOUT_TARGET_NAME} vald/checkout
+        env:
+          CHECKOUT_TARGET_NAME: ${{ inputs.CHECKOUT_TARGET_NAME }}
       # - run: |
       #     echo "build"
       #     export GOPATH=$HOME/go
