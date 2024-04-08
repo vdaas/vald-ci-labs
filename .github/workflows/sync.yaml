@@ -15,9 +15,9 @@
 #
 name: "Sync Vald"
 on:
-  pull_request:
-  # schedule:
-  #   - cron: "*/10 * * * *"
+  # pull_request:
+  schedule:
+    - cron: "*/5 * * * *"
 jobs:
   sync-main:
     uses: ./.github/workflows/_build.yaml
