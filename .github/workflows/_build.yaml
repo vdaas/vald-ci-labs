@@ -46,6 +46,7 @@ jobs:
 
           if [ "${ORIGIN_VALD_SHA}" == "${CURRENT_VALD_SHA}" ]; then
             echo "There is no need to update"
+            exit 0
           fi
 
           echo "UPDATE=true"                          >> $GITHUB_OUTPUT
