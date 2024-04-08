@@ -15,7 +15,8 @@
 #
 name: "Sync Vald"
 on:
-  pull_request:
+  repository_dispatch:
+  # pull_request:
   # schedule:
   #   - cron: "*/5 * * * *"
 jobs:
