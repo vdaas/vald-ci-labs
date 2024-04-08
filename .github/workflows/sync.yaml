@@ -19,7 +19,7 @@ on:
   # schedule:
   #   - cron: "*/10 * * * *"
 jobs:
-  sync:
+  sync-main:
     uses: ./.github/workflows/_build.yaml
     secrets: inherit
     with:
@@ -30,7 +30,7 @@ jobs:
 
   semver-auto:
     needs:
-      - sync
+      - sync-main
     uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@fix/ci/two-version-support-for-client # TODO: to main branch.
     secrets: inherit
 
@@ -44,7 +44,7 @@ jobs:
       release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
     secrets: inherit
 
-  build:
+  sync-release:
     needs:
      - semver-auto
      - prepare-release
