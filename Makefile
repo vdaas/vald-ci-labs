@@ -140,8 +140,8 @@ vald/sha/print:
 
 .PHONY: vald/sha/update
 ## update VALD_SHA value
-vald/sha/update: vald
-	(cd vald; git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
+vald/sha/update: $(VALD_DIR)
+	(cd $(VALD_DIR); git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
 
 .PHONY: vald/client/python/version/print
 ## print VALD_CLIENT_PYTHON_VERSION value
@@ -150,7 +150,7 @@ vald/client/python/version/print:
 
 .PHONY: vald/client/python/version/update
 ## update VALD_CLIENT_PYTHON_VERSION value
-vald/client/python/version/update: vald
+vald/client/python/version/update: $(VALD_DIR)
 	(vald_version=`cat $(VALD_DIR)/versions/VALD_VERSION | sed -e 's/^v//'`; \
 	    client_version=`cat $(VALD_CLIENT_PYTHON_VERSION)`; \
 	    major=$${client_version%%.*}; client_version="$${client_version#*.}"; \
