@@ -82,5 +82,6 @@ jobs:
         continue-on-error: true
         run: |
           version="$(make vald/client/python/version/print)"
+          git remote set-url origin "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git tag ${version}
-          git push --tags
+          git push -u origin --tags
