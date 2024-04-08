@@ -118,6 +118,11 @@ $(VALD_DIR):
 ## clone vald repository
 vald/clone: $(VALD_DIR)
 
+.PHONY: vald/delete
+## delete local vald repository
+vald/delete:
+	rm -rf $(VALD_DIR)
+
 .PHONY: vald/checkout
 ## checkout vald repository
 vald/checkout: $(VALD_DIR)
