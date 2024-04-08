@@ -45,6 +45,7 @@ jobs:
     secrets: inherit
 
   sync-release:
+    if: ${{ needs.prepare-release.outputs.RESULT == 'true' }}
     needs:
      - semver-auto
      - prepare-release
