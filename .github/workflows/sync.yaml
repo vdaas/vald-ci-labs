@@ -1,0 +1,57 @@
+#
+# Copyright (C) 2019-2024 vdaas.org vald team <vald@vdaas.org>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# You may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: "Sync Vald"
+on:
+  pull_request:
+  # schedule:
+  #   - cron: "*/10 * * * *"
+jobs:
+  sync-main:
+    uses: ./.github/workflows/_build.yaml
+    secrets: inherit
+    with:
+      vald_checkout_target_name: main    # sync based on vald main branch.
+      # client_checkout_target_name: main
+      enable_tag_push: false
+      client_checkout_target_name: fix/ci/two-version-support-for-client # NOTE: change to man
+
+  semver-auto:
+    needs:
+      - sync-main
+    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@fix/ci/two-version-support-for-client # TODO: to main branch.
+    secrets: inherit
+
+  prepare-release:
+    if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
+    needs:
+      - semver-auto
+    uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@fix/ci/two-version-support-for-client # TODO: to main branch.
+    with:
+      image_tag: ${{ needs.semver-auto.outputs.VERSION }}
+      release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
+    secrets: inherit
+
+  sync-release:
+    if: ${{ needs.prepare-release.outputs.RESULT == 'true' }}
+    needs:
+     - semver-auto
+     - prepare-release
+    uses: ./.github/workflows/_build.yaml
+    secrets: inherit
+    with:
+      vald_checkout_target_name: ${{ needs.semver-auto.outputs.VERSION }}                 # sync based on vald released version.
+      client_checkout_target_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
+      enable_tag_push: true

@@ -1,0 +1,87 @@
+name: build protobuf
+on:
+  workflow_call:
+    inputs:
+      vald_checkout_target_name:
+        description: "Switch branches or restore working tree files to build vald"
+        type: string
+        default: main
+        required: false
+      client_checkout_target_name:
+        description: "Switch branches or restore working tree files to build vald"
+        type: string
+        default: main
+        required: false
+      enable_tag_push:
+        description: "Whether or not to push tag"
+        type: boolean
+        default: false
+        required: false
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.client_checkout_target_name }}
+      - name: Set Git config
+        run: |
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Clone Vald repository
+        working-directory: .github/workflows # NOTE: For debug.
+        run: |
+          make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
+        env:
+          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.vald_checkout_target_name }}
+      - name: Check SHA difference
+        id: check_sha
+        working-directory: .github/workflows # NOTE: For debug.
+        run: |
+          ORIGIN_VALD_SHA=$(make vald/origin/sha/print)
+          CURRENT_VALD_SHA="18786bf03a1a47d7c24afae496ad1c839c1aca1e" # TODO: make vald/sha/print
+
+          if [ "${ORIGIN_VALD_SHA}" == "${CURRENT_VALD_SHA}" ]; then
+            echo "There is no need to update"
+          fi
+
+          echo "UPDATE=true"                          >> $GITHUB_OUTPUT
+          echo "ORIGIN_VALD_SHA=${ORIGIN_VALD_SHA}"   >> $GITHUB_OUTPUT
+          echo "CURRENT_VALD_SHA=${CURRENT_VALD_SHA}" >> $GITHUB_OUTPUT
+
+          echo "UPDATE=true"
+          echo "ORIGIN_VALD_SHA=${ORIGIN_VALD_SHA}"
+          echo "CURRENT_VALD_SHA=${CURRENT_VALD_SHA}"
+      - name: Build and Push
+        if: ${{ steps.check_sha.outputs.UPDATE == 'true' }}
+        run: |
+          echo "Install dependencies"
+          sudo apt-get update
+          sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
+          pip3 install grpcio-tools
+
+          echo "Build"
+          # export GOPATH=$HOME/go
+          # make PYTHON=python3 all
+          # make vald/sha/update
+          # make vald/client/python/version/update
+          #
+          # echo "commit and push"
+          # sha=`make vald/sha/print`
+          # git config --global user.name 'VDaaS org'
+          # git config --global user.email 'ci@vdaas.org'
+          # git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+          # git add .
+          # git commit -m "Update [vald sha: ${sha}]"
+          # git push
+        env:
+          GITHUB_USER: ${{ secrets.CI_USER }}
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+      - name: Create tag
+        if: ${{ steps.check_sha.outputs.UPDATE == 'true' && inputs.enable_tag_push == true }}
+        continue-on-error: true
+        run: |
+          version=`make vald/client/python/version/print`
+          # git tag ${version}
+          # git push --tags
