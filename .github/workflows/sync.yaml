@@ -24,21 +24,20 @@ jobs:
     secrets: inherit
     with:
       vald_checkout_target_name: main    # sync based on vald main branch.
-      # client_checkout_target_name: main
+      client_checkout_target_name: main
       enable_tag_push: false
-      client_checkout_target_name: fix/ci/two-version-support-for-client # NOTE: change to man
 
   semver-auto:
     needs:
       - sync-main
-    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@fix/ci/two-version-support-for-client # TODO: to main branch.
+    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
     secrets: inherit
 
   prepare-release:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     needs:
       - semver-auto
-    uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@fix/ci/two-version-support-for-client # TODO: to main branch.
+    uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@main
     with:
       image_tag: ${{ needs.semver-auto.outputs.VERSION }}
       release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
