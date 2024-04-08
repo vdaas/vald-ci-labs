@@ -147,23 +147,8 @@ vald/client/python/version/print:
 ## update VALD_CLIENT_PYTHON_VERSION value
 vald/client/python/version/update: $(VALD_DIR)
 	(vald_version=`cat $(VALD_DIR)/versions/VALD_VERSION | sed -e 's/^v//'`; \
-	    client_version=`cat $(VALD_CLIENT_PYTHON_VERSION)`; \
-	    major=$${client_version%%.*}; client_version="$${client_version#*.}"; \
-	    minor=$${client_version%%.*}; client_version="$${client_version#*.}"; \
-	    patch=$${client_version%%.*}; client_version="$${client_version#*.}"; \
-	    if [ "$${vald_version}" = "$${major}.$${minor}.$${patch}" ]; then \
-	        if [ "$${patch}" = "$${client_version}" ]; then \
-	            new_version="$${major}.$${minor}.$${patch}.post1"; \
-	        else \
-	            rev="$${client_version#post}"; \
-	            rev=$$((rev+1)); \
-	            new_version="$${major}.$${minor}.$${patch}.post$${rev}"; \
-	        fi; \
-	    else \
-	        new_version="$${vald_version}"; \
-	    fi; \
-	    echo "VALD_VERSION: $${vald_version}, NEW_CLIENT_VERSION: $${new_version}"; \
-	    echo "$${new_version}" > VALD_CLIENT_PYTHON_VERSION)
+	    echo "VALD_VERSION: $${vald_version}"; \
+	    echo "$${vald_version}" > VALD_CLIENT_PYTHON_VERSION)
 	sed -i -e "s/^version = .*\$$/version = `cat VALD_CLIENT_PYTHON_VERSION`/" setup.cfg
 
 .PHONY: proto/deps
@@ -180,4 +165,3 @@ $(BINDIR)/buf:
 	"https://github.com/bufbuild/buf/releases/download/$$version/buf-$(shell uname -s)-$(shell uname -m)" \
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
-
