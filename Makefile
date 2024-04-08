@@ -112,7 +112,21 @@ $(PB2DIR_ROOT):
 $(PB2PYS): proto/deps $(PB2DIR_ROOT) $(SHADOWS)
 
 $(VALD_DIR):
-	git clone --depth 1 https://$(VALDREPO) $(VALD_DIR)
+	git clone https://$(VALDREPO) $(VALD_DIR)
+
+.PHONY: vald/clone
+## clone vald repository
+vald/clone: $(VALD_DIR)
+
+.PHONY: vald/checkout
+## checkout vald repository
+vald/checkout: $(VALD_DIR)
+	cd $(VALD_DIR) && git checkout ${VALD_CHECKOUT_TARGET_NAME}
+
+.PHONY: vald/origin/sha/print
+## print origin VALD_SHA value
+vald/origin/sha/print: $(VALD_DIR)
+	@cd $(VALD_DIR) && git rev-parse HEAD | tr -d '\n'
 
 .PHONY: vald/sha/print
 ## print VALD_SHA value
@@ -166,3 +180,4 @@ $(BINDIR)/buf:
 	"https://github.com/bufbuild/buf/releases/download/$$version/buf-$(shell uname -s)-$(shell uname -m)" \
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
+
