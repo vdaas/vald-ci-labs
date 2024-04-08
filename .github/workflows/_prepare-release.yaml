@@ -55,7 +55,6 @@ jobs:
             echo "Search image: ${image}:${IMAGE_TAG}"
             if ! curl -s "https://registry.hub.docker.com/v2/repositories/${image}/tags/${IMAGE_TAG}" | jq '.name' | grep -v "null" > /dev/null ; then
               echo "Image ${image}:${IMAGE_TAG} not Found. Existing..."
-              echo "FOUND_ALL_IMAGES=false" >> $GITHUB_OUTPUT
               exit 0
             else
               echo "Image ${image}:${IMAGE_TAG} Found"
@@ -66,7 +65,7 @@ jobs:
           echo "All images found."
         env:
           IMAGES: ${{ inputs.images }}
-          IMAGE_TAG: ${{ inputs.images }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
       - name: Create release branch
         id: create_release_branch
         if: ${{ steps.search_docker_image_tag.outputs.FOUND_ALL_IMAGES == 'true' }}
