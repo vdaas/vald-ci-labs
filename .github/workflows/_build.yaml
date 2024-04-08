@@ -64,22 +64,23 @@ jobs:
           make PYTHON=python3 all
           make vald/sha/update
           make vald/client/python/version/update
-          #
-          # echo "commit and push"
-          # sha=`make vald/sha/print`
-          # git config --global user.name 'VDaaS org'
-          # git config --global user.email 'ci@vdaas.org'
-          # git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
-          # git add .
-          # git commit -m "Update [vald sha: ${sha}]"
-          # git push
+
+          echo "commit and push"
+          sha=`make vald/sha/print`
+          git config --global user.name 'VDaaS org'
+          git config --global user.email 'ci@vdaas.org'
+          git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+          git add .
+          git commit -m "Update [vald sha: ${sha}]"
+          git push
         env:
-          GITHUB_USER: ${{ secrets.CI_USER }}
-          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+          # TODO: Check secrets
+          GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
       - name: Create tag
         if: ${{ steps.check_sha.outputs.UPDATE == 'true' && inputs.enable_tag_push == true }}
         continue-on-error: true
         run: |
           version="$(make vald/client/python/version/print)"
-          # git tag ${version}
-          # git push --tags
+          git tag ${version}
+          git push --tags
