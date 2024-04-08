@@ -17,6 +17,10 @@ on:
         type: boolean
         default: false
         required: false
+env:
+  # TODO: Check secrets
+  GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+  GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
 jobs:
   build-and-push:
@@ -73,10 +77,6 @@ jobs:
           git add .
           git commit -m "Update [vald sha: ${sha}]"
           git push
-        env:
-          # TODO: Check secrets
-          GITHUB_USER: ${{ secrets.DISPATCH_USER }}
-          GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
       - name: Create tag
         if: ${{ steps.check_sha.outputs.UPDATE == 'true' && inputs.enable_tag_push == true }}
         continue-on-error: true
