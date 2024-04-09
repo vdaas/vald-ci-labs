@@ -24,23 +24,21 @@ jobs:
     uses: ./.github/workflows/_build.yaml
     secrets: inherit
     with:
-      vald_checkout_target_name: main    # sync based on vald main branch.
-      client_checkout_target_name: main
+      vald_checkout_ref: main    # sync based on vald main branch.
+      client_checkout_ref: main
       enable_tag_push: false
 
   semver-auto:
     needs:
       - sync-main
-    uses:  ./.github/workflows/_semver-auto.yaml
-    # uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
+    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
     secrets: inherit
 
   prepare-release:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     needs:
       - semver-auto
-    # uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@main
-    uses: ./.github/workflows/_prepare-release.yaml
+    uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@main
     with:
       image_tag: ${{ needs.semver-auto.outputs.VERSION }}
       release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
@@ -49,11 +47,11 @@ jobs:
   sync-release:
     if: ${{ needs.prepare-release.outputs.RESULT == 'true' }}
     needs:
-     - semver-auto
-     - prepare-release
+      - semver-auto
+      - prepare-release
     uses: ./.github/workflows/_build.yaml
     secrets: inherit
     with:
-      vald_checkout_target_name: ${{ needs.semver-auto.outputs.VERSION }}                 # sync based on vald released version.
-      client_checkout_target_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
+      vald_checkout_ref: ${{ needs.semver-auto.outputs.VERSION }}                 # sync based on vald released version.
+      client_checkout_ref: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
       enable_tag_push: true

@@ -2,12 +2,12 @@ name: build protobuf
 on:
   workflow_call:
     inputs:
-      vald_checkout_target_name:
+      vald_checkout_ref:
         description: "Switch branches or restore working tree files to build vald"
         type: string
         default: main
         required: false
-      client_checkout_target_name:
+      client_checkout_ref:
         description: "Switch branches or restore working tree files to build vald"
         type: string
         default: main
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ inputs.client_checkout_target_name }}
+          ref: ${{ inputs.client_checkout_ref }}
           token: ${{ env.GITHUB_TOKEN }}
       - name: Set Git config
         run: |
@@ -41,9 +41,9 @@ jobs:
           git_commit_gpgsign: true
       - name: Clone Vald repository
         run: |
-          make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
+          make vald/clone && make VALD_CHECKOUT_REF=${VALD_CHECKOUT_REF} vald/checkout
         env:
-          VALD_CHECKOUT_TARGET_NAME: ${{ inputs.vald_checkout_target_name }}
+          VALD_CHECKOUT_REF: ${{ inputs.vald_checkout_ref }}
       - name: Check SHA difference
         id: check_sha
         run: |
