@@ -121,7 +121,7 @@ vald/clone: $(VALD_DIR)
 .PHONY: vald/checkout
 ## checkout vald repository
 vald/checkout: $(VALD_DIR)
-	cd $(VALD_DIR) && git checkout ${VALD_CHECKOUT_TARGET_NAME}
+	cd $(VALD_DIR) && git checkout ${VALD_CHECKOUT_REF}
 
 .PHONY: vald/origin/sha/print
 ## print origin VALD_SHA value
