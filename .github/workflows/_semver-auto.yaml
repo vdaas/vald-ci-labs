@@ -33,7 +33,7 @@ on:
         description: "Release branch name"
         value: ${{ jobs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
     secrets:
-      GITHUB_TOKEN:
+      CI_TOKEN:
         required: true
 env:
   VALD_TAG_LIST_API_URL: https://api.github.com/repos/vdaas/vald/tags
@@ -50,7 +50,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.client_checkout_ref }} ## NOTE:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CI_TOKEN }}
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}

@@ -37,7 +37,7 @@ on:
         type: string
         required: true
     secrets:
-      GITHUB_TOKEN:
+      CI_TOKEN:
         required: true
     outputs:
       RESULT:
@@ -53,7 +53,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.client_checkout_ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CI_TOKEN }}
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
