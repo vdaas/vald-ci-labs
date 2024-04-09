@@ -32,7 +32,8 @@ jobs:
     needs:
       - sync-main
     uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   prepare-release:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
@@ -42,7 +43,8 @@ jobs:
     with:
       image_tag: ${{ needs.semver-auto.outputs.VERSION }}
       release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   sync-release:
     if: ${{ needs.prepare-release.outputs.RESULT == 'true' }}
