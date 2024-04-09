@@ -33,6 +33,11 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Clone Vald repository
         run: |
           make vald/clone && make VALD_CHECKOUT_TARGET_NAME=${VALD_CHECKOUT_TARGET_NAME} vald/checkout
@@ -76,7 +81,7 @@ jobs:
           git config --global user.email 'ci@vdaas.org'
           git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
           git add .
-          git commit -m "Update [vald sha: ${sha}]"
+          git commit -S --signoff -m "Update [vald sha: ${sha}]"
           git push
       - name: Create tag
         if: ${{ steps.check_sha.outputs.UPDATE == 'true' && inputs.enable_tag_push == true }}
