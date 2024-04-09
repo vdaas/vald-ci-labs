@@ -22,18 +22,21 @@ on:
 jobs:
   sync-main:
     uses: ./.github/workflows/_build.yaml
-    secrets: inherit
     with:
       vald_checkout_ref: main    # sync based on vald main branch.
       client_checkout_ref: main
       enable_tag_push: false
+    secrets:
+      CI_USER: ${{ secrets.DISPATCH_USER }}
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
   semver-auto:
     needs:
       - sync-main
     uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
     secrets:
-      GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   prepare-release:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
@@ -44,7 +47,7 @@ jobs:
       image_tag: ${{ needs.semver-auto.outputs.VERSION }}
       release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   sync-release:
     if: ${{ needs.prepare-release.outputs.RESULT == 'true' }}
@@ -52,8 +55,11 @@ jobs:
       - semver-auto
       - prepare-release
     uses: ./.github/workflows/_build.yaml
-    secrets: inherit
     with:
       vald_checkout_ref: ${{ needs.semver-auto.outputs.VERSION }}                 # sync based on vald released version.
       client_checkout_ref: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
       enable_tag_push: true
+    secrets:
+      CI_USER: ${{ secrets.DISPATCH_USER }}
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
