@@ -35,6 +35,10 @@ on:
       RESULT:
         description: "Whether the preparation is a success or not"
         value: ${{ jobs.prepare.outputs.RESULT }}
+env:
+  # TODO: Check secrets
+  GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+  GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
 jobs:
   prepare:
