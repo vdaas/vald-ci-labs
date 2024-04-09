@@ -1,0 +1,26 @@
+name: test
+on:
+  pull_request:
+
+env:
+  # TODO: Check secrets
+  GITHUB_USER: ${{ secrets.DISPATCH_USER }}
+  GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set Git config
+        run: |
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
+          toch test.txt
+
+          git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
+          git add test.txt
+          git commit -S --signoff -m "test commit"
+          git push
