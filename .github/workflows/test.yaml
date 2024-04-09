@@ -31,4 +31,4 @@ jobs:
           git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
           git add test.txt
           git commit -S --signoff -m "test commit"
-          git push
+          git push origin fix/revert
