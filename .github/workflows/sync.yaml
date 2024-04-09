@@ -31,14 +31,16 @@ jobs:
   semver-auto:
     needs:
       - sync-main
-    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
+    uses:  ./.github/workflows/_semver-auto.yaml
+    # uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
     secrets: inherit
 
   prepare-release:
     if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
     needs:
       - semver-auto
-    uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@main
+    # uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@main
+    uses: ./.github/workflows/_prepare-release.yaml
     with:
       image_tag: ${{ needs.semver-auto.outputs.VERSION }}
       release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
