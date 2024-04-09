@@ -77,8 +77,8 @@ jobs:
 
           echo "commit and push"
           sha=`make vald/sha/print`
-          git config --global user.name 'VDaaS org'
-          git config --global user.email 'ci@vdaas.org'
+          # git config --global user.name 'VDaaS org'
+          # git config --global user.email 'ci@vdaas.org'
           git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
           git add .
           git commit -S --signoff -m "Update [vald sha: ${sha}]"
