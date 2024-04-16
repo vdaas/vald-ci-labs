@@ -41,4 +41,6 @@ jobs:
       vald_checkout_src_ref: ${{ matrix.vald_checkout_src_ref }}
       client_checkout_target_ref: main
     secrets:
+      CI_USER: ${{ secrets.DISPATCH_USER }}
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}

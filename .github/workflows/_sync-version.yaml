@@ -45,24 +45,24 @@ jobs:
           make vald/clone && make VALD_CHECKOUT_REF=${VALD_CHECKOUT_REF} vald/checkout
         env:
           VALD_CHECKOUT_REF: ${{ inputs.vald_checkout_src_ref }}
-      - name: Build and Push
-        run: |
-          # NOTE: call from Make command.
-          echo "Install dependencies"
-          sudo apt-get update
-          sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
-          pip3 install grpcio-tools
-
-          echo "Build proto"
-          export GOPATH=$HOME/go
-          make PYTHON=python3 proto
-          make vald/sha/update
-          make vald/client/python/version/update
-
-          echo "commit and push"
-          SHA="$(make vald/sha/print)"
-
-          git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
-          git add .
-          git commit -S --signoff -m "Update [vald sha: ${SHA}]"
-          git push
+      # - name: Build and Push
+      #   run: |
+      #     # NOTE: call from Make command.
+      #     echo "Install dependencies"
+      #     sudo apt-get update
+      #     sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
+      #     pip3 install grpcio-tools
+      #
+      #     echo "Build proto"
+      #     export GOPATH=$HOME/go
+      #     make PYTHON=python3 proto
+      #     make vald/sha/update
+      #     make vald/client/python/version/update
+      #
+      #     echo "commit and push"
+      #     SHA="$(make vald/sha/print)"
+      #
+      #     git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
+      #     git add .
+      #     git commit -S --signoff -m "Update [vald sha: ${SHA}]"
+      #     git push
