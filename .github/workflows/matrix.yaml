@@ -31,7 +31,7 @@ jobs:
   matrix-test:
     needs:
       - check-version
-    uses: ./.github/workflows/_check-main.yaml
+    uses: ./.github/workflows/_sync-version.yaml
     strategy:
       fail-fast: true
       max-parallel: 1

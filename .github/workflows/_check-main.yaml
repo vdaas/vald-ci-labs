@@ -18,12 +18,12 @@ on:
   workflow_call:
     inputs:
       vald_checkout_src_ref:
-        description: "Switch branches or restore working tree files to build vald"
+        description: "Switch branches or restore working tree files to check HEAD commit difference"
         type: string
         default: main
         required: false
       client_checkout_target_ref:
-        description: "Switch branches or restore working tree files to build vald"
+        description: "Switch branches or restore working tree files to check HEAD commit difference"
         type: string
         default: main
         required: false
