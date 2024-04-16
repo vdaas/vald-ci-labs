@@ -36,9 +36,9 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        vald_checkout_src_ref: ${{ fromJson(needs.check-version.outputs.JSON) }}
+        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.JSON) }}
     with:
-      vald_checkout_src_ref: ${{ matrix.vald_checkout_src_ref }}
+      vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
       client_checkout_target_ref: main
     secrets:
       CI_USER: ${{ secrets.DISPATCH_USER }}
