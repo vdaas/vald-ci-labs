@@ -1,0 +1,42 @@
+#
+# This file is for verification purposes only.
+#
+name: "Sync Vald"
+on:
+  workflow_dispatch:
+
+env:
+  CI_TOKEN: ${{ secrets.CI_TOKEN }}
+
+jobs:
+  check-version:
+    runs-on: ubuntu-20.04
+    outputs:
+      JSON: ${{ steps.gen.outputs.JSON }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{ env.CI_TOKEN }}
+      - name: Generate version array
+        id: gen
+        run: |
+          ARRAY="v1.7.11 v1.7.12"
+          JSON=$(echo "${ARRAY}" | jq --compact-output -R 'split(" ")')
+          echo "JSON=${JSON}" >> $GITHUB_OUTPUT
+
+
+  matrix-test:
+    needs:
+      - check-version
+    uses: ./.github/workflows/_check-main.yaml
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix:
+        vald_checkout_src_ref: ${{ fromJson(needs.check-version.outputs.JSON) }}
+    with:
+      vald_checkout_src_ref: ${{ matrix.vald_checkout_src_ref }}
+      client_checkout_target_ref: main
+    secrets: inherit
