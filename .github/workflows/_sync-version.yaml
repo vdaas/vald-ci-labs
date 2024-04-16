@@ -1,12 +1,11 @@
-name: Check version difference
+name: Sync Vald version
 on:
   workflow_call:
     inputs:
-      vald_checkout_src_ref:
-        description: "Switch branches or restore working tree files to build vald"
+      vald_checkout_src_tag_ref:
+        description: "Switch tag or restore working tree files to build vald"
         type: string
-        default: main
-        required: false
+        required: true
       client_checkout_target_ref:
         description: "Switch branches or restore working tree files to build vald"
         type: string
@@ -19,50 +18,57 @@ on:
         required: true
       GPG_PRIVATE_KEY:
         required: true
+
+env:
+  IMAGES: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
+  IMAGE_TAG: ${{ inputs.vald_checkout_src_tag_ref }} # v1.7.12
+
 jobs:
-  sync-version:
-    runs-on: ubuntu-20.04
-    env:
-      CI_USER: ${{ secrets.CI_USER }}
-      CI_TOKEN: ${{ secrets.CI_TOKEN }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      RELEASE_BRANCH_NAME: ${{ steps.create_release_branch.outputs.RELEASE_BRANCH_NAME }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ inputs.client_checkout_target_ref }}
-          token: ${{ env.CI_TOKEN }}
+          token: ${{ secrets.CI_TOKEN }}
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-      - uses: crazy-max/ghaction-import-gpg@v4
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-      - name: Clone Vald repository
+      - name: Search docker image tag
+        id: search_docker_image_tag
         run: |
-          make vald/clone && make VALD_CHECKOUT_REF=${VALD_CHECKOUT_REF} vald/checkout
+          for image in ${IMAGES}; do
+            echo "Search image: ${image}:${IMAGE_TAG}"
+            if ! curl -s "https://registry.hub.docker.com/v2/repositories/${image}/tags/${IMAGE_TAG}" | jq '.name' | grep -v "null" > /dev/null ; then
+              echo "Image ${image}:${IMAGE_TAG} not Found. Existing..."
+              exit 1
+            else
+              echo "Image ${image}:${IMAGE_TAG} Found"
+            fi
+          done
+
+          echo "All images found."
+      - name: Create branch
+        id: create_release_branch
+        run: |
+          BRANCH_EXIST=$(git fetch origin "${RELEASE_BRANCH_NAME}" && echo true || echo false)
+          if [ "${BRANCH_EXIST}" != "true" ]; then
+            git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
+          fi
+
+          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
         env:
-          VALD_CHECKOUT_REF: ${{ inputs.vald_checkout_src_ref }}
-      # - name: Build and Push
-      #   run: |
-      #     # NOTE: call from Make command.
-      #     echo "Install dependencies"
-      #     sudo apt-get update
-      #     sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
-      #     pip3 install grpcio-tools
-      #
-      #     echo "Build proto"
-      #     export GOPATH=$HOME/go
-      #     make PYTHON=python3 proto
-      #     make vald/sha/update
-      #     make vald/client/python/version/update
-      #
-      #     echo "commit and push"
-      #     SHA="$(make vald/sha/print)"
-      #
-      #     git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
-      #     git add .
-      #     git commit -S --signoff -m "Update [vald sha: ${SHA}]"
-      #     git push
+          RELEASE_BRANCH_NAME: release/${{ inputs.vald_checkout_src_tag_ref }}
+
+  sync:
+    needs:
+      - prepare
+    uses: ./.github/workflows/_sync.yaml
+    with:
+      vald_checkout_src_ref: ${{ inputs.vald_checkout_src_tag_ref }}
+      client_checkout_ref: ${{ needs.prepare.outputs.RELEASE_BRANCH_NAME }}
+    secrets: inherit

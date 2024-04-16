@@ -30,9 +30,9 @@ jobs:
     if: ${{ needs.check-main.outputs.NEED_UPDATE == 'true' }}
     needs:
       - check-main
-    uses: ./.github/workflows/_sync-main.yaml
+    uses: ./.github/workflows/_sync.yaml
     with:
-      vald_checkout_ref: main    # sync based on vald main branch.
+      vald_checkout_ref: main    # sync based on Vald main branch.
       client_checkout_ref: main
     secrets: inherit
 
@@ -49,6 +49,5 @@ jobs:
       - check-version
     uses: ./.github/workflows/_sync-version.yaml
     with:
-      vald_checkout_src_ref: ${{ needs.check-version.outputs.VERSION }}   # sync based on vald main branch.
-      client_checkout_target_ref: ${{ needs.check-version.outputs.RELEASE_BRANCH_NAME }}
+      vald_checkout_src_tag_ref: ${{ needs.check-version.outputs.VERSION }}   # sync based on Vald version(v1.7.12).
     secrets: inherit

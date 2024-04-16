@@ -1,4 +1,4 @@
-name: Build Protobuf
+name: Build client source
 on:
   workflow_call:
     inputs:
@@ -20,7 +20,7 @@ on:
       GPG_PRIVATE_KEY:
         required: true
 jobs:
-  sync-main:
+  sync:
     runs-on: ubuntu-20.04
     env:
       CI_USER: ${{ secrets.CI_USER }}
@@ -45,30 +45,30 @@ jobs:
           make vald/clone && make VALD_CHECKOUT_REF=${VALD_CHECKOUT_REF} vald/checkout
         env:
           VALD_CHECKOUT_REF: ${{ inputs.vald_checkout_src_ref }}
-      - name: Build and Push
-        run: |
-          # NOTE: The flow here will be changed to using the make command in the future, such as the following.
-          #
-          # 1. make deps
-          # 2. make proto
-          # 3. make vald/sha/update
-          # 4. make vald/client/python/version/update
-          # 5. make vald/sha/print
-          echo "Install dependencies"
-          sudo apt-get update
-          sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
-          pip3 install grpcio-tools
-
-          echo "Build proto"
-          export GOPATH=$HOME/go
-          make PYTHON=python3 proto
-          make vald/sha/update
-          make vald/client/python/version/update
-
-          echo "commit and push"
-          SHA="$(make vald/sha/print)"
-
-          git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
-          git add .
-          git commit -S --signoff -m "Update [vald sha: ${SHA}]"
-          git push
+      # - name: Build and Push
+      #   run: |
+      #     # NOTE: The flow here will be changed to using the make command in the future, such as the following.
+      #     #
+      #     # 1. make deps
+      #     # 2. make proto
+      #     # 3. make vald/sha/update
+      #     # 4. make vald/client/python/version/update
+      #     # 5. make vald/sha/print
+      #     echo "Install dependencies"
+      #     sudo apt-get update
+      #     sudo apt-get install -y python3-setuptools libprotobuf-dev libprotoc-dev protobuf-compiler
+      #     pip3 install grpcio-tools
+      #
+      #     echo "Build proto"
+      #     export GOPATH=$HOME/go
+      #     make PYTHON=python3 proto
+      #     make vald/sha/update
+      #     make vald/client/python/version/update
+      #
+      #     echo "commit and push"
+      #     SHA="$(make vald/sha/print)"
+      #
+      #     git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
+      #     git add .
+      #     git commit -S --signoff -m "Update [vald sha: ${SHA}]"
+      #     git push

@@ -34,8 +34,6 @@ on:
     secrets:
       CI_TOKEN:
         required: true
-env:
-  CI_TOKEN: ${{ secrets.CI_TOKEN }}
 
 jobs:
   check-main:
@@ -47,7 +45,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.client_checkout_target_ref }}
-          token: ${{ env.CI_TOKEN }}
+          token: ${{ secrets.CI_TOKEN }}
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
