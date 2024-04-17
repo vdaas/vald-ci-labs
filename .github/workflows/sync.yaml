@@ -50,4 +50,5 @@ jobs:
     uses: ./.github/workflows/_sync-version.yaml
     with:
       vald_checkout_src_tag_ref: ${{ needs.check-version.outputs.VERSION }}   # sync based on Vald version(v1.7.12).
+      client_checkout_target_ref: main
     secrets: inherit

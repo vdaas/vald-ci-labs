@@ -23,12 +23,12 @@ jobs:
       - name: Generate version array
         id: gen
         run: |
-          ARRAY="v1.7.11 v1.7.12"
+          ARRAY="v1.6.100 v1.7.11 v1.7.12"
           JSON=$(echo "${ARRAY}" | jq --compact-output -R 'split(" ")')
           echo "JSON=${JSON}" >> $GITHUB_OUTPUT
 
 
-  matrix-test:
+  sync-version:
     needs:
       - check-version
     uses: ./.github/workflows/_sync-version.yaml
