@@ -29,6 +29,9 @@ on:
       TAG_DIFF_LIST_JSON:
         description: "JSON value of tag difference"
         value: ${{ jobs.check-version.outputs.TAG_DIFF_LIST_JSON }}
+      TAG_DIFF_LIST_JSON_LEN:
+        description: "JSON value length of tag difference"
+        value: ${{ jobs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN }}
     secrets:
       CI_TOKEN:
         required: true
@@ -41,6 +44,7 @@ jobs:
     outputs:
       NEED_UPDATE: ${{ steps.get_version_diff.outputs.NEED_UPDATE }}
       TAG_DIFF_LIST_JSON: ${{ steps.get_version_diff.outputs.TAG_DIFF_LIST_JSON }}
+      TAG_DIFF_LIST_JSON_LEN: ${{ steps.get_version_diff.outputs.TAG_DIFF_LIST_JSON_LEN }}
     steps:
       - uses: actions/checkout@v4
         with:
