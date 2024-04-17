@@ -59,7 +59,7 @@ jobs:
           VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$')
           CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed '/^v/! s/^/v/')
 
-          DIFF_TAG_LIST=$(diff -u <(echo ${CLIENT_TAG_LIST}) <(echo ${VALD_TAG_LIST}) | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac | '{printf "%s ", $0} END {print ""}')
+          DIFF_TAG_LIST=$(diff -u <(echo ${CLIENT_TAG_LIST}) <(echo ${VALD_TAG_LIST}) | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac | awk '{printf "%s ", $0} END {print ""}')
 
           echo "VALD_TAG_LIST=${VALD_TAG_LIST}"
           echo "CLIENT_TAG_LIST=${CLIENT_TAG_LIST}"
