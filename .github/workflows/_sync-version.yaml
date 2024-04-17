@@ -78,8 +78,7 @@ jobs:
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
 
-
-  sync:
+  sync-version:
     needs:
       - prepare
     uses: ./.github/workflows/_sync.yaml
