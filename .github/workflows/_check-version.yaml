@@ -60,11 +60,14 @@ jobs:
           TAG_DIFF_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac | awk '{printf "%s ", $0} END {print ""}')
           TAG_DIFF_LIST_JSON=$(echo ${TAG_DIFF_LIST} | jq --compact-output -R 'split(" ")')
 
-          if [ "${TAG_DIFF_LIST}" != ""]; then
-            echo "NEED_UPDATE=true"                         >> $GITHUB_OUTPUT
-            echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}" >> $GITHUB_OUTPUT # e.g) [ "v1.6.3", "v1.7.11", "v1.7.12"]
+          if [ "${TAG_DIFF_LIST}" != "" ]; then
+            NEED_UPDATE="true"
           fi
 
+          echo "NEED_UPDATE=${NEED_UPDATE}"               >> $GITHUB_OUTPUT
+          echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}" >> $GITHUB_OUTPUT # e.g) [ "v1.6.3", "v1.7.11", "v1.7.12"]
+
+          echo "NEED_UPDATE=${NEED_UPDATE}"
           echo "VALD_TAG_LIST=${VALD_TAG_LIST}"
           echo "CLIENT_TAG_LIST=${CLIENT_TAG_LIST}"
           echo "TAG_DIFF_LIST=${TAG_DIFF_LIST}"
