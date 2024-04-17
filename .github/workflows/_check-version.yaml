@@ -39,7 +39,7 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     outputs:
-      NEED_UPDATE: ${{ steps.check_release.outputs.NEED_UPDATE }}
+      NEED_UPDATE: ${{ steps.get_version_diff.outputs.NEED_UPDATE }}
       TAG_DIFF_LIST_JSON: ${{ steps.get_version_diff.outputs.TAG_DIFF_LIST_JSON }}
     steps:
       - uses: actions/checkout@v4
@@ -60,78 +60,81 @@ jobs:
           TAG_DIFF_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac | awk '{printf "%s ", $0} END {print ""}')
           TAG_DIFF_LIST_JSON=$(echo ${TAG_DIFF_LIST} | jq --compact-output -R 'split(" ")')
 
-          echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}" >> $GITHUB_OUTPUT # e.g) [ "v1.6.3", "v1.7.11", "v1.7.12"]
+          if [ "${TAG_DIFF_LIST}" != ""]; then
+            echo "NEED_UPDATE=true"                         >> $GITHUB_OUTPUT
+            echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}" >> $GITHUB_OUTPUT # e.g) [ "v1.6.3", "v1.7.11", "v1.7.12"]
+          fi
 
           echo "VALD_TAG_LIST=${VALD_TAG_LIST}"
           echo "CLIENT_TAG_LIST=${CLIENT_TAG_LIST}"
           echo "TAG_DIFF_LIST=${TAG_DIFF_LIST}"
           echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}"
 
-      - name: Set Vald context
-        id: set_vald_context
-        run: |
-          VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name')
-          SUPPORTED_TWO_VALD_VERSIONS=$(echo "${VALD_TAG_LIST}"   | awk -F. '{print $1"."$2}' | uniq | head -n 2)
-          SUPPORTED_LATEST_VALD_VERSION=$(echo "${VALD_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | head -n 1) | head -n 1)
-          SUPPORTED_LAST_VALD_VERSION=$(echo "${VALD_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | tail -n 1) | head -n 1)
-          SUPPORTED_TWO_VALD_VERSIONS=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | tr '\n' ' ')         # override to set GITHUB_OUTPUT.
-
-          echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"      >> $GITHUB_OUTPUT # e.g) v1.8 v1.7
-          echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}"  >> $GITHUB_OUTPUT # e.g) v1.8.9
-          echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"      >> $GITHUB_OUTPUT # e.g) v1.7.12
-
-          echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"
-          echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}"
-          echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"
-      - name: Set Client context
-        id: set_client_context
-        run: |
-          CLIENT_TAG_LIST=$(git tag --sort=-v:refname)
-          SUPPORTED_TWO_CLIENT_VERSIONS=$(echo "${CLIENT_TAG_LIST}"   | awk -F. '{print $1"."$2}' | uniq | head -n 2)
-          SUPPORTED_LATEST_CLIENT_VERSION=$(echo "${CLIENT_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_CLIENT_VERSIONS}" | head -n 1) | head -n 1)
-          SUPPORTED_LAST_CLIENT_VERSION=$(echo "${CLIENT_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_CLIENT_VERSIONS}" | tail -n 1) | head -n 1)
-
-          echo "SUPPORTED_LATEST_CLIENT_VERSION=${SUPPORTED_LATEST_CLIENT_VERSION}" >> $GITHUB_OUTPUT # e.g) v1.7.12
-          echo "SUPPORTED_LAST_CLIENT_VERSION=${SUPPORTED_LAST_CLIENT_VERSION}"     >> $GITHUB_OUTPUT # e.g) v1.6.9
-
-          echo "SUPPORTED_TWO_CLIENT_VERSIONS=${SUPPORTED_TWO_CLIENT_VERSIONS}"
-          echo "SUPPORTED_LATEST_CLIENT_VERSION=${SUPPORTED_LATEST_CLIENT_VERSION}"
-          echo "SUPPORTED_LAST_CLIENT_VERSION=${SUPPORTED_LAST_CLIENT_VERSION}"
-      - name: Check if client should be released
-        id: check_release
-        run: |
-          RELEASE_BRANCH_NAME_PREFIX="release"
-
-          if [ "${SUPPORTED_LAST_VALD_VERSION}" != "${SUPPORTED_LAST_CLIENT_VERSION}" ]; then
-            RELEASE_BRANCH_NAME_SUFFIX=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $2}') # e.g) v1.7
-            if [ "${RELEASE_BRANCH_NAME_SUFFIX}" == "" ]; then
-              echo "Release branch name suffix is empty"
-              exit 1
-            fi
-
-            echo "NEED_UPDATE=true"                                                                    >> $GITHUB_OUTPUT
-            echo "VERSION=${SUPPORTED_LAST_VALD_VERSION}"                                          >> $GITHUB_OUTPUT
-            echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME_PREFIX}/${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT
-            echo "Release for supported last client version"
-            exit 0
-          fi
-
-          if [ "${SUPPORTED_LATEST_VALD_VERSION}" != "${SUPPORTED_LATEST_CLIENT_VERSION}" ]; then
-            RELEASE_BRANCH_NAME_SUFFIX=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $1}')  # e.g) v1.8
-            if [ "${RELEASE_BRANCH_NAME_SUFFIX}" == "" ]; then
-              echo "Release branch name suffix is empty"
-              exit 1
-            fi
-
-            echo "NEED_UPDATE=true"                                                                    >> $GITHUB_OUTPUT
-            echo "VERSION=${SUPPORTED_LATEST_VALD_VERSION}"                                        >> $GITHUB_OUTPUT
-            echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME_PREFIX}/${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT
-            echo "Release for supported latest client latest"
-            exit 0
-          fi
-        env:
-          SUPPORTED_TWO_VALD_VERSIONS: ${{ steps.set_vald_context.outputs.SUPPORTED_TWO_VALD_VERSIONS }}
-          SUPPORTED_LATEST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LATEST_VALD_VERSION }}
-          SUPPORTED_LAST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LAST_VALD_VERSION }}
-          SUPPORTED_LATEST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LATEST_CLIENT_VERSION }}
-          SUPPORTED_LAST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LAST_CLIENT_VERSION }}
+      # - name: Set Vald context
+      #   id: set_vald_context
+      #   run: |
+      #     VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name')
+      #     SUPPORTED_TWO_VALD_VERSIONS=$(echo "${VALD_TAG_LIST}"   | awk -F. '{print $1"."$2}' | uniq | head -n 2)
+      #     SUPPORTED_LATEST_VALD_VERSION=$(echo "${VALD_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | head -n 1) | head -n 1)
+      #     SUPPORTED_LAST_VALD_VERSION=$(echo "${VALD_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_VALD_VERSIONS}" | tail -n 1) | head -n 1)
+      #     SUPPORTED_TWO_VALD_VERSIONS=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | tr '\n' ' ')         # override to set GITHUB_OUTPUT.
+      #
+      #     echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"      >> $GITHUB_OUTPUT # e.g) v1.8 v1.7
+      #     echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}"  >> $GITHUB_OUTPUT # e.g) v1.8.9
+      #     echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"      >> $GITHUB_OUTPUT # e.g) v1.7.12
+      #
+      #     echo "SUPPORTED_TWO_VALD_VERSIONS=${SUPPORTED_TWO_VALD_VERSIONS}"
+      #     echo "SUPPORTED_LATEST_VALD_VERSION=${SUPPORTED_LATEST_VALD_VERSION}"
+      #     echo "SUPPORTED_LAST_VALD_VERSION=${SUPPORTED_LAST_VALD_VERSION}"
+      # - name: Set Client context
+      #   id: set_client_context
+      #   run: |
+      #     CLIENT_TAG_LIST=$(git tag --sort=-v:refname)
+      #     SUPPORTED_TWO_CLIENT_VERSIONS=$(echo "${CLIENT_TAG_LIST}"   | awk -F. '{print $1"."$2}' | uniq | head -n 2)
+      #     SUPPORTED_LATEST_CLIENT_VERSION=$(echo "${CLIENT_TAG_LIST}" | grep $(echo "${SUPPORTED_TWO_CLIENT_VERSIONS}" | head -n 1) | head -n 1)
+      #     SUPPORTED_LAST_CLIENT_VERSION=$(echo "${CLIENT_TAG_LIST}"   | grep $(echo "${SUPPORTED_TWO_CLIENT_VERSIONS}" | tail -n 1) | head -n 1)
+      #
+      #     echo "SUPPORTED_LATEST_CLIENT_VERSION=${SUPPORTED_LATEST_CLIENT_VERSION}" >> $GITHUB_OUTPUT # e.g) v1.7.12
+      #     echo "SUPPORTED_LAST_CLIENT_VERSION=${SUPPORTED_LAST_CLIENT_VERSION}"     >> $GITHUB_OUTPUT # e.g) v1.6.9
+      #
+      #     echo "SUPPORTED_TWO_CLIENT_VERSIONS=${SUPPORTED_TWO_CLIENT_VERSIONS}"
+      #     echo "SUPPORTED_LATEST_CLIENT_VERSION=${SUPPORTED_LATEST_CLIENT_VERSION}"
+      #     echo "SUPPORTED_LAST_CLIENT_VERSION=${SUPPORTED_LAST_CLIENT_VERSION}"
+      # - name: Check if client should be released
+      #   id: check_release
+      #   run: |
+      #     RELEASE_BRANCH_NAME_PREFIX="release"
+      #
+      #     if [ "${SUPPORTED_LAST_VALD_VERSION}" != "${SUPPORTED_LAST_CLIENT_VERSION}" ]; then
+      #       RELEASE_BRANCH_NAME_SUFFIX=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $2}') # e.g) v1.7
+      #       if [ "${RELEASE_BRANCH_NAME_SUFFIX}" == "" ]; then
+      #         echo "Release branch name suffix is empty"
+      #         exit 1
+      #       fi
+      #
+      #       echo "NEED_UPDATE=true"                                                                    >> $GITHUB_OUTPUT
+      #       echo "VERSION=${SUPPORTED_LAST_VALD_VERSION}"                                          >> $GITHUB_OUTPUT
+      #       echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME_PREFIX}/${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT
+      #       echo "Release for supported last client version"
+      #       exit 0
+      #     fi
+      #
+      #     if [ "${SUPPORTED_LATEST_VALD_VERSION}" != "${SUPPORTED_LATEST_CLIENT_VERSION}" ]; then
+      #       RELEASE_BRANCH_NAME_SUFFIX=$(echo ${SUPPORTED_TWO_VALD_VERSIONS} | awk '{print $1}')  # e.g) v1.8
+      #       if [ "${RELEASE_BRANCH_NAME_SUFFIX}" == "" ]; then
+      #         echo "Release branch name suffix is empty"
+      #         exit 1
+      #       fi
+      #
+      #       echo "NEED_UPDATE=true"                                                                    >> $GITHUB_OUTPUT
+      #       echo "VERSION=${SUPPORTED_LATEST_VALD_VERSION}"                                        >> $GITHUB_OUTPUT
+      #       echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME_PREFIX}/${RELEASE_BRANCH_NAME_SUFFIX}" >> $GITHUB_OUTPUT
+      #       echo "Release for supported latest client latest"
+      #       exit 0
+      #     fi
+      #   env:
+      #     SUPPORTED_TWO_VALD_VERSIONS: ${{ steps.set_vald_context.outputs.SUPPORTED_TWO_VALD_VERSIONS }}
+      #     SUPPORTED_LATEST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LATEST_VALD_VERSION }}
+      #     SUPPORTED_LAST_VALD_VERSION: ${{ steps.set_vald_context.outputs.SUPPORTED_LAST_VALD_VERSION }}
+      #     SUPPORTED_LATEST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LATEST_CLIENT_VERSION }}
+      #     SUPPORTED_LAST_CLIENT_VERSION: ${{ steps.set_client_context.outputs.SUPPORTED_LAST_CLIENT_VERSION }}
