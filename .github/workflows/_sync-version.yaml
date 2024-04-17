@@ -22,6 +22,7 @@ on:
 env:
   IMAGES: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
   IMAGE_TAG: ${{ inputs.vald_checkout_src_tag_ref }} # v1.7.12
+  RELEASE_BRANCH_NAME: release/${{ inputs.vald_checkout_src_tag_ref }} # release/v1.7.12
 
 jobs:
   prepare:
@@ -61,8 +62,7 @@ jobs:
 
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
-        env:
-          RELEASE_BRANCH_NAME: release/${{ inputs.vald_checkout_src_tag_ref }}
+
 
   sync:
     needs:
