@@ -59,15 +59,12 @@ jobs:
           VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$')
           CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' )
 
+          if ! echo "${CLIENT_TAG_LIST}" | grep -q '^v'; then
+            CLIENT_TAG_LIST=$(echo "${CLIENT_TAG_LIST}" | sed 's/^/v/')
+          fi
+
           echo "VALD_TAG_LIST=${VALD_TAG_LIST}"
           echo "CLIENT_TAG_LIST=${CLIENT_TAG_LIST}"
-
-          # Some Vald clients do not start with "v" in their version tags, so normalise them to exclude "v".
-          VALD_VERSIONS=$(echo ${VALD_TAG_LIST} | sed -E 's/^v?([0-9]+\.[0-9]+\.[0-9]+)$/\1/' | uniq )
-          CLIENT_VERSIONS=$(echo ${CLIENT_TAG_LIST} | sed -E 's/^v?([0-9]+\.[0-9]+\.[0-9]+)$/\1/' | uniq )
-
-          echo "VALD_VERSIONS=${VALD_VERSIONS}"
-          echo "CLIENT_VERSIONS=${CLIENT_VERSIONS}"
 
       - name: Set Vald context
         id: set_vald_context
