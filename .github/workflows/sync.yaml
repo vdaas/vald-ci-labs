@@ -21,33 +21,36 @@ on:
 jobs:
   check-main:
     uses: ./.github/workflows/_check-main.yaml
-    with:
-      vald_checkout_src_ref: main
-      client_checkout_target_ref: main
-    secrets: inherit
+    secrets:
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   sync-main:
     if: ${{ needs.check-main.outputs.NEED_UPDATE == 'true' }}
     needs:
       - check-main
     uses: ./.github/workflows/_sync.yaml
-    with:
-      vald_checkout_ref: main    # sync based on Vald main branch.
-      client_checkout_ref: main
-    secrets: inherit
+    secrets:
+      CI_USER: ${{ secrets.DISPATCH_USER }}
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
   check-version:
     uses: ./.github/workflows/_check-version.yaml
-    with:
-      client_checkout_target_ref: main
-    secrets: inherit
+    secrets:
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
   sync-version:
-    if: ${{ needs.check-version.outputs.NEED_UPDATE == 'true' }}
     needs:
       - check-version
     uses: ./.github/workflows/_sync-version.yaml
+    strategy:
+      fail-fast: true
+      max-parallel: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN) }}
+      matrix:
+        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
     with:
-      vald_checkout_src_tag_ref: ${{ needs.check-version.outputs.VERSION }}   # sync based on Vald version(v1.7.12).
-      client_checkout_target_ref: main
-    secrets: inherit
+      vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
+    secrets:
+      CI_USER: ${{ secrets.DISPATCH_USER }}
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
