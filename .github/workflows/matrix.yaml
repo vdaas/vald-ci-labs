@@ -13,7 +13,6 @@ jobs:
   check-version:
     uses: ./.github/workflows/_check-version.yaml
     with:
-      vald_checkout_src_ref: main
       client_checkout_target_ref: main
     secrets:
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
