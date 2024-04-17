@@ -26,12 +26,9 @@ on:
       NEED_UPDATE:
         description: "Whether it should be updated version"
         value: ${{ jobs.check-version.outputs.NEED_UPDATE }}
-      VERSION:
-        description: "Release version"
-        value: ${{ jobs.check-version.outputs.VERSION }}
-      RELEASE_BRANCH_NAME:
-        description: "Release branch name"
-        value: ${{ jobs.check-version.outputs.RELEASE_BRANCH_NAME }}
+      TAG_DIFF_LIST_JSON:
+        description: "JSON value of tag difference"
+        value: ${{ jobs.check-version.outputs.TAG_DIFF_LIST_JSON }}
     secrets:
       CI_TOKEN:
         required: true
@@ -43,8 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       NEED_UPDATE: ${{ steps.check_release.outputs.NEED_UPDATE }}
-      VERSION: ${{ steps.check_release.outputs.VERSION }}
-      RELEASE_BRANCH_NAME: ${{ steps.check_release.outputs.RELEASE_BRANCH_NAME }}
+      TAG_DIFF_LIST_JSON: ${{ steps.get_version_diff.outputs.TAG_DIFF_LIST_JSON }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,15 +51,21 @@ jobs:
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: Get version difference
+        id: get_version_diff
         run: |
           VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$')
           CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed '/^v/! s/^/v/' | sort -r)
 
-          DIFF_TAG_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac | awk '{printf "%s ", $0} END {print ""}')
+          # We cannot store multiple rows of values in "GITHUB_OUTPUT", so convert them to a single line.
+          TAG_DIFF_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac | awk '{printf "%s ", $0} END {print ""}')
+          TAG_DIFF_LIST_JSON=$(echo ${TAG_DIFF_LIST} | jq --compact-output -R 'split(" ")')
+
+          echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}" >> $GITHUB_OUTPUT # e.g) [ "v1.6.3", "v1.7.11", "v1.7.12"]
 
           echo "VALD_TAG_LIST=${VALD_TAG_LIST}"
           echo "CLIENT_TAG_LIST=${CLIENT_TAG_LIST}"
-          echo "DIFF_TAG_LIST=${DIFF_TAG_LIST}"
+          echo "TAG_DIFF_LIST=${TAG_DIFF_LIST}"
+          echo "TAG_DIFF_LIST_JSON=${TAG_DIFF_LIST_JSON}"
 
       - name: Set Vald context
         id: set_vald_context
