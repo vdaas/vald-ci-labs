@@ -54,6 +54,14 @@ jobs:
       - name: Set Git config
         run: |
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Get version difference
+        run: |
+          VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$')
+          CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' )
+
+          echo "${VALD_TAG_LIST}"
+          echo "${CLIENT_TAG_LIST}"
+
       - name: Set Vald context
         id: set_vald_context
         run: |
