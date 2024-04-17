@@ -57,7 +57,7 @@ jobs:
       - name: Get version difference
         run: |
           VALD_TAG_LIST=$(curl -s "${VALD_TAG_LIST_API_URL}" | jq -r '.[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$')
-          CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' )
+          CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed '/^v/! s/^/v/')
 
           if ! echo "${CLIENT_TAG_LIST}" | grep -q '^v'; then
             CLIENT_TAG_LIST=$(echo "${CLIENT_TAG_LIST}" | sed 's/^/v/')
