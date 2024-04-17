@@ -71,4 +71,5 @@ jobs:
     with:
       vald_checkout_src_ref: ${{ inputs.vald_checkout_src_tag_ref }}
       client_checkout_target_ref: ${{ needs.prepare.outputs.RELEASE_BRANCH_NAME }}
+      enable_tag_push: true
     secrets: inherit

@@ -12,6 +12,11 @@ on:
         type: string
         default: main
         required: false
+      enable_tag_push:
+        description: "Whether or not to push tag"
+        type: boolean
+        default: false
+        required: false
     secrets:
       CI_USER:
         required: true
@@ -19,13 +24,15 @@ on:
         required: true
       GPG_PRIVATE_KEY:
         required: true
+env:
+  CI_USER: ${{ secrets.CI_USER }}
+  CI_TOKEN: ${{ secrets.CI_TOKEN }}
+  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
 jobs:
   sync:
     runs-on: ubuntu-20.04
-    env:
-      CI_USER: ${{ secrets.CI_USER }}
-      CI_TOKEN: ${{ secrets.CI_TOKEN }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,3 +79,11 @@ jobs:
       #     git add .
       #     git commit -S --signoff -m "Update [vald sha: ${SHA}]"
       #     git push
+      - name: Create tag
+        if: ${{ inputs.enable_tag_push == true }}
+        continue-on-error: true
+        run: |
+          version="$(make vald/client/python/version/print)"
+          git remote set-url origin "https://${CI_USER}:${CI_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git tag ${version}
+          git push origin ${version}
