@@ -30,7 +30,8 @@ jobs:
       - name: Generate version array
         id: gen
         run: |
-          ARRAY="v1.7.11 v1.7.12"
+          ARRAY=""
+          # ARRAY="v1.7.11 v1.7.12"
           JSON=$(echo "${ARRAY}" | jq --compact-output -R 'split(" ")')
           echo "JSON=${JSON}" >> $GITHUB_OUTPUT
 
@@ -42,11 +43,16 @@ jobs:
     uses: ./.github/workflows/_sync-version.yaml
     strategy:
       fail-fast: true
-      max-parallel: 1
+      max-parallel: 0
       matrix:
         # TODO: change job id
         # vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.JSON) }}
-        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
+        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version-for-debug.outputs.JSON) }}
+      # max-parallel: ${{ needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN < 0 && 1 || needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN }}
+      # matrix:
+      #   # TODO: change job id
+      #   # vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.JSON) }}
+      #   vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
     with:
       vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
       client_checkout_target_ref: main
