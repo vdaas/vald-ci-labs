@@ -13,46 +13,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: "Prepare for release"
+name: Sync Vald version
 on:
   workflow_call:
     inputs:
-      client_checkout_ref:
-        description: "Switch branches or restore working tree files"
+      vald_checkout_src_tag_ref:
+        description: "Switch tag or restore working tree files to build vald"
+        type: string
+        required: true
+      client_checkout_target_ref:
+        description: "Switch branches or restore working tree files to build vald"
         type: string
         default: main
         required: false
-      images:
-        description: "docker image names used in E2E test before release"
-        type: string
-        required: false
-        default: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
-      image_tag:
-        description: "image tag name"
-        type: string
-        required: false
-        default: "nightly"
-      release_branch_name:
-        description: "release branch name"
-        type: string
-        required: true
     secrets:
+      CI_USER:
+        required: true
       CI_TOKEN:
         required: true
-    outputs:
-      RESULT:
-        description: "Whether the preparation is a success or not"
-        value: ${{ jobs.prepare.outputs.RESULT }}
+      GPG_PRIVATE_KEY:
+        required: true
+
+env:
+  IMAGES: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
+  IMAGE_TAG: ${{ inputs.vald_checkout_src_tag_ref }} # v1.7.12
+  RELEASE_BRANCH_NAME: release/${{ inputs.vald_checkout_src_tag_ref }} # release/v1.7.12
+
 jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      RESULT: ${{ steps.create_release_branch.outputs.RESULT }}
+      RELEASE_BRANCH_NAME: ${{ steps.create_release_branch.outputs.RELEASE_BRANCH_NAME }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ inputs.client_checkout_ref }}
+          ref: ${{ inputs.client_checkout_target_ref }}
           token: ${{ secrets.CI_TOKEN }}
       - name: Set Git config
         run: |
@@ -64,25 +60,30 @@ jobs:
             echo "Search image: ${image}:${IMAGE_TAG}"
             if ! curl -s "https://registry.hub.docker.com/v2/repositories/${image}/tags/${IMAGE_TAG}" | jq '.name' | grep -v "null" > /dev/null ; then
               echo "Image ${image}:${IMAGE_TAG} not Found. Existing..."
-              exit 0
+              exit 1
             else
               echo "Image ${image}:${IMAGE_TAG} Found"
             fi
           done
 
-          echo "FOUND_ALL_IMAGES=true" >> $GITHUB_OUTPUT
           echo "All images found."
-        env:
-          IMAGES: ${{ inputs.images }}
-          IMAGE_TAG: ${{ inputs.image_tag }}
-      - name: Create release branch
+      - name: Create branch
         id: create_release_branch
-        if: ${{ steps.search_docker_image_tag.outputs.FOUND_ALL_IMAGES == 'true' }}
         run: |
           BRANCH_EXIST=$(git fetch origin "${RELEASE_BRANCH_NAME}" && echo true || echo false)
           if [ "${BRANCH_EXIST}" != "true" ]; then
             git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
           fi
-          echo "RESULT=true" >> $GITHUB_OUTPUT
-        env:
-          RELEASE_BRANCH_NAME: ${{ inputs.release_branch_name }}
+
+          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
+
+  sync-version:
+    needs:
+      - prepare
+    uses: ./.github/workflows/_sync.yaml
+    with:
+      vald_checkout_src_ref: ${{ inputs.vald_checkout_src_tag_ref }}
+      client_checkout_target_ref: ${{ needs.prepare.outputs.RELEASE_BRANCH_NAME }}
+      enable_tag_push: true
+    secrets: inherit

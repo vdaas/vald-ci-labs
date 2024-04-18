@@ -27,12 +27,21 @@ jobs:
       - name: Helm version
         run: |
           helm version
+      - name: Get image tag
+        id: get_image_tag
+        run: |
+          TAG="nightly"
+          if [[ "$GITHUB_REF" =~ ^refs/tags/.* ]]; then
+            TAG=$(echo $GITHUB_REF | sed -e 's:^refs/tags/::' | sed 's/^v\?/v/')
+          fi
+          echo "TAG=${TAG}" >> $GITHUB_OUTPUT
+          echo "TAG=${TAG}"
       - name: deploy Vald
         run: |
           helm repo add vald https://vald.vdaas.org/charts
           helm install \
             --values ${VALUES} \
-            --set defaults.image.tag=nightly \
+            --set defaults.image.tag=${TAG} \
             --set agent.ngt.dimension=300 \
             --set agent.ngt.auto_index_length=2 \
             --set agent.minReplicas=1 \
@@ -45,6 +54,7 @@ jobs:
           kubectl get pods
         env:
           VALUES: https://raw.githubusercontent.com/vdaas/vald/main/.github/helm/values/values-lb.yaml
+          TAG: ${{ steps.get_image_tag.outputs.TAG }}
       - name: python dependencies
         run: |
           pip install --upgrade grpcio-tools protobuf grpcio googleapis-common-protos

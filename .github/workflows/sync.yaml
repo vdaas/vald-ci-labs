@@ -16,49 +16,40 @@
 name: "Sync Vald"
 on:
   workflow_dispatch:
-  # pull_request:
   # schedule:
   #   - cron: "*/5 * * * *"
 jobs:
+  check-main:
+    uses: ./.github/workflows/_check-main.yaml
+    secrets:
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+
   sync-main:
-    uses: ./.github/workflows/_build.yaml
-    with:
-      vald_checkout_ref: main    # sync based on vald main branch.
-      client_checkout_ref: main
-      enable_tag_push: false
+    if: ${{ needs.check-main.outputs.NEED_UPDATE == 'true' }}
+    needs:
+      - check-main
+    uses: ./.github/workflows/_sync.yaml
     secrets:
       CI_USER: ${{ secrets.DISPATCH_USER }}
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
-  semver-auto:
-    needs:
-      - sync-main
-    uses:  vdaas/vald-ci-labs/.github/workflows/_semver-auto.yaml@main
+  check-version:
+    uses: ./.github/workflows/_check-version.yaml
     secrets:
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
-  prepare-release:
-    if: ${{ needs.semver-auto.outputs.RELEASE == 'true' }}
+  sync-version:
     needs:
-      - semver-auto
-    uses: vdaas/vald-ci-labs/.github/workflows/_prepare-release.yaml@main
+      - check-version
+    uses: ./.github/workflows/_sync-version.yaml
+    strategy:
+      fail-fast: true
+      max-parallel: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN) }}
+      matrix:
+        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
     with:
-      image_tag: ${{ needs.semver-auto.outputs.VERSION }}
-      release_branch_name: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
-    secrets:
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-
-  sync-release:
-    if: ${{ needs.prepare-release.outputs.RESULT == 'true' }}
-    needs:
-      - semver-auto
-      - prepare-release
-    uses: ./.github/workflows/_build.yaml
-    with:
-      vald_checkout_ref: ${{ needs.semver-auto.outputs.VERSION }}                 # sync based on vald released version.
-      client_checkout_ref: ${{ needs.semver-auto.outputs.RELEASE_BRANCH_NAME }}
-      enable_tag_push: true
+      vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
     secrets:
       CI_USER: ${{ secrets.DISPATCH_USER }}
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}

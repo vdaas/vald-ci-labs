@@ -165,3 +165,14 @@ $(BINDIR)/buf:
 	"https://github.com/bufbuild/buf/releases/download/$$version/buf-$(shell uname -s)-$(shell uname -m)" \
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
+
+
+.PHONY: ci/deps
+## install deps for CI environment
+ci/deps:
+	sudo apt-get update -y && sudo apt-get install -y \
+		python3-setuptools \
+		libprotobuf-dev \
+		libprotoc-dev \
+		protobuf-compiler
+	pip3 install grpcio-tools
