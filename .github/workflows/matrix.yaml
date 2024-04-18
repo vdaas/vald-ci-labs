@@ -45,8 +45,8 @@ jobs:
       max-parallel: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN) }}
       matrix:
         # TODO: change job id
-        # vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
-        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version-for-debug.outputs.JSON) }}
+        vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
+        # vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version-for-debug.outputs.JSON) }}
     with:
       vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
       client_checkout_target_ref: main
