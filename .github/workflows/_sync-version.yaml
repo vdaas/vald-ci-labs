@@ -18,7 +18,7 @@ on:
   workflow_call:
     inputs:
       vald_checkout_src_tag_ref:
-        description: "Switch tag or restore working tree files to build vald"
+        description: "Switch tag or restore working tree files to build vald (e.g. v1.7.12)"
         type: string
         required: true
       client_checkout_target_ref:
@@ -37,7 +37,6 @@ on:
 env:
   IMAGES: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
   IMAGE_TAG: ${{ inputs.vald_checkout_src_tag_ref }} # v1.7.12
-  RELEASE_BRANCH_NAME: release/${{ inputs.vald_checkout_src_tag_ref }} # release/v1.7.12
 
 jobs:
   prepare:
@@ -70,6 +69,8 @@ jobs:
       - name: Create branch
         id: create_release_branch
         run: |
+          RELEASE_BRANCH_NAME="release/$(echo "${TAG_REF}" | awk -F '.' '{print $1"."$2}')" # release/v1.7
+
           BRANCH_EXIST=$(git fetch origin "${RELEASE_BRANCH_NAME}" && echo true || echo false)
           if [ "${BRANCH_EXIST}" != "true" ]; then
             git checkout -b ${RELEASE_BRANCH_NAME} && git push origin ${RELEASE_BRANCH_NAME}
@@ -77,6 +78,8 @@ jobs:
 
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}" >> $GITHUB_OUTPUT
           echo "RELEASE_BRANCH_NAME=${RELEASE_BRANCH_NAME}"
+        env:
+          TAG_REF: ${{ inputs.vald_checkout_src_tag_ref }}
 
   sync-version:
     needs:
