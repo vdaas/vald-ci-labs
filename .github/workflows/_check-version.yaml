@@ -61,7 +61,7 @@ jobs:
           CLIENT_TAG_LIST=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed '/^v/! s/^/v/' | sort -r)
 
           # We cannot store multiple rows of values in "GITHUB_OUTPUT", so convert them to a single line.
-          TAG_DIFF_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac
+          TAG_DIFF_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac)
           echo "aaaaaaaa===${TAG_DIFF_LIST}"
           TAG_DIFF_LIST=$(echo ${TAG_DIFF_LIST} | awk '{printf "%s ", $0} END {print ""}')
           echo "aaaaaaaa===${TAG_DIFF_LIST}"
