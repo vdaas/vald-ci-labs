@@ -65,15 +65,15 @@ jobs:
           echo "commit and push"
           SHA="$(make vald/sha/print)"
 
-          # git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
-          # git add .
-          # git commit -S --signoff -m "Update [vald sha: ${SHA}]"
-          # git push
-      # - name: Create tag
-      #   if: ${{ inputs.enable_tag_push == true }}
-      #   continue-on-error: true
-      #   run: |
-      #     version="$(make vald/client/python/version/print)"
-      #     git remote set-url origin "https://${CI_USER}:${CI_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-      #     git tag ${version}
-      #     git push origin ${version}
+          git remote set-url origin https://${CI_USER}:${CI_TOKEN}@github.com/$GITHUB_REPOSITORY
+          git add .
+          git commit -S --signoff -m "Update [vald sha: ${SHA}]"
+          git push
+      - name: Create tag
+        if: ${{ inputs.enable_tag_push == true }}
+        continue-on-error: true
+        run: |
+          version="$(make vald/client/python/version/print)"
+          git remote set-url origin "https://${CI_USER}:${CI_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git tag ${version}
+          git push origin ${version}
