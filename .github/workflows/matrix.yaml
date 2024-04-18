@@ -41,7 +41,7 @@ jobs:
       - check-version-for-debug
     uses: ./.github/workflows/_sync-version.yaml
     strategy:
-      fail-fast: true
+      fail-fast: false
       max-parallel: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN) }}
       matrix:
         # TODO: change job id
