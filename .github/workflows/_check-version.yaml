@@ -62,7 +62,8 @@ jobs:
 
           # We cannot store multiple rows of values in "GITHUB_OUTPUT", so convert them to a single line.
           TAG_DIFF_LIST=$(diff -u <(echo "${CLIENT_TAG_LIST}") <(echo "${VALD_TAG_LIST}") | grep '^+' | grep -v '^+++' | sed 's/^+//' | tac)
-          TAG_DIFF_LIST=$(echo ${TAG_DIFF_LIST} | awk -F'.' '!seen[$1"."$2]++' | awk '{printf "%s ", $0} END {print ""}')
+          echo "aaaaaaaa===${TAG_DIFF_LIST}"
+          TAG_DIFF_LIST=$(echo ${TAG_DIFF_LIST} | awk -F '.' '!seen[$1"."$2]++' | awk '{printf "%s ", $0} END {print ""}')
           echo "aaaaaaaa===${TAG_DIFF_LIST}"
 
           TAG_DIFF_LIST_JSON=$(echo ${TAG_DIFF_LIST} | jq --compact-output -R 'split(" ")')
