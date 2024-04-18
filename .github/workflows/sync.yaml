@@ -44,7 +44,7 @@ jobs:
       - check-version
     uses: ./.github/workflows/_sync-version.yaml
     strategy:
-      fail-fast: true
+      fail-fast: false
       max-parallel: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON_LEN) }}
       matrix:
         vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
