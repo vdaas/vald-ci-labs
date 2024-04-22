@@ -1,14 +1,33 @@
-name: release
+#
+# Copyright (C) 2019-2024 vdaas.org vald team <vald@vdaas.org>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# You may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: Run release
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - '*.*.*'
-      - 'v*.*.*'
-      - '*.*.*-*'
-      - 'v*.*.*-*'
-  pull_request:
+  workflow_call:
+    inputs:
+      client_type:
+        type: "string"
+        description: "Set client type. e.g) go, python, node, java"
+        required: true
+    secrets:
+      CI_USER:
+        required: true
+      CI_TOKEN:
+        required: true
+      GPG_PRIVATE_KEY:
+        required: true
 
 jobs:
   e2e:
@@ -20,7 +39,7 @@ jobs:
           version: latest
           name: vald
           agents: 1
-      - name: check k3d
+      - name: Check k3d
         run: |
           kubectl cluster-info
       - uses: azure/setup-helm@v3
@@ -36,7 +55,7 @@ jobs:
           fi
           echo "TAG=${TAG}" >> $GITHUB_OUTPUT
           echo "TAG=${TAG}"
-      - name: deploy Vald
+      - name: Deploy Vald
         run: |
           helm repo add vald https://vald.vdaas.org/charts
           helm install \
@@ -55,18 +74,20 @@ jobs:
         env:
           VALUES: https://raw.githubusercontent.com/vdaas/vald/main/.github/helm/values/values-lb.yaml
           TAG: ${{ steps.get_image_tag.outputs.TAG }}
-      - name: python dependencies
+      - name: Download data
         run: |
-          pip install --upgrade grpcio-tools protobuf grpcio googleapis-common-protos
+          curl -OL https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json
+      - name: Install dependencies
+        run: |
+          make ci/deps
           ## dirty hack:
           sudo rm -rf /usr/lib/python3/dist-packages/validate.py
-          curl -LO https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json
-      - name: run tests
+      - name: Run tests
         run: |
           kubectl port-forward statefulset/vald-agent 8081:8081 &
           pid=$!
 
-          python src/test.py
+          make ci/test
 
           kill $pid
   release:
@@ -98,9 +119,7 @@ jobs:
       - name: Install dependencies
         run: |
           echo "Install dependencies"
-          sudo apt-get update
-          sudo apt-get install -y python3-setuptools
-          pip3 install grpcio-tools
+          make ci/deps
       - name: prepare to publish
         run: |
           python3 setup.py sdist
