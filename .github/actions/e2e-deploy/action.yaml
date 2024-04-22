@@ -47,6 +47,7 @@ runs:
       shell: bash
       run: |
         helm version
+    # NOTE: get tag infomation from actions inputs.
     - name: Get image tag
       shell: bash
       id: get_image_tag
@@ -84,7 +85,7 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        make ci/deps # NOTE: we may change to 'ci/deps/install'
+        make ci/deps/install # NOTE: we may change to 'ci/deps/install'
     - name: Run tests
       shell: bash
       run: |
@@ -94,3 +95,12 @@ runs:
         make ci/test # NOTE: we may change to 'ci/test/start'
 
         kill $pid
+    # NOTE: debug step
+    - name: Debug git changes
+      shell: bash
+      run: |
+        git diff
+    - name: Delete downloaded dataset
+      shell: bash
+      run: |
+        rm -rf wordvecs1000.json

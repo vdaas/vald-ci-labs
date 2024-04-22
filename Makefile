@@ -167,9 +167,9 @@ $(BINDIR)/buf:
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
 
-.PHONY: ci/deps
+.PHONY: ci/deps/install
 ## install deps for CI environment
-ci/deps:
+ci/deps/install:
 	sudo apt-get update -y && sudo apt-get install -y \
 		python3-setuptools \
 		libprotobuf-dev \
