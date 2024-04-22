@@ -48,7 +48,7 @@ runs:
       run: |
         helm version
     - name: Get image tag
-      shell: bashc
+      shell: bash
       id: get_image_tag
       run: |
         TAG="nightly"
