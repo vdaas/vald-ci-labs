@@ -26,6 +26,10 @@ on:
         type: string
         default: main
         required: false
+      client_type:
+        type: "string"
+        description: "Set client type. e.g) go, python, node, java"
+        required: true
 
 env:
   IMAGES: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"
@@ -82,4 +86,5 @@ jobs:
       vald_checkout_src_ref: ${{ inputs.vald_checkout_src_tag_ref }}
       client_checkout_target_ref: ${{ needs.prepare.outputs.RELEASE_BRANCH_NAME }}
       enable_tag_push: true
+      client_type: ${{ inputs.client_type }}
     secrets: inherit
