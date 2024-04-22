@@ -17,8 +17,8 @@
 name: "Sync Vald"
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/5 * * * *"
+  # schedule:
+  #   - cron: "*/5 * * * *"
 jobs:
   sync:
     uses: ./.github/workflows/sync.yaml
