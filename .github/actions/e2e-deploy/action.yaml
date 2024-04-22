@@ -84,13 +84,13 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        make ci/deps # or make ci/deps/install
+        make ci/deps # NOTE: we may change to 'ci/deps/install'
     - name: Run tests
       shell: bash
       run: |
         kubectl port-forward statefulset/vald-agent 8081:8081 &
         pid=$!
 
-        make ci/test # or make ci/tests
+        make ci/test # NOTE: we may change to 'ci/test/start'
 
         kill $pid

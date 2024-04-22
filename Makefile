@@ -177,6 +177,11 @@ ci/deps:
 		protobuf-compiler
 	pip3 install grpcio-tools
 
+.PHONY: ci/test
+## Execute test for CI environment
+ci/test:
+	python src/test.py
+
 .PHONY: ci/package/prepare
 ## prepare package to publish
 ci/package/prepare:
