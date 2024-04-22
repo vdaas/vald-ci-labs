@@ -1,3 +1,0 @@
-[submodule "vald-client-ci"]
-	path = vald-client-ci
-	url = https://github.com/vdaas/vald-client-ci.git
