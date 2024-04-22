@@ -17,13 +17,6 @@ on:
         type: boolean
         default: false
         required: false
-    secrets:
-      CI_USER:
-        required: true
-      CI_TOKEN:
-        required: true
-      GPG_PRIVATE_KEY:
-        required: true
 env:
   CI_USER: ${{ secrets.CI_USER }}
   CI_TOKEN: ${{ secrets.CI_TOKEN }}
