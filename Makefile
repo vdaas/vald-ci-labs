@@ -176,3 +176,9 @@ ci/deps:
 		libprotoc-dev \
 		protobuf-compiler
 	pip3 install grpcio-tools
+
+.PHONY: ci/package/prepare
+## prepare package to publish
+ci/package/prepare:
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
