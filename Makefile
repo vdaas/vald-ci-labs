@@ -26,6 +26,7 @@ PYTHON = python
 VALD_DIR    = vald-origin
 VALD_SHA    = VALD_SHA
 VALD_CLIENT_PYTHON_VERSION = VALD_CLIENT_PYTHON_VERSION
+VALD_CHECKOUT_REF ?= main
 
 BINDIR ?= /usr/local/bin
 
@@ -121,7 +122,7 @@ vald/clone: $(VALD_DIR)
 .PHONY: vald/checkout
 ## checkout vald repository
 vald/checkout: $(VALD_DIR)
-	cd $(VALD_DIR) && git checkout ${VALD_CHECKOUT_REF}
+	cd $(VALD_DIR) && git checkout $(VALD_CHECKOUT_REF)
 
 .PHONY: vald/origin/sha/print
 ## print origin VALD_SHA value
@@ -165,7 +166,6 @@ $(BINDIR)/buf:
 	"https://github.com/bufbuild/buf/releases/download/$$version/buf-$(shell uname -s)-$(shell uname -m)" \
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
-
 
 .PHONY: ci/deps
 ## install deps for CI environment
