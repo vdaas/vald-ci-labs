@@ -26,13 +26,6 @@ on:
         type: string
         default: main
         required: false
-    secrets:
-      CI_USER:
-        required: true
-      CI_TOKEN:
-        required: true
-      GPG_PRIVATE_KEY:
-        required: true
 
 env:
   IMAGES: "vdaas/vald-agent-ngt vdaas/vald-discoverer-k8s vdaas/vald-lb-gateway vdaas/vald-manager-index"

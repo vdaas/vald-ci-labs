@@ -15,29 +15,34 @@
 #
 name: "Sync Vald"
 on:
-  workflow_dispatch:
-  # schedule:
-  #   - cron: "*/5 * * * *"
+  workflow_call:
+    inputs:
+      client_type:
+        type: "string"
+        description: "Set client type. e.g) go, python, node, java"
+        required: true
+    secrets:
+      CI_USER:
+        required: true
+      CI_TOKEN:
+        required: true
+      GPG_PRIVATE_KEY:
+        required: true
 jobs:
   check-main:
     uses: ./.github/workflows/_check-main.yaml
-    secrets:
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+    secrets: inherit
 
   sync-main:
     if: ${{ needs.check-main.outputs.NEED_UPDATE == 'true' }}
     needs:
       - check-main
     uses: ./.github/workflows/_sync.yaml
-    secrets:
-      CI_USER: ${{ secrets.DISPATCH_USER }}
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+    secrets: inherit
 
   check-version:
     uses: ./.github/workflows/_check-version.yaml
-    secrets:
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+    secrets: inherit
 
   sync-version:
     needs:
@@ -50,7 +55,4 @@ jobs:
         vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
     with:
       vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
-    secrets:
-      CI_USER: ${{ secrets.DISPATCH_USER }}
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+    secrets: inherit
