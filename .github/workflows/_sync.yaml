@@ -55,7 +55,7 @@ jobs:
 
           echo "Build proto"
           export GOPATH=$HOME/go
-          make PYTHON=python3 proto
+          make proto
           make vald/sha/update
           make vald/client/python/version/update
 
