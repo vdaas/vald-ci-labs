@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: "Deploy Vald for E2E test"
+name: "Deploy Vald and Run E2E test"
 description: "A action to deploy vald for E2E test"
 inputs:
   client_type:

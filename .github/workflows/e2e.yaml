@@ -25,6 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/e2e-deploy
+      - uses: ./.github/actions/e2e
         with:
           client_type: python
