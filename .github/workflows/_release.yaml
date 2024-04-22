@@ -21,13 +21,6 @@ on:
         type: "string"
         description: "Set client type. e.g) go, python, node, java"
         required: true
-    secrets:
-      CI_USER:
-        required: true
-      CI_TOKEN:
-        required: true
-      GPG_PRIVATE_KEY:
-        required: true
 
 jobs:
   e2e:

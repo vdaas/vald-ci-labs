@@ -31,7 +31,4 @@ jobs:
     uses: ./.github/workflows/_release.yaml
     with:
       client_type: python
-    secrets:
-      CI_USER: ${{ secrets.DISPATCH_USER }}
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+    secrets: inherit
