@@ -38,6 +38,8 @@ jobs:
     needs:
       - check-main
     uses: ./.github/workflows/_sync.yaml
+    with:
+      client_type: ${{ inputs.client_type }}
     secrets: inherit
 
   check-version:
@@ -55,4 +57,5 @@ jobs:
         vald_checkout_src_tag_ref: ${{ fromJson(needs.check-version.outputs.TAG_DIFF_LIST_JSON) }}
     with:
       vald_checkout_src_tag_ref: ${{ matrix.vald_checkout_src_tag_ref }}
+      client_type: ${{ inputs.client_type }}
     secrets: inherit
