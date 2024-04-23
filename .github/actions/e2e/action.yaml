@@ -47,7 +47,7 @@ runs:
     - name: Deploy Vald
       shell: bash
       run: |
-        helm repo add vald https://vald.vdaas.org/charts
+        helm repo add vald-charts https://vald.vdaas.org/charts
         helm install \
           --values ${VALUES} \
           --set defaults.image.tag=${TAG} \
@@ -57,7 +57,7 @@ runs:
           --set gateway.lb.enabled=false \
           --set discoverer.enabled=false \
           --set manager.index.enabled=false \
-          --generate-name vald/vald
+          --generate-name vald-charts/vald
         sleep 3
         kubectl wait --for=condition=ready pod -l app=vald-agent --timeout=3m
         kubectl get pods
