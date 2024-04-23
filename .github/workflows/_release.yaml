@@ -78,10 +78,9 @@ jobs:
           fetch-depth: 1
       - name: Install Protoc
         uses: arduino/setup-protoc@v1
-      - name: Setup Node environment
-        uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-language
         with:
-          node-version: '18'
+          client_type: ${{ inputs.client_type }}
       # - name: Publish
       #   run: |
       #     make ci/package/publish
