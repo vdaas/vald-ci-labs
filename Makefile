@@ -137,14 +137,14 @@ vald/sha/print:
 vald/sha/update: $(VALD_DIR)
 	(cd $(VALD_DIR); git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
 
-.PHONY: vald/client/python/version/print
+.PHONY: vald/client/version/print
 ## print VALD_CLIENT_PYTHON_VERSION value
-vald/client/python/version/print:
+vald/client/version/print:
 	@cat $(VALD_CLIENT_PYTHON_VERSION)
 
-.PHONY: vald/client/python/version/update
+.PHONY: vald/client/version/update
 ## update VALD_CLIENT_PYTHON_VERSION value
-vald/client/python/version/update: $(VALD_DIR)
+vald/client/version/update: $(VALD_DIR)
 	(vald_version=`cat $(VALD_DIR)/versions/VALD_VERSION | sed -e 's/^v//'`; \
 	    echo "VALD_VERSION: $${vald_version}"; \
 	    echo "$${vald_version}" > VALD_CLIENT_PYTHON_VERSION)

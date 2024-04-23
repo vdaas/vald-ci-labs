@@ -19,6 +19,10 @@ inputs:
   client_type:
     description: "Set client type. e.g) go, python, node, java"
     required: true
+  image_tag:
+    description: "Set image tag to deploy Vald. e.g) nightly, vx.x.x"
+    required: true
+    default: "nightly"
 
 runs:
   using: "composite"
@@ -47,17 +51,6 @@ runs:
       shell: bash
       run: |
         helm version
-    # NOTE: get tag infomation from actions inputs.
-    - name: Get image tag
-      shell: bash
-      id: get_image_tag
-      run: |
-        TAG="nightly"
-        if [[ "$GITHUB_REF" =~ ^refs/tags/.* ]]; then
-          TAG=$(echo $GITHUB_REF | sed -e 's:^refs/tags/::' | sed 's/^v\?/v/')
-        fi
-        echo "TAG=${TAG}" >> $GITHUB_OUTPUT
-        echo "TAG=${TAG}"
     - name: Deploy Vald
       shell: bash
       run: |
@@ -77,7 +70,7 @@ runs:
         kubectl get pods
       env:
         VALUES: https://raw.githubusercontent.com/vdaas/vald/main/.github/helm/values/values-lb.yaml
-        TAG: ${{ steps.get_image_tag.outputs.TAG }}
+        TAG: ${{ inputs.image_tag }}
     - name: Download data
       shell: bash
       run: |
