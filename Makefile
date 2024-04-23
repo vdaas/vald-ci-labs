@@ -21,8 +21,6 @@ LANGUAGE    = python
 PKGNAME     = $(NAME)-client-$(LANGUAGE)
 PKGREPO     = github.com/$(REPO)/$(PKGNAME)
 
-PYTHON = python
-
 VALD_DIR    = vald-origin
 VALD_SHA    = VALD_SHA
 VALD_CLIENT_PYTHON_VERSION = VALD_CLIENT_PYTHON_VERSION
@@ -139,14 +137,14 @@ vald/sha/print:
 vald/sha/update: $(VALD_DIR)
 	(cd $(VALD_DIR); git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
 
-.PHONY: vald/client/python/version/print
+.PHONY: vald/client/version/print
 ## print VALD_CLIENT_PYTHON_VERSION value
-vald/client/python/version/print:
+vald/client/version/print:
 	@cat $(VALD_CLIENT_PYTHON_VERSION)
 
-.PHONY: vald/client/python/version/update
+.PHONY: vald/client/version/update
 ## update VALD_CLIENT_PYTHON_VERSION value
-vald/client/python/version/update: $(VALD_DIR)
+vald/client/version/update: $(VALD_DIR)
 	(vald_version=`cat $(VALD_DIR)/versions/VALD_VERSION | sed -e 's/^v//'`; \
 	    echo "VALD_VERSION: $${vald_version}"; \
 	    echo "$${vald_version}" > VALD_CLIENT_PYTHON_VERSION)
@@ -167,15 +165,20 @@ $(BINDIR)/buf:
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
 
-.PHONY: ci/deps
+.PHONY: ci/deps/install
 ## install deps for CI environment
-ci/deps:
+ci/deps/install:
 	sudo apt-get update -y && sudo apt-get install -y \
 		python3-setuptools \
 		libprotobuf-dev \
 		libprotoc-dev \
 		protobuf-compiler
 	pip3 install grpcio-tools
+
+.PHONY: ci/test
+## Execute test for CI environment
+ci/test:
+	python src/test.py
 
 .PHONY: ci/package/prepare
 ## prepare package to publish
