@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 1
       - name: Install dependencies
         run: |
-          make ci/deps
+          make ci/deps/install
       - name: Prepare for publish
         run: |
           make ci/package/prepare
