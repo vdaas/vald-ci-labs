@@ -27,7 +27,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
     - uses: ./.github/actions/setup-language
       with:
         client_type: ${{ inputs.client_type }}
