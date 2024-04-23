@@ -28,15 +28,9 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
-    - name: Setup Go environment
-      if: ${{ inputs.client_type == 'go' }}
-      uses: ./.github/actions/setup-go
-    - name: Setup Node environment
-      if: ${{ inputs.client_type == 'node' }}
-      uses: ./.github/actions/setup-node
-    - name: Setup Node environment
-      if: ${{ inputs.client_type == 'java' }}
-      uses: ./.github/actions/setup-java
+    - uses: ./.github/actions/setup-language
+      with:
+        client_type: ${{ inputs.client_type }}
     - uses: rinx/setup-k3d@v0.0.4
       with:
         version: latest
