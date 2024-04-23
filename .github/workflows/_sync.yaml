@@ -51,8 +51,6 @@ jobs:
           VALD_CHECKOUT_REF: ${{ inputs.vald_checkout_src_ref }}
       - name: Build proto
         run: |
-          # make ci/all
-
           echo "Install dependencies"
           make ci/deps/install
 
@@ -75,7 +73,9 @@ jobs:
           image_tag: ${{ env.IMAGE_TAG }}
       - name: Push
         run: |
-          git push
+          git push origin ${REF}
+        env:
+          REF: ${{ inputs.client_checkout_target_ref }}
       - name: Create tag
         if: ${{ inputs.enable_tag_push == true }}
         continue-on-error: true
