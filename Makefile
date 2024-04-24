@@ -185,3 +185,13 @@ ci/test:
 ci/package/prepare:
 	python3 setup.py sdist
 	python3 setup.py bdist_wheel
+
+.PHONY: dataset/download
+## download dataset
+dataset/download:
+	curl -OL https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json
+
+.PHONY: dataset/delete
+## download dataset
+dataset/delete:
+	rm -rf wordvecs1000.json
