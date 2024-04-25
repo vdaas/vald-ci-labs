@@ -96,6 +96,8 @@ clean:
 ## build proto
 proto: $(VALD_DIR) $(JAVA_ROOT)
 	@$(call green, "generating .java files...")
+	sed -i '/lint:/a \  ignore: [v1]' $(PROTO_ROOT)/buf.yaml
+	echo 'build:\n  excludes: [v1/agent/sidecar, v1/discoverer, v1/manager]' >> $(PROTO_ROOT)/buf.yaml
 	./gradlew bufGenerate
 	cp -r build/bufbuild/generated/main src
 
@@ -105,8 +107,6 @@ $(JAVA_ROOT):
 
 $(VALD_DIR):
 	git clone https://$(VALDREPO) $(VALD_DIR)
-	sed -i '/lint:/a \  ignore: [v1]' $(PROTO_ROOT)/buf.yaml
-	echo 'build:\n  excludes: [v1/agent/sidecar, v1/discoverer, v1/manager]' >> $(PROTO_ROOT)/buf.yaml
 
 .PHONY: vald/checkout
 ## checkout vald repository
@@ -132,11 +132,6 @@ vald/sha/update: $(VALD_DIR)
 ## print VALD_CLIENT_JAVA_VERSION value
 vald/client/version/print:
 	@cat $(VALD_CLIENT_JAVA_VERSION)
-
-.PHONY: vald/java/version/latest
-## print JAVA_LTS_LATEST_VERSTION value
-vald/java/version/latest:
-	@cat $(JAVA_LTS_LATEST_VERSTION)
 
 .PHONY: vald/client/version/update
 ## update VALD_CLIENT_JAVA_VERSION value
