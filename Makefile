@@ -144,12 +144,12 @@ vald/client/version/update: $(VALD_DIR)
 .PHONY: ci/deps/install
 ## install deps for CI environment
 ci/deps/install:
-	echo "Nothing do be done"
+	@echo "Nothing do be done"
 
 .PHONY: ci/deps/update
 ## update deps for CI environment
 ci/deps/update:
-	echo "Nothing do be done"
+	@echo "Nothing do be done"
 
 .PHONY: ci/test
 ## Execute test for CI environment
