@@ -159,6 +159,35 @@ ci/test: $(TEST_DATASET_PATH)
 $(TEST_DATASET_PATH):
 	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
 
+.PHONY: ci/package/prepare
+## prepare for publich
+ci/package/prepare:
+	./gradlew clean
+	echo "${PGP_PRIVATE_KEY}" > private_key.txt
+	gpg --import --batch private_key.txt
+	rm -f private_key.txt
+	gpg --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --export-secret-keys -o ~/.gnupg/secring.gpg
+	cat << EOF > ~/.gradle/gradle.properties
+	org.gradle.daemon=true
+	signing.keyId=${GPG_KEYID}
+	signing.password=${GPG_PASSPHRASE}
+	signing.secretKeyRingFile=${HOME}/.gnupg/secring.gpg
+	sonatypeUsername=${SONATYPE_USERNAME}
+	sonatypePassword=${SONATYPE_PASSWORD}
+	nexusUsername=${SONATYPE_USERNAME}
+	nexusPassword=${SONATYPE_PASSWORD}
+	EOF
+
+.PHONY: ci/package/publish
+## publich packages
+ci/package/publish:
+	./gradlew clean
+	# make vald
+	./gradlew build -x test --stacktrace
+	./gradlew publish -Prelease --stacktrace
+	sleep 120
+	./gradlew closeAndReleaseRepository --stacktrace
+
 .PHONY: version/java
 ## Print Java version
 version/java:
