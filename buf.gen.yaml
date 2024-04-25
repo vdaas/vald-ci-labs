@@ -1,8 +1,6 @@
 version: v1
-managed:
-  enabled: false
 plugins:
-  - plugin: buf.build/protocolbuffers/python
-    out: src
-  - plugin: buf.build/grpc/python
-    out: src
+  - plugin: buf.build/grpc/java
+    out: main/java
+  - plugin: buf.build/protocolbuffers/java
+    out: main/java
