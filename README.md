@@ -1,64 +1,76 @@
-# vald-client-python
+# vald-client-java
 
-[![PyPI version](https://badge.fury.io/py/vald-client-python.svg)](https://badge.fury.io/py/vald-client-python)
+[![Maven Central](https://img.shields.io/maven-central/v/org.vdaas.vald/vald-client-java?style=flat-square)](https://search.maven.org/search?q=g:%22org.vdaas.vald%22%20AND%20a:%22vald-client-java%22)
 [![Vald version](https://img.shields.io/github/release/vdaas/vald.svg?style=flat-square)](https://github.com/vdaas/vald/releases/latest)
-![Build version](https://img.shields.io/badge/python-3.8-green)
+[![java](https://img.shields.io/badge/java-17-blue)](https://docs.oracle.com/en/java/javase/17/)
+[![kotlin](https://img.shields.io/badge/kotlin-1.9.10-orange)](https://kotlinlang.org/docs/home.html)
 
-A Python gRPC client library for [Vald](https://github.com/vdaas/vald).
-
-## Install
-
-Using pip,
-
-```sh
-pip install vald-client-python
-```
+A Java gRPC client library for [Vald](https://github.com/vdaas/vald).
 
 ## Usage
 
-To use v1 APIs,
+### Dependency
 
-```python
-import grpc
-from vald.v1.vald import insert_pb2_grpc
-from vald.v1.vald import search_pb2_grpc
-from vald.v1.vald import update_pb2_grpc
-from vald.v1.vald import remove_pb2_grpc
-from vald.v1.payload import payload_pb2
+Add `vald-client-java` into your project dependency.
 
-## create a channel by passing "{host}:{port}"
-channel = grpc.insecure_channel("gateway.vald.vdaas.org:80")
+For Maven `pom.xml`,
 
-## create stubs for calling RPCs
-istub = insert_pb2_grpc.InsertStub(channel)
-sstub = search_pb2_grpc.SearchStub(channel)
-ustub = update_pb2_grpc.UpdateStub(channel)
-rstub = remove_pb2_grpc.RemoveStub(channel)
+```xml
+<dependency>
+    <groupId>org.vdaas.vald</groupId>
+    <artifactId>vald-client-java</artifactId>
+    <version>x.y.z</version>
+</dependency>
+<dependency>
+  <groupId>io.grpc</groupId>
+  <artifactId>grpc-api</artifactId>
+  <version>x.y.z</version>
+</dependency>
+<dependency>
+  <groupId>io.grpc</groupId>
+  <artifactId>grpc-core</artifactId>
+  <version>x.y.z</version>
+</dependency>
+<dependency>
+  <groupId>io.grpc</groupId>
+  <artifactId>grpc-stub</artifactId>
+  <version>x.y.z</version>
+</dependency>
+<dependency>
+  <groupId>io.grpc</groupId>
+  <artifactId>grpc-protobuf</artifactId>
+  <version>x.y.z</version>
+</dependency>
+<dependency>
+  <groupId>io.grpc</groupId>
+  <artifactId>grpc-netty-shaded</artifactId>
+  <version>x.y.z</version>
+</dependency>
 
-## call RPCs: Insert
-vec = payload_pb2.Object.Vector(id='vector_id_1', vector=[0.1, 0.2, 0.3])
-icfg = payload_pb2.Insert.Config(skip_strict_exist_check=True)
-istub.Insert(payload_pb2.Insert.Request(vector=vec, config=icfg))
-
-
-## call RPCs: Search
-### num: number of results
-### timeout: 3 seconds
-scfg = payload_pb2.Search.Config(num=10, radius=-1.0, epsilon=0.01, timeout=3000000000)
-res = sstub.Search(payload_pb2.Search.Request(vector=[0.1, 0.2, 0.3], config=scfg))
-
-
-## call RPCs: Update
-uvec = payload_pb2.Object.Vector(id='vector_id_1', vector=[0.1, 0.2, 0.3])
-ucfg = payload_pb2.Update.Config(skip_strict_exist_check=True)
-ustub.Update(payload_pb2.Update.Request(vector=uvec, config=ucfg))
-
-
-## call RPCs: Remove
-rcfg = payload_pb2.Remove.Config(skip_strict_exist_check=True)
-rid = payload_pb2.Object.ID(id='vector_id_1')
-rstub.Remove(payload_pb2.Remove.Request(id=rid, config=rcfg))
-
-## close channel
-channel.close()
 ```
+
+Gradle `build.gradle`,
+
+```groovy
+implementation 'org.vdaas.vald:vald-client-java:x.y.z'
+implementation 'io.grpc:grpc-api:x.y.z'
+implementation 'io.grpc:grpc-core:x.y.z'
+implementation 'io.grpc:grpc-stub:x.y.z'
+implementation 'io.grpc:grpc-protobuf:x.y.z'
+implementation 'io.grpc:grpc-netty-shaded:x.y.z'
+```
+
+`io.grpc:grpc-netty-shaded` can be replaced by `io.grpc:grpc-okhttp` or `io.grpc:grpc-netty`.
+
+### Example
+
+Please refer the [examples](./examples) directory.
+
+To run,
+
+    $ ./gradlew build
+    $ cd examples
+    $ ./gradlew shadowJar
+    $ java -jar build/libs/vald-client-java-example-0.0.1-all.jar
+
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B21465%2Fvald-client-java.svg?type=large)](https://app.fossa.com/projects/custom%2B21465%2Fvald-client-java?ref=badge_large)
