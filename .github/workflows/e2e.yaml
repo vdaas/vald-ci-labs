@@ -31,3 +31,11 @@ jobs:
       - uses: vdaas/vald-client-ci/.github/actions/e2e@feat/add-common-workflows
         with:
           client_type: java
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: debug
+        run: |
+          ./gradlew build -x test --stacktrace
