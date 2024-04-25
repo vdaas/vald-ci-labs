@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/e2e
+      # - uses: vdaas/vald-client-ci/.github/actions/e2e@main
+      - uses: vdaas/vald-client-ci/.github/actions/e2e@feat/add-common-workflows
         with:
           client_type: python
