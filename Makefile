@@ -108,10 +108,6 @@ $(VALD_DIR):
 	sed -i '/lint:/a \  ignore: [v1]' $(PROTO_ROOT)/buf.yaml
 	echo 'build:\n  excludes: [v1/agent/sidecar, v1/discoverer, v1/manager]' >> $(PROTO_ROOT)/buf.yaml
 
-.PHONY: vald/clone
-## clone vald repository
-vald/clone: $(VALD_DIR)
-
 .PHONY: vald/checkout
 ## checkout vald repository
 vald/checkout: $(VALD_DIR)
