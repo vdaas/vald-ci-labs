@@ -48,4 +48,4 @@ jobs:
                           -x checkKotlinGradlePluginConfigurationErrors \
                           -x test \
                           --stacktrace
-          ls -la
+          ls ./build -la
