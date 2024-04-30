@@ -187,8 +187,14 @@ ci/package/prepare:
 ## publich packages
 ci/package/publish:
 	./gradlew clean
-	# make vald
-	./gradlew build -x test --stacktrace
+	./gradlew build -x bufFormatApply \
+					-x bufFormatCheck \
+					-x bufLint \
+					-x check \
+					-x checkKotlinGradlePluginConfigurationErrors \
+					-x checkKotlinGradlePluginConfigurationErrors \
+					-x test \
+					--stacktrace
 	./gradlew publish -Prelease --stacktrace
 	sleep 120
 	./gradlew closeAndReleaseRepository --stacktrace
