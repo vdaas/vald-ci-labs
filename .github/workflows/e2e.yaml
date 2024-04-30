@@ -39,4 +39,12 @@ jobs:
       - name: debug
         run: |
           ./gradlew tasks
-          ./gradlew build -x test -x bufFormatApply --stacktrace
+          # Disable Verification tasks
+          ./gradlew build -x bufFormatApply \
+                          -x bufFormatCheck \
+                          -x bufLint \
+                          -x check \
+                          -x checkKotlinGradlePluginConfigurationErrors \
+                          -x checkKotlinGradlePluginConfigurationErrors \
+                          -x test \
+                          --stacktrace
