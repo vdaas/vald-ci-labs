@@ -50,7 +50,6 @@ jobs:
 
           git diff
 
-          make proto
           ./gradlew tasks
           # Disable Verification tasks
           # ./gradlew build -x bufFormatApply \
