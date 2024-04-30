@@ -39,4 +39,4 @@ jobs:
       - name: debug
         run: |
           ./gradlew tasks
-          ./gradlew build -x test --stacktrace
+          ./gradlew build -x test bufFormatApply --stacktrace
