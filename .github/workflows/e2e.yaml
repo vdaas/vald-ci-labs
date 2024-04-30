@@ -53,13 +53,13 @@ jobs:
           make proto
           ./gradlew tasks
           # Disable Verification tasks
-          ./gradlew build -x bufFormatApply \
-                          -x bufFormatCheck \
-                          -x bufLint \
-                          -x check \
-                          -x checkKotlinGradlePluginConfigurationErrors \
-                          -x checkKotlinGradlePluginConfigurationErrors \
-                          -x test \
-                          --stacktrace
+          # ./gradlew build -x bufFormatApply \
+          #                 -x bufFormatCheck \
+          #                 -x bufLint \
+          #                 -x check \
+          #                 -x checkKotlinGradlePluginConfigurationErrors \
+          #                 -x checkKotlinGradlePluginConfigurationErrors \
+          #                 -x test \
+          #                 --stacktrace
           ls -la
           ls ./build -la
