@@ -48,3 +48,4 @@ jobs:
                           -x checkKotlinGradlePluginConfigurationErrors \
                           -x test \
                           --stacktrace
+          la

@@ -98,7 +98,7 @@ proto: $(VALD_DIR) $(JAVA_ROOT)
 	@$(call green, "generating .java files...")
 	sed -i '/lint:/a \  ignore: [v1]' $(PROTO_ROOT)/buf.yaml
 	echo 'build:\n  excludes: [v1/agent/sidecar, v1/discoverer, v1/manager]' >> $(PROTO_ROOT)/buf.yaml
-	./gradlew bufGenerate
+	./gradlew bufGenerate bufFormatApply bufFormatCheck bufLint check
 	cp -r build/bufbuild/generated/main src
 
 $(JAVA_ROOT):
