@@ -46,7 +46,9 @@ jobs:
           make vald/sha/update
           make vald/client/version/update
           echo "Update dependencies"
-          make ci/deps/Update
+          make ci/deps/update
+
+          git diff
 
           make proto
           ./gradlew tasks
