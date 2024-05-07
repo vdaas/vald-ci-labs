@@ -142,7 +142,7 @@ ci/package/prepare:
 
 .PHONY: ci/package/publish
 ## publich packages
-ci/package/publish: mod
+ci/package/publish:
 	@echo "Nothing do be done"
 
 .PHONY: mod
