@@ -253,7 +253,7 @@ test: $(TEST_DATASET_PATH)
 	# verify example codes
 	npm pack
 	npm install -g ts-node
-	(version=$(shell $(MAKE) -s vald/client/node/version/print); \
+	(version=$(shell $(MAKE) -s vald/client/version/print); \
 		echo "vald-client-node version: $${version}"; \
 		cd example-ts && npm install ../vald-client-node-$${version}.tgz -s -f; \
 		DIM=300 ts-node example.ts; \
