@@ -84,6 +84,7 @@ sync/v1: $(VALD_DIR)
 $(VALD_DIR):
 	git clone https://$(VALDREPO) $(VALD_DIR)
 
+.PHONY: vald/checkout
 ## checkout vald repository
 vald/checkout: $(VALD_DIR)
 	cd $(VALD_DIR) && git checkout $(VALD_CHECKOUT_REF)
