@@ -270,8 +270,8 @@ ci/deps/install:
 ci/deps/update:
 	@echo "Nothing do be done"
 
-.PHONY: npm/deps
-npm/deps: \
+.PHONY: npm/deps/install
+npm/deps/install: \
 	$(BUF_GEN_PATH)
 
 $(BUF_GEN_PATH):
@@ -280,14 +280,15 @@ $(BUF_GEN_PATH):
 .PHONY: proto/deps
 ## install proto deps
 proto/deps: \
-	npm/deps
+	npm/deps/install
 
 $(TEST_DATASET_PATH):
 	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
 
 .PHONY: ci/package/prepare
 ## prepare for publich
-ci/package/prepare: ci/deps/install
+ci/package/prepare: \
+	ci/deps/install
 
 .PHONY: ci/package/publish
 ## publich packages
