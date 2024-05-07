@@ -1,11 +1,11 @@
 #
-# Copyright (C) 2019-2020 Vdaas.org Vald team ( kpango, rinx, kmrmt )
+# Copyright (C) 2019 Vdaas.org Vald team ( kpango, kou-m, rinx )
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,50 +17,18 @@
 REPO       ?= vdaas
 NAME        = vald
 VALDREPO    = github.com/$(REPO)/$(NAME)
-LANGUAGE    = python
+LANGUAGE    = go
 PKGNAME     = $(NAME)-client-$(LANGUAGE)
 PKGREPO     = github.com/$(REPO)/$(PKGNAME)
 
-PYTHON = python
+VALD_SHA     = VALD_SHA
+VALD_VERSION = VALD_VERSION
+VALD_DIR     = vald-origin
 
-VALD_DIR    = vald-origin
-VALD_SHA    = VALD_SHA
-VALD_CLIENT_PYTHON_VERSION = VALD_CLIENT_PYTHON_VERSION
-VALD_CHECKOUT_REF ?= main
+ROOTDIR = $(eval ROOTDIR := $(shell git rev-parse --show-toplevel))$(ROOTDIR)
+GO_VERSION := $(eval GO_VERSION := $(shell cat GO_VERSION))$(GO_VERSION)
 
-BINDIR ?= /usr/local/bin
-
-PROTO_ROOT  = $(VALD_DIR)/apis/proto
-PB2DIR_ROOT = src
-
-BUF_VERSION_URL := https://raw.githubusercontent.com/vdaas/vald/main/versions/BUF_VERSION
-BUF_CONFIGS = \
-	$(PROTO_ROOT)/buf.yaml \
-	$(PROTO_ROOT)/buf.lock
-
-SHADOW_ROOT       = vald
-SHADOW_PROTO_ROOT = $(SHADOW_ROOT)/$(SHADOW_ROOT)
-
-PROTOS = \
-	v1/agent/core/agent.proto \
-	v1/filter/egress/egress_filter.proto \
-	v1/filter/ingress/ingress_filter.proto \
-	v1/vald/filter.proto \
-	v1/vald/insert.proto \
-	v1/vald/object.proto \
-	v1/vald/remove.proto \
-	v1/vald/search.proto \
-	v1/vald/update.proto \
-	v1/vald/upsert.proto \
-	v1/payload/payload.proto
-PROTOS := $(PROTOS:%=$(PROTO_ROOT)/%)
-SHADOWS = $(PROTOS:$(PROTO_ROOT)/%.proto=$(SHADOW_PROTO_ROOT)/%.proto)
-PB2PYS  = $(PROTOS:$(PROTO_ROOT)/%.proto=$(PB2DIR_ROOT)/$(SHADOW_ROOT)/%_pb2.py)
-
-MAKELISTS = Makefile
-
-PYTHON_VERSION := $(eval PYTHON_VERSION := $(shell cat PYTHON_VERSION))$(PYTHON_VERSION)
-TEST_DATASET_PATH = wordvecs1000.json
+MAKELISTS   = Makefile
 
 red    = /bin/echo -e "\x1b[31m\#\# $1\x1b[0m"
 green  = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
@@ -71,7 +39,7 @@ cyan   = /bin/echo -e "\x1b[36m\#\# $1\x1b[0m"
 
 .PHONY: all
 ## execute clean and proto
-all: clean proto
+all: clean sync/v1 mod clean
 
 .PHONY: help
 ## print all available commands
@@ -92,40 +60,27 @@ help:
 .PHONY: clean
 ## clean
 clean:
-	rm -rf $(PB2DIR_ROOT)/google $(PB2DIR_ROOT)/vald $(PB2DIR_ROOT)/buf
-	rm -rf $(SHADOW_ROOT)
-	rm -rf $(VALD_DIR)
-
-.PHONY: proto
-## build proto
-proto: $(PB2PYS)
-	@$(call green, "generating pb2.py files...")
-	cp -f $(BUF_CONFIGS) $(SHADOW_ROOT)
-	buf generate --include-imports
-
-$(PROTOS): $(VALD_DIR)
-$(SHADOWS): $(PROTOS)
-$(SHADOW_PROTO_ROOT)/%.proto: $(PROTO_ROOT)/%.proto
-	mkdir -p $(dir $@)
-	cp $< $@
-	sed -i -e 's:^import "v1:import "$(SHADOW_ROOT)/v1:' $@
-
-$(PB2DIR_ROOT):
-	mkdir -p $@
-
-$(PB2PYS): proto/deps/install $(PB2DIR_ROOT) $(SHADOWS)
+	-@rm -rf $(VALD_DIR)
 
 $(VALD_DIR):
-	git clone https://$(VALDREPO) $(VALD_DIR)
+	git clone --depth 1 https://$(VALDREPO) $(VALD_DIR)
 
-## checkout vald repository
-vald/checkout: $(VALD_DIR)
-	cd $(VALD_DIR) && git checkout $(VALD_CHECKOUT_REF)
-
-.PHONY: vald/origin/sha/print
-## print origin VALD_SHA value
-vald/origin/sha/print: $(VALD_DIR)
-	@cd $(VALD_DIR) && git rev-parse HEAD | tr -d '\n'
+.PHONY: sync/v1
+## sync/v1 synchronize VALD_DIR's generated v1 pbgo to v1 dir and patch it
+sync/v1: $(VALD_DIR)
+	rm -rf $(ROOTDIR)/v1
+	cp -r $(VALD_DIR)/apis/grpc/v1 $(ROOTDIR)/v1
+	rm -rf $(ROOTDIR)/v1/discoverer \
+	    $(ROOTDIR)/v1/agent/sidecar \
+	    $(ROOTDIR)/v1/manager \
+	    $(ROOTDIR)/v1/rpc
+	    # $(ROOTDIR)/v1/mirror \
+	find $(ROOTDIR)/v1/* -name '*.go' | xargs sed -i -E "s%github.com/vdaas/vald/internal/net/grpc/codes%google.golang.org/grpc/codes%g"
+	find $(ROOTDIR)/v1/* -name '*.go' | xargs sed -i -E "s%github.com/vdaas/vald/internal/net/grpc/status%google.golang.org/grpc/status%g"
+	find $(ROOTDIR)/v1/* -name '*.go' | xargs sed -i -E "s%github.com/vdaas/vald/apis/grpc/v1%github.com/vdaas/vald-client-go/v1%g"
+	find $(ROOTDIR)/v1/* -name '*.go' | xargs sed -i -E "s%github.com/vdaas/vald/internal/io%io%g"
+	find $(ROOTDIR)/v1/* -name '*.go' | xargs sed -i -E "s%github.com/vdaas/vald/internal/sync%sync%g"
+	rm -rf $(VALD_DIR)
 
 .PHONY: vald/sha/print
 ## print VALD_SHA value
@@ -135,67 +90,23 @@ vald/sha/print:
 .PHONY: vald/sha/update
 ## update VALD_SHA value
 vald/sha/update: $(VALD_DIR)
-	(cd $(VALD_DIR); git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
+	(cd $(VALD_DIR); git rev-parse HEAD > ../$(VALD_SHA))
+	cp $(VALD_DIR)/versions/VALD_VERSION $(VALD_VERSION)
+	cp $(VALD_DIR)/versions/GO_VERSION $(ROOTDIR)/GO_VERSION
 
-.PHONY: vald/client/version/print
-## print VALD_CLIENT_PYTHON_VERSION value
-vald/client/version/print:
-	@cat $(VALD_CLIENT_PYTHON_VERSION)
+.PHONY: vald/version/print
+## print VALD_VERSION value
+vald/version/print:
+	@cat $(VALD_VERSION)
 
-.PHONY: vald/client/version/update
-## update VALD_CLIENT_PYTHON_VERSION value
-vald/client/version/update: $(VALD_DIR)
-	(vald_version=`cat $(VALD_DIR)/versions/VALD_VERSION | sed -e 's/^v//'`; \
-	    echo "VALD_VERSION: $${vald_version}"; \
-	    echo "$${vald_version}" > VALD_CLIENT_PYTHON_VERSION)
-	sed -i -e "s/^version = .*\$$/version = `cat VALD_CLIENT_PYTHON_VERSION`/" setup.cfg
+.PHONY: mod
+## update go.mod
+mod:
+	rm -rf $(ROOTDIR)/go.mod $(ROOTDIR)/go.sum
+	cp $(ROOTDIR)/go.mod.default $(ROOTDIR)/go.mod
+	GOPRIVATE=$(VALDREPO) go mod tidy
 
-.PHONY: test
-## Execute test
-test: $(TEST_DATASET_PATH)
-	python src/test.py
-
-$(TEST_DATASET_PATH):
-	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
-
-.PHONY: ci/deps/install
-## install deps for CI environment
-ci/deps/install: proto/deps/install
-	sudo apt-get update -y && sudo apt-get install -y \
-		python3-setuptools \
-		libprotobuf-dev \
-		libprotoc-dev \
-		protobuf-compiler
-	pip3 install grpcio-tools
-
-.PHONY: ci/deps/update
-## update deps for CI environment
-ci/deps/update:
-	@echo "Nothing do be done"
-
-.PHONY: ci/package/prepare
-## prepare package to publish
-ci/package/prepare:
-	python3 setup.py sdist
-	python3 setup.py bdist_wheel
-
-.PHONY: ci/package/publish
-## publich packages
-ci/package/publish:
-	@echo "Nothing do be done"
-
-.PHONY: proto/deps/install
-## install proto deps
-proto/deps/install: $(BINDIR)/buf
-
-$(BINDIR)/buf:
-	@version=$$(curl -sSL $(BUF_VERSION_URL)); \
-	curl -sSL \
-	"https://github.com/bufbuild/buf/releases/download/$$version/buf-$(shell uname -s)-$(shell uname -m)" \
-	-o "${BINDIR}/buf" && \
-	chmod +x "${BINDIR}/buf"
-
-.PHONY: version/python
-## Print Python version
-version/python:
-	@echo $(PYTHON_VERSION)
+.PHONY: version/go
+## print go version
+version/go:
+	@echo $(GO_VERSION)
