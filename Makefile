@@ -260,6 +260,9 @@ test: $(TEST_DATASET_PATH)
 		cd ../example && npm install ../vald-client-node-$${version}.tgz -s -f; \
 		DIM=300 node example.js)
 
+$(TEST_DATASET_PATH):
+	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
+
 .PHONY: ci/deps/install
 ## install deps for CI environment
 ci/deps/install:
@@ -270,21 +273,6 @@ ci/deps/install:
 ci/deps/update:
 	@echo "Nothing do be done"
 
-.PHONY: npm/deps/install
-npm/deps/install: \
-	$(BUF_GEN_PATH)
-
-$(BUF_GEN_PATH):
-	npm install --save-dev @bufbuild/buf @bufbuild/protobuf
-
-.PHONY: proto/deps
-## install proto deps
-proto/deps: \
-	npm/deps/install
-
-$(TEST_DATASET_PATH):
-	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
-
 .PHONY: ci/package/prepare
 ## prepare for publich
 ci/package/prepare: \
@@ -294,6 +282,14 @@ ci/package/prepare: \
 ## publich packages
 ci/package/publish:
 	npm publish
+
+.PHONY: proto/deps/install
+## install proto deps
+proto/deps/install: \
+	$(BUF_GEN_PATH)
+
+$(BUF_GEN_PATH):
+	npm install --save-dev @bufbuild/buf @bufbuild/protobuf
 
 .PHONY: version/node
 ## Print Node version
