@@ -25,7 +25,7 @@ jobs:
     # uses: vdaas/vald-client-ci/.github/workflows/sync.yaml@main
     uses: vdaas/vald-client-ci/.github/workflows/sync.yaml@feat/add-common-workflows
     with:
-      client_type: java
+      client_type: node
     secrets:
       CI_USER: ${{ secrets.DISPATCH_USER }}
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}

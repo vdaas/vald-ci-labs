@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2022 vdaas.org vald team <vald@vdaas.org>
+# Copyright (C) 2019-2020 Vdaas.org Vald team ( kpango, rinx, kmrmt )
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,29 +17,52 @@
 REPO       ?= vdaas
 NAME        = vald
 VALDREPO    = github.com/$(REPO)/$(NAME)
-LANGUAGE    = java
+LANGUAGE    = node
 PKGNAME     = $(NAME)-client-$(LANGUAGE)
 PKGREPO     = github.com/$(REPO)/$(PKGNAME)
 
-VALD_DIR    = vald
+VALD_DIR    = vald-origin
 VALD_SHA    = VALD_SHA
-VALD_CLIENT_JAVA_VERSION = version/VALD_CLIENT_JAVA_VERSION
-VALD_CHECKOUT_REF ?= main
-PROTOBUF_VERSION = version/PROTOBUF_VERSION
-GRPC_JAVA_VERSION = version/GRPC_JAVA_VERSION
-JAVA_LTS_LATEST_VERSTION = version/JAVA_VERSION_LTS_LATEST
-JAVA_LTS_STABLE_VERSTION = version/JAVA_VERSION_LTS_STABLE
+VALD_CLIENT_NODE_VERSION = VALD_CLIENT_NODE_VERSION
 
 PWD    := $(eval PWD := $(shell pwd))$(PWD)
 
 PROTO_ROOT  = $(VALD_DIR)/apis/proto
-JAVA_ROOT   = src/main/java
-API_ROOT    = org/vdaas/vald/api
+NODE_ROOT   = src
+NPM_BIN = $(shell npm prefix)
+
+BUF_CONFIGS = \
+	$(PROTO_ROOT)/buf.yaml \
+	$(PROTO_ROOT)/buf.lock
+
+SHADOW_ROOT = vald
+SHADOW_PROTO_ROOT = $(SHADOW_ROOT)/$(SHADOW_ROOT)
+
+PROTOS = \
+	v1/agent/core/agent.proto \
+	v1/vald/filter.proto \
+	v1/vald/insert.proto \
+	v1/vald/object.proto \
+	v1/vald/remove.proto \
+	v1/vald/search.proto \
+	v1/vald/update.proto \
+	v1/vald/upsert.proto \
+	v1/payload/payload.proto
+PROTOS     := $(PROTOS:%=$(PROTO_ROOT)/%)
+SHADOWS     = $(PROTOS:$(PROTO_ROOT)/%.proto=$(SHADOW_PROTO_ROOT)/%.proto)
+NODESOURCES = $(PROTOS:$(PROTO_ROOT)/%.proto=$(NODE_ROOT)/$(SHADOW_ROOT)/%_grpc_pb.js)
+NODE_IDXDIR = $(dir $(NODESOURCES))
+NODE_IDXJS = $(NODE_IDXDIR:%=%index.js)
+NODE_IDXDTS = $(NODE_IDXDIR:%=%index.d.ts)
+
+PROTO_PATHS = \
+	$(PWD) \
+	$(PWD)/$(VALD_DIR) \
+	$(PWD)/$(PROTO_ROOT)
+
+BUF_GEN_PATH = $(NPM_BIN)/node_modules/@bufbuild/buf/bin/buf
 
 MAKELISTS   = Makefile
-
-JAVA_VERSION := $(eval JAVA_VERSION := $(shell cat ./version/JAVA_VERSION))$(JAVA_VERSION)
-TEST_DATASET_PATH = wordvecs1000.json
 
 red    = /bin/echo -e "\x1b[31m\#\# $1\x1b[0m"
 green  = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
@@ -48,21 +71,9 @@ blue   = /bin/echo -e "\x1b[34m\#\# $1\x1b[0m"
 pink   = /bin/echo -e "\x1b[35m\#\# $1\x1b[0m"
 cyan   = /bin/echo -e "\x1b[36m\#\# $1\x1b[0m"
 
-define go-get
-	GO111MODULE=on go get -u $1
-endef
-
-define go-get-no-mod
-	GO111MODULE=off go get -u $1
-endef
-
-define mkdir
-	mkdir -p $1
-endef
-
 .PHONY: all
 ## execute clean and proto
-all: clear proto clean
+all: clean proto
 
 .PHONY: help
 ## print all available commands
@@ -80,48 +91,123 @@ help:
 	{ lastLine = $$0 }' $(MAKELISTS) | sort -u
 	@printf "\n"
 
-.PHONY: clear
-## clear all dependency files
-clear: clean
-	rm -rf $(JAVA_ROOT)
-
 .PHONY: clean
-## clean temp files
+## clean
 clean:
+	rm -rf index.js index.d.ts
+	rm -rf $(NODE_ROOT)
 	rm -rf $(VALD_DIR)
-	rm -rf build
-	./gradlew clean
+	rm -rf $(SHADOW_ROOT)
+	rm -rf node_modules
 
 .PHONY: proto
 ## build proto
-proto: $(VALD_DIR) $(JAVA_ROOT)
-	@$(call green, "generating .java files...")
-	sed -i '/lint:/a \  ignore: [v1]' $(PROTO_ROOT)/buf.yaml
-	echo 'build:\n  excludes: [v1/agent/sidecar, v1/discoverer, v1/manager]' >> $(PROTO_ROOT)/buf.yaml
-	./gradlew bufGenerate \
-				bufFormatApply \
-				bufFormatCheck \
-				bufLint \
-				check \
-				-x test
-	cp -r build/bufbuild/generated/main src
+proto: \
+	$(NODESOURCES) \
+	$(NODE_IDXJS) \
+	$(NODE_IDXDTS) \
+	index.js \
+	index.d.ts
 
-$(JAVA_ROOT):
-	$(call mkdir, $@)
-	$(call rm, -rf, $@/*)
+$(PROTOS): $(VALD_DIR)
+$(SHADOWS): $(PROTOS)
+$(SHADOW_PROTO_ROOT)/%.proto: $(PROTO_ROOT)/%.proto
+	mkdir -p $(dir $@)
+	cp $< $@
+	sed -i -e 's:^import "v1:import "$(SHADOW_ROOT)/v1:' $@
+
+$(NODE_ROOT):
+	mkdir -p $@
+
+$(NODE_IDXDIR): \
+	$(NODESOURCES)
+$(NODE_IDXJS): \
+	$(NODE_IDXDIR) \
+	$(NODESOURCES)
+$(NODE_IDXDTS): \
+	$(NODE_IDXDIR) \
+	$(NODESOURCES)
+$(NODE_ROOT)/$(SHADOW_ROOT)/%/index.js: $(NODE_ROOT)/$(SHADOW_ROOT)/%
+	rm -rf $@
+	for v in $(filter $</%.js,$(NODESOURCES)); \
+	    do \
+	    name=`echo "$$v" | \
+		sed -e "s:$</::" | \
+		sed -e "s:_grpc_pb.js::"`; \
+	    echo "module.exports.$${name} = require(\"./$${name}_pb\");" >> $@; \
+	    if [ ! "$${name}" = "payload" ]; then \
+		echo "module.exports.$${name}_grpc = require(\"./$${name}_pb.grpc-client\");" >> $@; \
+		fi; \
+	    done
+$(NODE_ROOT)/$(SHADOW_ROOT)/%/index.d.ts: $(NODE_ROOT)/$(SHADOW_ROOT)/%
+	rm -rf $@
+	ss=""; \
+	for v in $(filter $</%.js,$(NODESOURCES)); \
+	    do \
+	    name=`echo "$$v" | \
+		sed -e "s:$</::" | \
+		sed -e "s:_grpc_pb.js::"`; \
+	    echo "import $${name} = require(\"./$${name}_pb\");" >> $@; \
+	    if [ ! "$${name}" = "payload" ]; then \
+		echo "import $${name}_grpc = require(\"./$${name}_pb.grpc-client\");" >> $@; \
+	    fi; \
+	    ss="$$ss $$name"; \
+	    done; \
+	echo "declare const _default: {" >> $@; \
+	for s in $$ss; \
+	    do \
+	    echo "    $$s: typeof $$s," >> $@; \
+	    if [ ! "$${s}" = "payload" ]; then \
+		echo "    $${s}_grpc: typeof $${s}_grpc," >> $@; \
+	    fi; \
+	    done
+	echo "};" >> $@
+	echo "export = _default;" >> $@
+
+index.js: $(NODE_IDXJS)
+	rm -rf $@
+	for i in $$(find $(NODE_ROOT)/$(SHADOW_ROOT) -type f -name "index.js"); \
+	    do \
+	    d=`echo $$i | \
+		sed -e "s:/index.js::"`; \
+	    s=`echo $$d | \
+		sed -e "s:$(NODE_ROOT)/$(SHADOW_ROOT)/::" | \
+		sed -e "s:/:_:g"`; \
+	    echo "module.exports.$$s = require(\"./$$d\");" >> $@; \
+	    done
+
+index.d.ts: $(NODE_IDXDTS)
+	rm -rf $@
+	ss=""; \
+	for i in $$(find $(NODE_ROOT)/$(SHADOW_ROOT) -type f -name "index.js"); \
+	    do \
+	    d=`echo $$i | \
+		sed -e "s:/index.js::"`; \
+	    s=`echo $$d | \
+		sed -e "s:$(NODE_ROOT)/$(SHADOW_ROOT)/::" | \
+		sed -e "s:/:_:g"`; \
+	    echo "import $$s = require(\"./$$d\");" >> $@; \
+	    ss="$$ss $$s"; \
+	    done; \
+	echo "declare const _default: {" >> $@; \
+	for s in $$ss; \
+	    do \
+	    echo "    $$s: typeof $$s," >> $@; \
+	    done
+	echo "};" >> $@
+	echo "export = _default;" >> $@
+
+$(NODESOURCES): \
+	$(BUF_GEN_PATH) \
+	$(NODE_ROOT) \
+	$(SHADOWS)
+$(NODE_ROOT)/$(SHADOW_ROOT)/%_grpc_pb.js: $(SHADOW_PROTO_ROOT)/%.proto
+	@$(call green, "generating node files...")
+	cp -f $(BUF_CONFIGS) $(SHADOW_ROOT)
+	$(BUF_GEN_PATH) generate --include-imports
 
 $(VALD_DIR):
-	git clone https://$(VALDREPO) $(VALD_DIR)
-
-.PHONY: vald/checkout
-## checkout vald repository
-vald/checkout: $(VALD_DIR)
-	cd $(VALD_DIR) && git checkout $(VALD_CHECKOUT_REF)
-
-.PHONY: vald/origin/sha/print
-## print origin VALD_SHA value
-vald/origin/sha/print: $(VALD_DIR)
-	@cd $(VALD_DIR) && git rev-parse HEAD | tr -d '\n'
+	git clone --depth 1 https://$(VALDREPO) $(VALD_DIR)
 
 .PHONY: vald/sha/print
 ## print VALD_SHA value
@@ -130,76 +216,30 @@ vald/sha/print:
 
 .PHONY: vald/sha/update
 ## update VALD_SHA value
-vald/sha/update: $(VALD_DIR)
-	(cd $(VALD_DIR); git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
+vald/sha/update: vald
+	(cd vald; git rev-parse HEAD > ../$(VALD_SHA))
 
-.PHONY: vald/client/version/print
-## print VALD_CLIENT_JAVA_VERSION value
-vald/client/version/print:
-	@cat $(VALD_CLIENT_JAVA_VERSION)
+.PHONY: vald/client/node/version/print
+## print VALD_CLIENT_NODE_VERSION value
+vald/client/node/version/print:
+	@cat $(VALD_CLIENT_NODE_VERSION)
 
-.PHONY: vald/client/version/update
-## update VALD_CLIENT_JAVA_VERSION value
-vald/client/version/update: $(VALD_DIR)
+.PHONY: vald/client/node/version/update
+## update VALD_CLIENT_NODE_VERSION value
+vald/client/node/version/update: vald
 	(vald_version=`cat $(VALD_DIR)/versions/VALD_VERSION | sed -e 's/^v//'`; \
-		echo "VALD_VERSION: $${vald_version}"; \
-		echo "$${vald_version}" > version/VALD_CLIENT_JAVA_VERSION)
-	sed -i -e "s/^version = ".*"\$$/version = \"`cat version/VALD_CLIENT_JAVA_VERSION`\"/" build.gradle
+	    echo "VALD_VERSION: $${vald_version}"; \
+	    echo "$${vald_version}" > VALD_CLIENT_NODE_VERSION)
+	sed -i -e "s/\"version\": \".*\",\$$/\"version\": \"`cat VALD_CLIENT_NODE_VERSION`\",/" package.json
 
-.PHONY: test
-## Execute test
-test: $(TEST_DATASET_PATH)
-	./gradlew test
+.PHONY: npm/deps
+npm/deps: \
+	$(BUF_GEN_PATH)
 
-.PHONY: ci/deps/install
-## install deps for CI environment
-ci/deps/install:
-	@echo "Nothing do be done"
+$(BUF_GEN_PATH):
+	npm install --save-dev @bufbuild/buf @bufbuild/protobuf
 
-.PHONY: ci/deps/update
-## update deps for CI environment
-ci/deps/update:
-	@echo "Nothing do be done"
-
-$(TEST_DATASET_PATH):
-	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
-
-.PHONY: ci/package/prepare
-## prepare for publich
-ci/package/prepare:
-	./gradlew clean
-	echo "${PGP_PRIVATE_KEY}" > private_key.txt
-	gpg --import --batch private_key.txt
-	rm -f private_key.txt
-	gpg --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --export-secret-keys -o ~/.gnupg/secring.gpg
-	cat << EOF > ~/.gradle/gradle.properties
-	org.gradle.daemon=true
-	signing.keyId=${GPG_KEYID}
-	signing.password=${GPG_PASSPHRASE}
-	signing.secretKeyRingFile=${HOME}/.gnupg/secring.gpg
-	sonatypeUsername=${SONATYPE_USERNAME}
-	sonatypePassword=${SONATYPE_PASSWORD}
-	nexusUsername=${SONATYPE_USERNAME}
-	nexusPassword=${SONATYPE_PASSWORD}
-	EOF
-
-.PHONY: ci/package/publish
-## publich packages
-ci/package/publish:
-	./gradlew clean
-	./gradlew build -x bufFormatApply \
-					-x bufFormatCheck \
-					-x bufLint \
-					-x check \
-					-x checkKotlinGradlePluginConfigurationErrors \
-					-x checkKotlinGradlePluginConfigurationErrors \
-					-x test \
-					--stacktrace
-	./gradlew publish -Prelease --stacktrace
-	sleep 120
-	./gradlew closeAndReleaseRepository --stacktrace
-
-.PHONY: version/java
-## Print Java version
-version/java:
-	@echo $(JAVA_VERSION)
+.PHONY: proto/deps
+## install proto deps
+proto/deps: \
+	npm/deps
