@@ -41,7 +41,7 @@ cyan   = /bin/echo -e "\x1b[36m\#\# $1\x1b[0m"
 
 .PHONY: all
 ## execute clean and proto
-all: clean sync/v1 mod clean
+all: clean proto mod clean
 
 .PHONY: help
 ## print all available commands
@@ -64,9 +64,9 @@ help:
 clean:
 	-@rm -rf $(VALD_DIR)
 
-.PHONY: sync/v1
-## sync/v1 synchronize VALD_DIR's generated v1 pbgo to v1 dir and patch it
-sync/v1: $(VALD_DIR)
+.PHONY: proto
+## proto synchronize VALD_DIR's generated v1 pbgo to v1 dir and patch it
+proto: $(VALD_DIR)
 	rm -rf $(ROOTDIR)/v1
 	cp -r $(VALD_DIR)/apis/grpc/v1 $(ROOTDIR)/v1
 	rm -rf $(ROOTDIR)/v1/discoverer \
