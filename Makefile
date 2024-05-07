@@ -155,6 +155,9 @@ vald/client/version/update: $(VALD_DIR)
 test: $(TEST_DATASET_PATH)
 	python src/test.py
 
+$(TEST_DATASET_PATH):
+	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
+
 .PHONY: ci/deps/install
 ## install deps for CI environment
 ci/deps/install: proto/deps/install
@@ -170,9 +173,6 @@ ci/deps/install: proto/deps/install
 ci/deps/update:
 	@echo "Nothing do be done"
 
-$(TEST_DATASET_PATH):
-	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
-
 .PHONY: ci/package/prepare
 ## prepare package to publish
 ci/package/prepare:
@@ -184,18 +184,9 @@ ci/package/prepare:
 ci/package/publish:
 	@echo "Nothing do be done"
 
-.PHONY: version/python
-## Print Python version
-version/python:
-	@echo $(PYTHON_VERSION)
-
 .PHONY: proto/deps/install
 ## install proto deps
-proto/deps/install: buf/install
-
-.PHONY: buf/install
-## install buf command.
-buf/install: $(BINDIR)/buf
+proto/deps/install: $(BINDIR)/buf
 
 $(BINDIR)/buf:
 	@version=$$(curl -sSL $(BUF_VERSION_URL)); \
@@ -203,3 +194,8 @@ $(BINDIR)/buf:
 	"https://github.com/bufbuild/buf/releases/download/$$version/buf-$(shell uname -s)-$(shell uname -m)" \
 	-o "${BINDIR}/buf" && \
 	chmod +x "${BINDIR}/buf"
+
+.PHONY: version/python
+## Print Python version
+version/python:
+	@echo $(PYTHON_VERSION)
