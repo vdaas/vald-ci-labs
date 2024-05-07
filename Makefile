@@ -271,7 +271,7 @@ ci/deps/install:
 .PHONY: ci/deps/update
 ## update deps for CI environment
 ci/deps/update:
-	@echo "Nothing do be done"
+	npm update
 
 .PHONY: ci/package/prepare
 ## prepare for publich
