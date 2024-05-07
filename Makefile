@@ -287,13 +287,12 @@ $(TEST_DATASET_PATH):
 
 .PHONY: ci/package/prepare
 ## prepare for publich
-ci/package/prepare:
-	@echo "Nothing do be done"
+ci/package/prepare: ci/deps/install
 
 .PHONY: ci/package/publish
 ## publich packages
 ci/package/publish:
-	@echo "Nothing do be done"
+	npm publish
 
 .PHONY: version/node
 ## Print Node version
