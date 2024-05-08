@@ -44,9 +44,6 @@ jobs:
           echo "Install dependencies"
           make ci/deps/install
 
-          NPM_BIN=$(npm prefix)
-          ls ${NPM_BIN}/node_modules/@bufbuild/buf/bin/buf
-
           echo "Build proto"
           export GOPATH=$HOME/go
           export PATH=$HOME/grpc-java:$PATH
