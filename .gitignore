@@ -11,5 +11,6 @@ pom.xml.asc
 .hg/
 /valdcli
 /vald
+lein
 
 wordvecs1000.json
