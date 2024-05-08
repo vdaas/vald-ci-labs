@@ -136,7 +136,7 @@ vald/client/version/update: $(VALD_DIR)
 
 .PHONY: test
 ## Execute test
-test: $(TEST_DATASET_PATH) $(LEIN_PATH)
+test: $(LEIN_PATH) $(TEST_DATASET_PATH)
 	./lein test
 
 $(TEST_DATASET_PATH):
