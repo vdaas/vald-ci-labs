@@ -7,6 +7,11 @@ NATIVE_IMAGE_CONFIG_OUTPUT_DIR=native-config
 
 TARGET_JAR=target/vald-client-clj-$(VERSION)-standalone.jar
 
+VALD_DIR    = vald
+VALD_SHA    = VALD_SHA
+VALD_CLIENT_CLJ_VERSION = VALD_CLIENT_CLJ_VERSION
+VALD_CHECKOUT_REF ?= main
+
 TEST_DATASET_PATH = wordvecs1000.json
 
 .PHONY: all
@@ -75,6 +80,50 @@ valdcli: $(TARGET_JAR)
 	-J-Dclojure.spec.skip-macros=true \
 	-J-Xms$(XMS) \
 	-J-Xmx$(XMX)
+
+$(VALD_DIR):
+	git clone https://$(VALDREPO) $(VALD_DIR)
+
+.PHONY: pom/create
+## update dependencies
+pom/create:
+	./lein pom
+
+.PHONY: proto
+## build proto
+proto: \
+	$(VALD_DIR) \
+	pom/create
+
+.PHONY: vald/checkout
+## checkout vald repository
+vald/checkout: $(VALD_DIR)
+	cd $(VALD_DIR) && git checkout $(VALD_CHECKOUT_REF)
+
+.PHONY: vald/origin/sha/print
+## print origin VALD_SHA value
+vald/origin/sha/print: $(VALD_DIR)
+	@cd $(VALD_DIR) && git rev-parse HEAD | tr -d '\n'
+
+.PHONY: vald/sha/print
+## print VALD_SHA value
+vald/sha/print:
+	@cat $(VALD_SHA)
+
+.PHONY: vald/sha/update
+## update VALD_SHA value
+vald/sha/update: $(VALD_DIR)
+	(cd $(VALD_DIR); git rev-parse HEAD | tr -d '\n' > ../$(VALD_SHA))
+
+.PHONY: vald/client/version/print
+## print VALD_CLIENT_JAVA_VERSION value
+vald/client/version/print:
+	@cat $(VALD_CLIENT_CLJ_VERSION)
+
+.PHONY: vald/client/version/update
+## update VALD_CLIENT_JAVA_VERSION value
+vald/client/version/update: $(VALD_DIR)
+	cp $(VALD_DIR)/versions/VALD_VERSION $(VALD_CLIENT_CLJ_VERSION)
 
 .PHONY: test
 ## Execute test
