@@ -93,16 +93,16 @@ valdcli: $(TARGET_JAR)
 $(VALD_DIR):
 	git clone https://$(VALDREPO) $(VALD_DIR)
 
-.PHONY: pom/create
+.PHONY: pom
 ## update dependencies
-pom/create: $(LEIN_PATH)
+pom: $(LEIN_PATH)
 	./lein pom
 
 .PHONY: proto
 ## build proto
 proto: \
 	$(VALD_DIR) \
-	pom/create
+	pom
 
 .PHONY: vald/checkout
 ## checkout vald repository
@@ -150,3 +150,12 @@ ci/deps/install: $(LEIN_PATH)
 ## update deps for CI environment
 ci/deps/update:
 	@echo "Nothing do be done"
+
+.PHONY: ci/package/prepare
+## prepare for publich
+ci/package/prepare: ci/deps/install
+
+.PHONY: ci/package/publish
+## publich packages
+ci/package/publish: ci/deps/install
+	./lein deploy clojars
