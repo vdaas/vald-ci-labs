@@ -150,12 +150,3 @@ ci/deps/install: $(LEIN_PATH)
 ## update deps for CI environment
 ci/deps/update:
 	@echo "Nothing do be done"
-
-.PHONY: ci/package/prepare
-## prepare for publich
-ci/package/prepare: ci/deps/install
-
-.PHONY: ci/package/publish
-## publich packages
-ci/package/publish: ci/deps/install
-	./lein deploy clojars
