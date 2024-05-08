@@ -1,16 +1,23 @@
 XMS = 2g
 XMX = 6g
 
-VERSION=$(shell cat VALD_CLIENT_CLJ_VERSION)
-
-NATIVE_IMAGE_CONFIG_OUTPUT_DIR=native-config
-
-TARGET_JAR=target/vald-client-clj-$(VERSION)-standalone.jar
+REPO       ?= vdaas
+NAME        = vald
+VALDREPO    = github.com/$(REPO)/$(NAME)
+LANGUAGE    = clj
+PKGNAME     = $(NAME)-client-$(LANGUAGE)
+PKGREPO     = github.com/$(REPO)/$(PKGNAME)
 
 VALD_DIR    = vald
 VALD_SHA    = VALD_SHA
 VALD_CLIENT_CLJ_VERSION = VALD_CLIENT_CLJ_VERSION
 VALD_CHECKOUT_REF ?= main
+
+VERSION=$(shell cat VALD_CLIENT_CLJ_VERSION)
+
+NATIVE_IMAGE_CONFIG_OUTPUT_DIR=native-config
+
+TARGET_JAR=target/vald-client-clj-$(VERSION)-standalone.jar
 
 TEST_DATASET_PATH = wordvecs1000.json
 
