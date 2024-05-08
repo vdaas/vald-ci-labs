@@ -142,3 +142,13 @@ ci/deps/install:
 ## update deps for CI environment
 ci/deps/update:
 	@echo "Nothing do be done"
+
+.PHONY: ci/package/prepare
+## prepare for publich
+ci/package/prepare:
+	@echo "Nothing do be done"
+
+.PHONY: ci/package/publish
+## publich packages
+ci/package/publish:
+	@echo "Nothing do be done"
