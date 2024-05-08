@@ -3,7 +3,7 @@ module github.com/vdaas/vald-ci-labs
 go 1.21
 
 replace (
-	cloud.google.com/go => cloud.google.com/go v0.112.3-0.20240507085229-269580156fad
+	cloud.google.com/go => cloud.google.com/go v0.112.3-0.20240507070757-949242c4006d
 	cloud.google.com/go/bigquery => cloud.google.com/go/bigquery v1.61.1-0.20240507085229-269580156fad
 	github.com/envoyproxy/protoc-gen-validate => github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
