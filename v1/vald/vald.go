@@ -27,7 +27,6 @@ type Server interface {
 	UpsertServer
 	SearchServer
 	RemoveServer
-	FlushServer
 	ObjectServer
 }
 
@@ -42,7 +41,6 @@ type UnimplementedValdServer struct {
 	UnimplementedUpsertServer
 	UnimplementedSearchServer
 	UnimplementedRemoveServer
-	UnimplementedFlushServer
 	UnimplementedObjectServer
 }
 
@@ -57,7 +55,6 @@ type Client interface {
 	UpsertClient
 	SearchClient
 	RemoveClient
-	FlushClient
 	ObjectClient
 }
 
@@ -74,7 +71,6 @@ const (
 	UpsertRPCServiceName = "Upsert"
 	SearchRPCServiceName = "Search"
 	RemoveRPCServiceName = "Remove"
-	FlushRPCServiceName  = "Flush"
 	ObjectRPCServiceName = "Object"
 	FilterRPCServiceName = "Filter"
 )
@@ -125,8 +121,6 @@ const (
 	MultiRemoveRPCName       = "MultiRemove"
 	RemoveByTimestampRPCName = "RemoveByTimestamp"
 
-	FlushRPCName = "Flush"
-
 	ExistsRPCName           = "Exists"
 	GetObjectRPCName        = "GetObject"
 	GetTimestampRPCName     = "GetTimestamp"
@@ -140,7 +134,6 @@ type client struct {
 	UpsertClient
 	SearchClient
 	RemoveClient
-	FlushClient
 	ObjectClient
 }
 
@@ -150,7 +143,6 @@ func RegisterValdServer(s *grpc.Server, srv Server) {
 	RegisterUpsertServer(s, srv)
 	RegisterSearchServer(s, srv)
 	RegisterRemoveServer(s, srv)
-	RegisterFlushServer(s, srv)
 	RegisterObjectServer(s, srv)
 }
 
@@ -166,7 +158,6 @@ func NewValdClient(conn *grpc.ClientConn) Client {
 		NewUpsertClient(conn),
 		NewSearchClient(conn),
 		NewRemoveClient(conn),
-		NewFlushClient(conn),
 		NewObjectClient(conn),
 	}
 }
