@@ -33,7 +33,8 @@ jobs:
           client_type: clj
   version-check-test:
     uses: vdaas/vald-client-ci/.github/workflows/_check-version.yaml@feat/add-common-workflows
-    secrets: inherit
+    secrets:
+      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
     with:
       tag_list_api_url: "https://api.github.com/repos/vdaas/vald-client-java/tags"
   # build-test:
