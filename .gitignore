@@ -1,3 +1,14 @@
-/vald-origin
+/target
+/classes
+/checkouts
+profiles.clj
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+.hgignore
+.hg/
+/valdcli
 
 wordvecs1000.json

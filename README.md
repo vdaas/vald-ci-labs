@@ -1,64 +1,154 @@
-# vald-client-go
-[![License: Apache 2.0](https://img.shields.io/github/license/vdaas/vald-client-go.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
-[![release](https://img.shields.io/github/release/vdaas/vald-client-go.svg?style=flat-square)](https://github.com/vdaas/vald-client-go/releases/latest)
-[![Go Reference](https://pkg.go.dev/badge/github.com/vdaas/vald-client-go.svg)](https://pkg.go.dev/github.com/vdaas/vald-client-go)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/vdaas/vald-client-go?filename=go.mod)](https://github.com/vdaas/vald-client-go/blob/main/go.mod#L3)
-[![Codacy Badge](https://img.shields.io/codacy/grade/a6e544eee7bc49e08a000bb10ba3deed?style=flat-square)](https://www.codacy.com/app/i.can.feel.gravity/vald?utm_source=github.com&utm_medium=referral&utm_content=vdaas/vald&utm_campaign=Badge_Grade)
-[![Go Report Card](https://goreportcard.com/badge/github.com/vdaas/vald-client-go?style=flat-square)](https://goreportcard.com/report/github.com/vdaas/vald-client-go)
-[![DepShield Badge](https://depshield.sonatype.org/badges/vdaas/vald-client-go/depshield.svg?style=flat-square)](https://depshield.github.io)
-[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B21465%2Fvald-client-go.svg?type=small)](https://app.fossa.com/projects/custom%2B21465%2Fvald-client-go?ref=badge_small)
-[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/vdaas/vald-client-go/?ref=repository-badge)
-[![CLA](https://cla-assistant.io/readme/badge/vdaas/vald-client-go?&style=flat-square)](https://cla-assistant.io/vdaas/vald-client-go)
-[![Slack](https://img.shields.io/badge/slack-join-brightgreen?logo=slack&style=flat-square)](https://join.slack.com/t/vald-community/shared_invite/zt-db2ky9o4-R_9p2sVp8xRwztVa8gfnPA)
-[![Twitter](https://img.shields.io/badge/twitter-follow-blue?logo=twitter&style=flat-square)](https://twitter.com/vdaas_vald)
+# vald-client-clj / valdcli
 
+[![LICENSE](https://img.shields.io/github/license/vdaas/vald-client-clj?style=flat-square)](https://github.com/vdaas/vald-client-clj/blob/main/LICENSE)
+[![release](https://img.shields.io/github/v/release/vdaas/vald-client-clj?style=flat-square)](https://github.com/vdaas/vald-client-clj/releases)
+[![Clojars Project](https://img.shields.io/clojars/v/vald-client-clj.svg?style=flat-square)](https://clojars.org/vald-client-clj)
+[![Vald version](https://img.shields.io/github/release/vdaas/vald.svg?style=flat-square)](https://github.com/vdaas/vald/releases/latest)
+[![clojure](https://img.shields.io/badge/clojure-1.11.1-orange)](https://clojure.github.io/clojure/)
 
-### example code
+A Clojure gRPC client library for [Vald](https://github.com/vdaas/vald).
 
-```go
-	// Create a Vald clien connection for Vald cluster.
-	conn, err := grpc.DialContext(ctx, "addr to cluster", grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
+## Usage
 
-	// Creates Vald client for gRPC.
-	client := vald.NewValdClient(conn)
+To use this library, one of the following libraries is required.
 
-	// Insert sample vector.
-	_, err := client.Insert(ctx, &payload.Insert_Request{
-		Vector: &payload.Object_Vector{
-			Id:     "id of vector",
-			Vector: []float32{0.1, 0.2, 0.3}, // some feature dense vector here.
-		}})
-	if err != nil {
-		log.Fatal(err)
-	}
+- `io.grpc/grpc-okhttp`
+- `io.grpc/grpc-netty`
+- `io.grpc/grpc-netty-shaded`
 
-	// WARN you may need to wait a minutes until index creation.
+```clojure
+(require '[vald-client-clj.core :as vald])
 
-	// Search sample vector.
-	res, err := client.Search(ctx, &payload.Search_Request{
-		Vector: vec,
-		// Conditions for hitting the search.
-		Config: &payload.Search_Config{
-			Num:     10,        // the number of search results
-			Radius:  -1,        // Radius is used to determine the space of search candidate radius for neighborhood vectors. -1 means infinite circle.
-			Epsilon: 0.1,       // Epsilon is used to determines how much to expand from search candidate radius.
-			Timeout: 100000000, // Timeout is used for search time deadline. The unit is nano-seconds.
-		}})
-	if err != nil {
-		log.Fatal(err)
-	}
+;; vald gateway
+(def client
+  (vald/vald-client "localhost" 8081))
 
-	// Remove vector.
-	_, err := client.Remove(ctx, &payload.Remove_Request{
-		Id: &payload.Object_ID{
-			Id: "id of vector",
-		}})
-	if err != nil {
-		log.Fatal(err)
-	}
+(-> client
+    (vald/stream-insert
+      println
+      [{:id "meta1"
+        :vector [0.1 0.2 0.3 0.4 0.5 0.6]}
+       {:id "meta2"
+        :vector [0.2 0.2 0.2 0.2 0.2 0.2]}])
+    (deref))
+
+(-> client
+    (vald/get-object "meta1"))
+
+(-> client
+    (vald/stream-search-by-id println {:num 2} ["meta1" "meta2"])
+    (deref))
+
+(-> client
+    (vald/search {:num 2} [0.1 0.2 0.3 0.3 0.3 0.4]))
+
+(vald/close client)
 ```
 
-[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B21465%2Fvald-client-go.svg?type=large)](https://app.fossa.com/projects/custom%2B21465%2Fvald-client-go?ref=badge_large)
+## valdcli
+
+`valdcli` is a CLI tool built from vald-client-clj.
+
+Fast startup time powered by GraalVM.
+
+### Install
+
+Native binaries are available from the [latest release](https://github.com/vdaas/vald-client-clj/releases/latest).
+
+### Usage
+
+```sh
+$ valdcli --help
+Usage: valdcli [OPTIONS] ACTION
+
+Options:
+      --help                  show usage
+      --version               show version
+  -d, --debug                 debug mode
+  -p, --port PORT  8080       Port number
+  -h, --host HOST  localhost  Hostname
+
+Actions:
+  create-and-save-index Call create-and-save-index command. (only for Agent)
+  create-index          Call create-index command. (only for Agent)
+  exists                Check whether ID exists or not.
+  get-object            Get object info of single ID.
+  index-info            Fetch index info. (only for Agent)
+  insert                Insert single vector.
+  rand-vec              Prints randomized vector.
+  rand-vecs             Prints randomized vectors.
+  remove                Remove single ID.
+  save-index            Call save-index command. (only for Agent)
+  search                Search single vector.
+  search-by-id          Search vectors using single ID.
+  stream-get-object     Get object info of multiple IDs.
+  stream-insert         Insert multiple vectors.
+  stream-remove         Remove multiple IDs.
+  stream-search         Search multiple vectors.
+  stream-search-by-id   Search vectors using multiple IDs.
+  stream-update         Update multiple vectors.
+  update                Update single vector.
+```
+
+It supports both EDN and JSON format data.
+
+#### insert
+
+```sh
+## insert EDN formatted vector
+$ valdcli insert abc "[0.1 0.2 0.3 0.4 0.5 0.6]"
+
+## it supports to read stdin
+$ echo "[0.1 0.2 0.3 0.4 0.5 0.6]" | valdcli -p 8081 insert abc
+
+## by adding '--json' flag, it reads JSON formatted vector
+$ valdcli -h vald.vdaas.org -p 8081 insert --json abc "[0.1, 0.2, 0.3, 0.4, 0.5, 0.6]"
+```
+
+#### search, search-by-id
+
+```sh
+$ valdcli search '[0.1 0.2 0.3 0.4 0.5 0.6]'
+
+## using options
+$ valdcli search --num 100 --epsilon 0.02 '[0.1 0.2 0.3 0.4 0.5 0.6]'
+
+## search id 'xyz'
+$ valdcli search-by-id --num 100 xyz
+```
+
+#### stream-insert, stream-search
+
+```sh
+$ valdcli stream-insert '[{:id "abc" :vector [0.1 0.2 0.3 0.4 0.5 0.6]} {:id "def" :vector [0.1 0.2 0.3 0.4 0.5 0.6]}]'
+
+$ valdcli stream-search -n 5 '[[0.1 0.2 0.3 0.4 0.5 0.6] [0.1 0.2 0.3 0.4 0.5 0.6] [0.1 0.2 0.3 0.4 0.5 0.6]]'
+
+$ valdcli stream-search-by-id -n 5 '["abc" "def" "xyz"]'
+```
+
+#### tips
+
+usages of each commands available by running:
+
+```sh
+$ valdcli exists --help
+```
+
+## License
+
+Copyright (C) 2020 Vdaas.org Vald team
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B21465%2Fvald-client-clj.svg?type=large)](https://app.fossa.com/projects/custom%2B21465%2Fvald-client-clj?ref=badge_large)

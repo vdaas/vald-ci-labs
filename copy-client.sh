@@ -137,21 +137,48 @@ rm -rf v1
 rm -rf VALD_SHA
 rm -rf VALD_VERSION
 
-cp -R ../vald-client-go/.fossa.yml .
-cp -R ../vald-client-go/.gitignore .
-cp -R ../vald-client-go/go.mod .
-cp -R ../vald-client-go/go.mod.default .
-cp -R ../vald-client-go/go.sum .
-cp -R ../vald-client-go/GO_VERSION .
-cp -R ../vald-client-go/Makefile .
-cp -R ../vald-client-go/README.md .
-cp -R ../vald-client-go/tests .
-cp -R ../vald-client-go/v1 .
-cp -R ../vald-client-go/VALD_SHA .
-cp -R ../vald-client-go/VALD_VERSION .
+# cp -R ../vald-client-go/.fossa.yml .
+# cp -R ../vald-client-go/.gitignore .
+# cp -R ../vald-client-go/go.mod .
+# cp -R ../vald-client-go/go.mod.default .
+# cp -R ../vald-client-go/go.sum .
+# cp -R ../vald-client-go/GO_VERSION .
+# cp -R ../vald-client-go/Makefile .
+# cp -R ../vald-client-go/README.md .
+# cp -R ../vald-client-go/tests .
+# cp -R ../vald-client-go/v1 .
+# cp -R ../vald-client-go/VALD_SHA .
+# cp -R ../vald-client-go/VALD_VERSION .
+#
+# find ./ -name '*.go' -exec sed -i 's/vdaas\/vald-client-go/vdaas\/vald-ci-labs/g' {} \;
+# find ./ -name 'go.mod' -exec sed -i 's/vdaas\/vald-client-go/vdaas\/vald-ci-labs/g' {} \;
+# find ./ -name 'go.mod.default' -exec sed -i 's/vdaas\/vald-client-go/vdaas\/vald-ci-labs/g' {} \;
+#
+# make mod
 
-find ./ -name '*.go' -exec sed -i 's/vdaas\/vald-client-go/vdaas\/vald-ci-labs/g' {} \;
-find ./ -name 'go.mod' -exec sed -i 's/vdaas\/vald-client-go/vdaas\/vald-ci-labs/g' {} \;
-find ./ -name 'go.mod.default' -exec sed -i 's/vdaas\/vald-client-go/vdaas\/vald-ci-labs/g' {} \;
+# CLJ
 
-make mod
+
+rm -rf cmd
+rm -rf Dockerfile
+rm -rf .gitignore
+rm -rf Makefile
+rm -rf native-config
+rm -rf pom.xml
+rm -rf project.clj
+rm -rf README.md
+rm -rf src
+rm -rf test
+rm -rf VALD_CLIENT_CLJ_VERSION
+
+cp -R ../vald-client-clj/cmd .
+cp -R ../vald-client-clj/Dockerfile .
+cp -R ../vald-client-clj/.gitignore .
+cp -R ../vald-client-clj/Makefile .
+cp -R ../vald-client-clj/native-config .
+cp -R ../vald-client-clj/pom.xml .
+cp -R ../vald-client-clj/project.clj .
+cp -R ../vald-client-clj/README.md .
+cp -R ../vald-client-clj/src .
+cp -R ../vald-client-clj/test .
+cp -R ../vald-client-clj/VALD_CLIENT_CLJ_VERSION .
