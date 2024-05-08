@@ -54,6 +54,9 @@ jobs:
           echo "Update dependencies"
           make ci/deps/update
 
+          # Dummy data
+          echo "v1.7.100" > VALD_CLIENT_CLJ_VERSION
+
           git diff
           git diff --name-only
       - uses: vdaas/vald-client-ci/.github/actions/e2e@feat/add-common-workflows
