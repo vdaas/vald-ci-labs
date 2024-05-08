@@ -21,6 +21,8 @@ TARGET_JAR=target/vald-client-clj-$(VERSION)-standalone.jar
 
 TEST_DATASET_PATH = wordvecs1000.json
 
+LEIN_PATH = ./lein
+
 .PHONY: all
 all: clean
 
@@ -57,12 +59,12 @@ profile/native-image-config: \
 $(NATIVE_IMAGE_CONFIG_OUTPUT_DIR):
 	mkdir -p $@
 
-lein:
+$(LEIN_PATH):
 	curl -o lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein \
 	&& chmod a+x lein \
 	&& ./lein version
 
-$(TARGET_JAR): src cmd
+$(TARGET_JAR): $(LEIN_PATH) src cmd
 	lein with-profile +cmd uberjar
 
 valdcli: $(TARGET_JAR)
@@ -93,7 +95,7 @@ $(VALD_DIR):
 
 .PHONY: pom/create
 ## update dependencies
-pom/create:
+pom/create: $(LEIN_PATH)
 	./lein pom
 
 .PHONY: proto
@@ -134,7 +136,7 @@ vald/client/version/update: $(VALD_DIR)
 
 .PHONY: test
 ## Execute test
-test: $(TEST_DATASET_PATH)
+test: $(TEST_DATASET_PATH) $(LEIN_PATH)
 	./lein test
 
 $(TEST_DATASET_PATH):
@@ -142,8 +144,7 @@ $(TEST_DATASET_PATH):
 
 .PHONY: ci/deps/install
 ## install deps for CI environment
-ci/deps/install:
-	@echo "Nothing do be done"
+ci/deps/install: $(LEIN_PATH)
 
 .PHONY: ci/deps/update
 ## update deps for CI environment
@@ -152,10 +153,9 @@ ci/deps/update:
 
 .PHONY: ci/package/prepare
 ## prepare for publich
-ci/package/prepare:
-	@echo "Nothing do be done"
+ci/package/prepare: ci/deps/install
 
 .PHONY: ci/package/publish
 ## publich packages
-ci/package/publish:
-	@echo "Nothing do be done"
+ci/package/publish: ci/deps/install
+	./lein deploy clojars
