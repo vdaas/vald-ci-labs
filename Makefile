@@ -7,6 +7,8 @@ NATIVE_IMAGE_CONFIG_OUTPUT_DIR=native-config
 
 TARGET_JAR=target/vald-client-clj-$(VERSION)-standalone.jar
 
+TEST_DATASET_PATH = wordvecs1000.json
+
 .PHONY: all
 all: clean
 
@@ -73,3 +75,21 @@ valdcli: $(TARGET_JAR)
 	-J-Dclojure.spec.skip-macros=true \
 	-J-Xms$(XMS) \
 	-J-Xmx$(XMX)
+
+.PHONY: test
+## Execute test
+test: $(TEST_DATASET_PATH)
+	./lein test
+
+$(TEST_DATASET_PATH):
+	curl -L https://raw.githubusercontent.com/rinx/word2vecjson/master/data/wordvecs1000.json -o $(TEST_DATASET_PATH)
+
+.PHONY: ci/deps/install
+## install deps for CI environment
+ci/deps/install:
+	@echo "Nothing do be done"
+
+.PHONY: ci/deps/update
+## update deps for CI environment
+ci/deps/update:
+	@echo "Nothing do be done"
