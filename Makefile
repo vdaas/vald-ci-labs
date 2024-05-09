@@ -159,3 +159,10 @@ ci/package/prepare: ci/deps/install
 ## publich packages
 ci/package/publish: ci/deps/install
 	./lein deploy clojars
+
+
+#########
+# for debug
+GO_VERSION = GO_VERSION
+version/go:
+	@cat $(GO_VERSION)
