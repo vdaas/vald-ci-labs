@@ -101,8 +101,8 @@ pom: $(LEIN_PATH)
 .PHONY: proto
 ## build proto
 proto: \
-	$(VALD_DIR) \
-	pom
+	$(VALD_DIR)
+	@echo "Nothing to do"
 
 .PHONY: vald/checkout
 ## checkout vald repository
@@ -148,8 +148,7 @@ ci/deps/install: $(LEIN_PATH)
 
 .PHONY: ci/deps/update
 ## update deps for CI environment
-ci/deps/update:
-	@echo "Nothing do be done"
+ci/deps/update: pom
 
 .PHONY: ci/package/prepare
 ## prepare for publich
