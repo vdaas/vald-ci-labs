@@ -15,10 +15,10 @@
     </license>
   </licenses>
   <scm>
-    <url>https://github.com/vdaas/vald-ci-labs</url>
-    <connection>scm:git:git://github.com/vdaas/vald-ci-labs.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/vdaas/vald-ci-labs.git</developerConnection>
-    <tag>45f07535b117cc0895a9a523954cd2c105b4ca6f</tag>
+    <url>https://github.com/vdaas/vald-client-clj</url>
+    <connection>scm:git:git://github.com/vdaas/vald-client-clj.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/vdaas/vald-client-clj.git</developerConnection>
+    <tag>af583e039c87f0b6f978b4567b1c78ad7a46b209</tag>
   </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -71,12 +71,12 @@
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-api</artifactId>
-      <version>1.58.0</version>
+      <version>1.59.1</version>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-core</artifactId>
-      <version>1.58.0</version>
+      <version>1.59.1</version>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
