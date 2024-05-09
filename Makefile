@@ -100,8 +100,7 @@ pom: $(LEIN_PATH)
 
 .PHONY: proto
 ## build proto
-proto: \
-	$(VALD_DIR)
+proto:
 	@echo "Nothing to do"
 
 .PHONY: vald/checkout
