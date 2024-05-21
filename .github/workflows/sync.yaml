@@ -17,14 +17,14 @@
 name: "Sync Vald"
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "*/5 * * * *"
+  schedule:
+    - cron: "*/10 * * * *"
 jobs:
   sync:
     uses: vdaas/vald-client-ci/.github/workflows/sync.yaml@main
     with:
-      client_type: clj
+      client_type: java
     secrets:
-      CI_USER: ${{ secrets.DISPATCH_USER }}
-      CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+      CI_USER: ${{ secrets.CI_USER }}
+      CI_TOKEN: ${{ secrets.CI_TOKEN }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
