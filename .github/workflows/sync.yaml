@@ -17,8 +17,8 @@
 name: "Sync Vald"
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/10 * * * *"
+  # schedule:
+  #   - cron: "*/10 * * * *"
 jobs:
   sync:
     uses: vdaas/vald-client-ci/.github/workflows/sync.yaml@main
