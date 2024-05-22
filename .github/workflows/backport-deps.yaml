@@ -27,6 +27,8 @@ env:
 jobs:
   create:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
