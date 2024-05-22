@@ -22,11 +22,8 @@ on:
   #     - "release/v*.*"
   #     - "!release/v*.*.*"
 env:
-  TARGET_LABEL_NAME_PREFIX: "actions/backport/"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
   FETCHED_GITHUB_INFO_PATH: github_info.json
-  GITHUB_USER: ${{ secrets.DISPATCH_USER }}
-  GITHUB_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 jobs:
   create:
     runs-on: ubuntu-latest
@@ -53,6 +50,11 @@ jobs:
             echo "There are no release branches."
           fi
           echo "RELEASE_BRANCHES=${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
+      - name: Fetch PR info
+        run: |
+          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged > ${FETCHED_GITHUB_INFO_PATH}
+          cat ${FETCHED_GITHUB_INFO_PATH}
+
       # - name: Fetch PR info
       #   run: |
       #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
