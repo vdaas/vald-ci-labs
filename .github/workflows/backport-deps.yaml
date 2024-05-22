@@ -51,7 +51,7 @@ jobs:
           cat ${FETCHED_GITHUB_INFO_PATH}
 
           PR_NUM=$(cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg REGEX "${DEPS_UPDATE_PR_TITLE_REGEX}" 'select(.title | test($REGEX)) | .number')
-          echo "${PR_NUM}" | tee -a $GITHUB_OUTPUT
+          echo "PR_NUM=${PR_NUM}" | tee -a $GITHUB_OUTPUT
           echo "${GITHUB_SHA}"
       - name: Get all release branches # e.g release/v1.7
         id: get_branch
