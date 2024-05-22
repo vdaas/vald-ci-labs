@@ -46,43 +46,30 @@ jobs:
       - name: Fetch all branches
         run: |
           git fetch --all
-      - name: Fetch PR info
+      - name: Get PR info
+        id: get_pr
         run: |
           gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged |
             jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
           cat ${FETCHED_GITHUB_INFO_PATH}
+
+          PR_NUM=$(cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg REGEX "${DEPS_UPDATE_PR_TITLE_REGEX}" 'select(.title | test($REGEX)) | .number')
+          echo "${PR_NUM}" | tee -a $GITHUB_OUTPUT
           echo "${GITHUB_SHA}"
       - name: Get all release branches # e.g release/v1.7
-        id: get_all_release_branches
+        id: get_branch
         run: |
           RELEASE_BRANCHES=$(git branch -r | tr -d ' ' | grep '^origin/release/v[0-9]\+\.[0-9]\+' | sed 's/origin\///g' | tr '\n' ' ' | sed 's/ $//')
           if [ -z "${RELEASE_BRANCHES}" ]; then
             echo "There are no release branches."
           fi
           echo "RELEASE_BRANCHES=${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
-      - name: Set context
-        id: set_context
+      - name: Create PR
+        if: ${{ steps.get_branch.outputs.RELEASE_BRANCHES != '' && steps.get_pr.outputs.PR_NUM != '' }}
         run: |
-          NAME=$(cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg REGEX "${DEPS_UPDATE_PR_TITLE_REGEX}" 'select(.title | test($REGEX)) | .title')
-          echo "${NAME}"
-      # - name: Fetch PR info
-      #   run: |
-      #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
-      #       jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
-      #     cat ${FETCHED_GITHUB_INFO_PATH}
-      #
-      #     echo "------"
-      #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged
-      #     git branch -a
-      #     echo "------"
-      #     echo ${GITHUB_SHA}
-      # # - name: Set context
-      # #   id: set_context
-      # #   run: |
-      # #     LABEL_NAMES=`cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
-      # #     echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
-      # #     echo "${LABEL_NAMES}"
-      # # - name: Create PR
+          echo "hello"
+
+        # # - name: Create PR
       # #   if: ${{ steps.set_context.outputs.LABEL_NAMES != '' }}
       # #   env:
       # #     LABEL_NAMES: ${{ steps.set_context.outputs.LABEL_NAMES }}
