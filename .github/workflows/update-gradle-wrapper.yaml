@@ -82,8 +82,10 @@ jobs:
           author: "${{ secrets.DISPATCH_USER }} <vald@vdaas.org>"
           token: ${{ secrets.DISPATCH_TOKEN }}
           committer: "${{ secrets.DISPATCH_USER }} <vald@vdaas.org>"
+          commit-message: "automated change"
           signoff: true
           delete-branch: true
           base: main
-          title: "Bump Gradle Wrapper to ${{ steps.gradle_info.outputs.LATEST_VERSION }}"
+          branch: chore/update-gradle-wrapper
+          title: "chore(deps): bump Gradle Wrapper to ${{ steps.gradle_info.outputs.LATEST_VERSION }}"
           body: "Automated pull request to update Gradle Wrapper."
