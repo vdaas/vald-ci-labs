@@ -19,7 +19,7 @@ on:
 
 jobs:
   auto-merge:
-    uses: vdaas/vald-client-ci/.github/workflows/_pr-auto-merge.yaml@main
+    uses: vdaas/vald-client-ci/.github/workflows/_pr-auto-merge.yaml@feat/ci/backport-deps-update
     with:
       client_type: java
     secrets:
