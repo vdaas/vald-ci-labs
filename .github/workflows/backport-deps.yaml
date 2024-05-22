@@ -52,7 +52,7 @@ jobs:
           if [ -z "${RELEASE_BRANCHES}" ]; then
             echo "There are no release branches."
           fi
-          echo "${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
+          echo "RELEASE_BRANCHES=${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
       # - name: Fetch PR info
       #   run: |
       #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
