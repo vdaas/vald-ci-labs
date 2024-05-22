@@ -25,7 +25,7 @@ env:
   FETCHED_GITHUB_INFO_PATH: github_info.json
 jobs:
   create:
-    if: "${{ false }}"
+    if: "false"
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
