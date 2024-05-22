@@ -45,18 +45,26 @@ jobs:
       - name: Fetch all branches
         run: |
           git fetch --all
+      - name: Fetch PR info
+        run: |
+          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged |
+            jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
+          cat ${FETCHED_GITHUB_INFO_PATH}
+          echo "${GITHUB_SHA}"
       - name: Get all release branches # e.g release/v1.7
+        id: get_all_release_branches
         run: |
           RELEASE_BRANCHES=$(git branch -r | tr -d ' ' | grep '^origin/release/v[0-9]\+\.[0-9]\+' | sed 's/origin\///g' | tr '\n' ' ' | sed 's/ $//')
           if [ -z "${RELEASE_BRANCHES}" ]; then
             echo "There are no release branches."
           fi
           echo "RELEASE_BRANCHES=${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
-      - name: Fetch PR info
+      - name: Set context
+        id: set_context
         run: |
-          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged > ${FETCHED_GITHUB_INFO_PATH}
-          cat ${FETCHED_GITHUB_INFO_PATH}
-
+          LABEL_NAMES=`cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
+          echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
+          echo "${LABEL_NAMES}"
       # - name: Fetch PR info
       #   run: |
       #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
