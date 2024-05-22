@@ -13,14 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: "Run backport PR"
+name: "Run backport deps update PR"
 on:
   pull_request:
   # push:
   #   branches:
   #     - main
-  #     - "release/v*.*"
-  #     - "!release/v*.*.*"
 env:
   DEPS_UPDATE_PR_TITLE_REGEX: "^(Bump|Snyk)"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
@@ -66,37 +64,31 @@ jobs:
           echo "RELEASE_BRANCHES=${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
       - name: Create PR
         if: ${{ steps.get_branch.outputs.RELEASE_BRANCHES != '' && steps.get_pr.outputs.PR_NUM != '' }}
+        env:
+          RELEASE_BRANCHES: ${{ steps.get_branch.outputs.RELEASE_BRANCHES }}
         run: |
-          echo "hello"
+          PR_TITLE=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".title"`
+          PR_BODY=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".body"`
+          PR_NUM=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".number"`
+          PR_BRANCH_NAME=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".headRefName"`
 
-        # # - name: Create PR
-      # #   if: ${{ steps.set_context.outputs.LABEL_NAMES != '' }}
-      # #   env:
-      # #     LABEL_NAMES: ${{ steps.set_context.outputs.LABEL_NAMES }}
-      # #   run: |
-      # #     PR_TITLE=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".title"`
-      # #     PR_BODY=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".body"`
-      # #     PR_NUM=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".number"`
-      # #     PR_BRANCH_NAME=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".headRefName"`
-      # #
-      # #     echo "${PR_NUM} ${PR_TITLE}: ${PR_BODY}"
-      # #
-      # #     for LABEL_NAME in ${LABEL_NAMES}; do
-      # #         BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`           # e.g) release/vx.x, main
-      # #         BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${PR_BRANCH_NAME}"   # e.g) backport/release/vx.x/{current branch name}
-      # #
-      # #         echo "BRANCH_NAME=${BRANCH_NAME}"
-      # #         echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
-      # #         echo "SHA=${GITHUB_SHA}"
-      # #
-      # #         git checkout ${BRANCH_NAME}
-      # #         git checkout -b ${BACKPORT_BRANCH_NAME}
-      # #
-      # #         # Force cherry-pick. The conflicts will be modified within the backport PR.
-      # #         git cherry-pick ${GITHUB_SHA} || (git add -A && git cherry-pick --continue --no-edit)
-      # #         git push origin ${BACKPORT_BRANCH_NAME}
-      # #
-      # #         gh pr create --base ${BRANCH_NAME} \
-      # #                      --title "Backport PR #${PR_NUM} to ${BRANCH_NAME} for ${PR_TITLE}" \
-      # #                      --body "${PR_BODY}"
-      # #     done
+          echo "${PR_NUM} ${PR_TITLE}: ${PR_BODY}"
+
+          for BRANCH_NAME in ${RELEASE_BRANCHES}; do
+              BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${PR_BRANCH_NAME}"   # e.g) backport/release/vx.x/{current branch name}
+
+              echo "BRANCH_NAME=${BRANCH_NAME}"
+              echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
+              echo "SHA=${GITHUB_SHA}"
+
+              git checkout ${BRANCH_NAME}
+              git checkout -b ${BACKPORT_BRANCH_NAME}
+
+              # Force cherry-pick. The conflicts will be modified within the backport PR.
+              git cherry-pick ${GITHUB_SHA} || (git add -A && git cherry-pick --continue --no-edit)
+              git push origin ${BACKPORT_BRANCH_NAME}
+
+              gh pr create --base ${BRANCH_NAME} \
+                           --title "Backport PR #${PR_NUM} to ${BRANCH_NAME} for ${PR_TITLE}" \
+                           --body "${PR_BODY}"
+          done
