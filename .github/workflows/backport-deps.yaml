@@ -43,51 +43,65 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           git_user_signingkey: true
           git_commit_gpgsign: true
-      - name: Fetch PR info
+      - name: Fetch all branches
         run: |
-          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
-            jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
-          cat ${FETCHED_GITHUB_INFO_PATH}
+          git fetch -all
+      - name: Get all release branches # e.g release/v1.7
+        run: |
+          RELEASE_BRANCHES=$(git branch -r | grep 'origin/release/v[0-9]\+\.[0-9]\+' | sed 's/origin\//g')
+          if [ -z ${RELEASE_BRANCHES} ]; then
+            echo "There are no release branches."
+            exit 0
+          fi
 
-          echo "------"
-          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged
-          git branch -a
-          echo "------"
-          echo ${GITHUB_SHA}
-      # - name: Set context
-      #   id: set_context
+          for branch in ${RELEASE_BRANCHES}; do
+            echo "branch = ${branch}"
+          done
+      # - name: Fetch PR info
       #   run: |
-      #     LABEL_NAMES=`cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
-      #     echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
-      #     echo "${LABEL_NAMES}"
-      # - name: Create PR
-      #   if: ${{ steps.set_context.outputs.LABEL_NAMES != '' }}
-      #   env:
-      #     LABEL_NAMES: ${{ steps.set_context.outputs.LABEL_NAMES }}
-      #   run: |
-      #     PR_TITLE=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".title"`
-      #     PR_BODY=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".body"`
-      #     PR_NUM=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".number"`
-      #     PR_BRANCH_NAME=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".headRefName"`
+      #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
+      #       jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
+      #     cat ${FETCHED_GITHUB_INFO_PATH}
       #
-      #     echo "${PR_NUM} ${PR_TITLE}: ${PR_BODY}"
-      #
-      #     for LABEL_NAME in ${LABEL_NAMES}; do
-      #         BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`           # e.g) release/vx.x, main
-      #         BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${PR_BRANCH_NAME}"   # e.g) backport/release/vx.x/{current branch name}
-      #
-      #         echo "BRANCH_NAME=${BRANCH_NAME}"
-      #         echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
-      #         echo "SHA=${GITHUB_SHA}"
-      #
-      #         git checkout ${BRANCH_NAME}
-      #         git checkout -b ${BACKPORT_BRANCH_NAME}
-      #
-      #         # Force cherry-pick. The conflicts will be modified within the backport PR.
-      #         git cherry-pick ${GITHUB_SHA} || (git add -A && git cherry-pick --continue --no-edit)
-      #         git push origin ${BACKPORT_BRANCH_NAME}
-      #
-      #         gh pr create --base ${BRANCH_NAME} \
-      #                      --title "Backport PR #${PR_NUM} to ${BRANCH_NAME} for ${PR_TITLE}" \
-      #                      --body "${PR_BODY}"
-      #     done
+      #     echo "------"
+      #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged
+      #     git branch -a
+      #     echo "------"
+      #     echo ${GITHUB_SHA}
+      # # - name: Set context
+      # #   id: set_context
+      # #   run: |
+      # #     LABEL_NAMES=`cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
+      # #     echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
+      # #     echo "${LABEL_NAMES}"
+      # # - name: Create PR
+      # #   if: ${{ steps.set_context.outputs.LABEL_NAMES != '' }}
+      # #   env:
+      # #     LABEL_NAMES: ${{ steps.set_context.outputs.LABEL_NAMES }}
+      # #   run: |
+      # #     PR_TITLE=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".title"`
+      # #     PR_BODY=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".body"`
+      # #     PR_NUM=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".number"`
+      # #     PR_BRANCH_NAME=`cat $FETCHED_GITHUB_INFO_PATH | jq -r ".headRefName"`
+      # #
+      # #     echo "${PR_NUM} ${PR_TITLE}: ${PR_BODY}"
+      # #
+      # #     for LABEL_NAME in ${LABEL_NAMES}; do
+      # #         BRANCH_NAME=`echo "${LABEL_NAME}" | sed -e "s:^${TARGET_LABEL_NAME_PREFIX}::"`           # e.g) release/vx.x, main
+      # #         BACKPORT_BRANCH_NAME="${BACKPORT_BRANCH_NAME_PREFIX}/${BRANCH_NAME}/${PR_BRANCH_NAME}"   # e.g) backport/release/vx.x/{current branch name}
+      # #
+      # #         echo "BRANCH_NAME=${BRANCH_NAME}"
+      # #         echo "BACKPORT_BRANCH_NAME=${BACKPORT_BRANCH_NAME}"
+      # #         echo "SHA=${GITHUB_SHA}"
+      # #
+      # #         git checkout ${BRANCH_NAME}
+      # #         git checkout -b ${BACKPORT_BRANCH_NAME}
+      # #
+      # #         # Force cherry-pick. The conflicts will be modified within the backport PR.
+      # #         git cherry-pick ${GITHUB_SHA} || (git add -A && git cherry-pick --continue --no-edit)
+      # #         git push origin ${BACKPORT_BRANCH_NAME}
+      # #
+      # #         gh pr create --base ${BRANCH_NAME} \
+      # #                      --title "Backport PR #${PR_NUM} to ${BRANCH_NAME} for ${PR_TITLE}" \
+      # #                      --body "${PR_BODY}"
+      # #     done
