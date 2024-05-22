@@ -20,7 +20,7 @@ on:
   #   branches:
   #     - main
 env:
-  DEPS_UPDATE_PR_TITLE_REGEX: "^(Bump|Snyk)"
+  DEPS_UPDATE_PR_TITLE_REGEX: "^(chore\\(deps\\): bump|\\[Snyk\\])"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
   FETCHED_GITHUB_INFO_PATH: github_info.json
 jobs:
@@ -47,6 +47,7 @@ jobs:
       - name: Get PR info
         id: get_pr
         run: |
+          echo "${DEPS_UPDATE_PR_TITLE_REGEX}"
           gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged |
             jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
           cat ${FETCHED_GITHUB_INFO_PATH}
