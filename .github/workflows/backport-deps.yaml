@@ -22,6 +22,7 @@ on:
   #     - "release/v*.*"
   #     - "!release/v*.*.*"
 env:
+  DEPS_UPDATE_PR_TITLE_REGEX: "^(Bump|Snyk)"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
   FETCHED_GITHUB_INFO_PATH: github_info.json
 jobs:
@@ -62,9 +63,8 @@ jobs:
       - name: Set context
         id: set_context
         run: |
-          LABEL_NAMES=`cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg PREFIX $TARGET_LABEL_NAME_PREFIX '[.labels[]? | select(.name | startswith($PREFIX)) | .name] | join(" ")'`
-          echo "LABEL_NAMES=${LABEL_NAMES}" >> $GITHUB_OUTPUT # e.g.) actions/backport/v1.7 actions/backport/v1.8
-          echo "${LABEL_NAMES}"
+          NAME=$(cat ${FETCHED_GITHUB_INFO_PATH} | jq -r --arg REGEX "${DEPS_UPDATE_PR_TITLE_REGEX}" 'select(.title | test($REGEX)) | .title')
+          echo "${NAME}"
       # - name: Fetch PR info
       #   run: |
       #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
