@@ -48,13 +48,13 @@ jobs:
           git fetch --all
       - name: Get all release branches # e.g release/v1.7
         run: |
-          RELEASE_BRANCHES=$(git branch -r | grep 'origin/release/v[0-9]\+\.[0-9]\+' | sed 's/origin\//g')
-          if [ -z ${RELEASE_BRANCHES} ]; then
+          RELEASE_BRANCHES=$(git branch -r | tr -d ' ' | grep '^origin/release/v[0-9]\+\.[0-9]\+' | sed 's/origin\///g' | tr '\n' ' ' | sed 's/ $//')
+          if [ -z "${RELEASE_BRANCHES}" ]; then
             echo "There are no release branches."
             exit 0
           fi
 
-          for branch in ${RELEASE_BRANCHES}; do
+          for branch in "${RELEASE_BRANCHES}"; do
             echo "branch = ${branch}"
           done
       # - name: Fetch PR info
