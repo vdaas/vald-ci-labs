@@ -51,12 +51,8 @@ jobs:
           RELEASE_BRANCHES=$(git branch -r | tr -d ' ' | grep '^origin/release/v[0-9]\+\.[0-9]\+' | sed 's/origin\///g' | tr '\n' ' ' | sed 's/ $//')
           if [ -z "${RELEASE_BRANCHES}" ]; then
             echo "There are no release branches."
-            exit 0
           fi
-
-          for branch in "${RELEASE_BRANCHES}"; do
-            echo "branch = ${branch}"
-          done
+          echo "${RELEASE_BRANCHES}" | tee -a $GITHUB_OUTPUT
       # - name: Fetch PR info
       #   run: |
       #     gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
