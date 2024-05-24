@@ -1,10 +1,10 @@
 input:
   job:
-    package-manager: npm_and_yarn
+    package-manager: github_actions
     allowed-updates:
       - update-type: all
     dependency-groups:
-      - name: npm
+      - name: actions
         rules:
           patterns:
             - "*"
@@ -12,6 +12,22 @@ input:
       directory: "/"
       provider: github
       repo: vdaas/vald-ci-labs
+
+# input:
+#   job:
+#     package-manager: npm_and_yarn
+#     allowed-updates:
+#       - update-type: all
+#     dependency-groups:
+#       - name: npm
+#         rules:
+#           patterns:
+#             - "*"
+#     source:
+#       directory: "/"
+#       provider: github
+#       repo: vdaas/vald-ci-labs
+
 # job:
 #   package-manager: npm_and_yarn
 #   allowed-updates:
