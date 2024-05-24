@@ -1,6 +1,17 @@
 version: v1
+managed:
+  enabled: true
 plugins:
-  - plugin: buf.build/grpc/java
-    out: main/java
-  - plugin: buf.build/protocolbuffers/java:v25.3
-    out: main/java
+  - plugin: buf.build/community/timostamm-protobuf-ts
+    out: src
+    # https://github.com/timostamm/protobuf-ts/blob/main/MANUAL.md#the-protoc-plugin
+    opt:
+      - add_pb_suffix
+      - client_grpc1
+      - generate_dependencies
+      - keep_enum_prefix
+      - ts_nocheck
+      - use_proto_field_name
+      - output_javascript
+      - output_legacy_commonjs
+      - eslint_disable
