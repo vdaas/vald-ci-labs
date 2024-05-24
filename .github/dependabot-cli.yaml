@@ -9,7 +9,7 @@ input:
           patterns:
             - "*"
     source:
-      directory: "*"
+      directory: "/"
       provider: github
       repo: vdaas/vald-ci-labs
 # job:
