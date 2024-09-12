@@ -45,6 +45,8 @@ jobs:
           git_commit_gpgsign: true
       - name: Fetch PR info
         run: |
+          HOGE=`gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state open`
+          echo ${HOGE}
           gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state open | \
             jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
           cat ${FETCHED_GITHUB_INFO_PATH}
