@@ -15,7 +15,9 @@
 #
 name: "Run backport PR"
 on:
-  pull_request:
+  push:
+    branches:
+      - main
 env:
   TARGET_LABEL_NAME_PREFIX: "actions/backport/"
   BACKPORT_BRANCH_NAME_PREFIX: "backport"
@@ -45,9 +47,11 @@ jobs:
           git_commit_gpgsign: true
       - name: Fetch PR info
         run: |
-          HOGE=`gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state open`
+          HOGE=`gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged`
           echo ${HOGE}
-          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state open | \
+          FUGA=`${HOGE} | jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)'`
+          echo {FUGA}
+          gh pr list --limit 10 --json number,title,body,labels,headRefName,headRefOid,mergeCommit --state merged | \
             jq --arg oid "${GITHUB_SHA}" '.[] | select(.mergeCommit.oid == $oid)' > ${FETCHED_GITHUB_INFO_PATH}
           cat ${FETCHED_GITHUB_INFO_PATH}
           echo ${GITHUB_SHA}
