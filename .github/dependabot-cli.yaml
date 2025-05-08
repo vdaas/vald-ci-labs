@@ -1,16 +1,43 @@
-job:
-  package-manager: gradle
-  allowed-updates:
-    - update-type: all
-  ignore-conditions:
-    - dependency-name: com.google.protobuf:protobuf-java
-      version-requirement: ">=3.25.1"
-  dependency-groups:
-    - name: gradle
-      rules:
-        patterns:
-          - "*"
-  source:
-    directory: /
-    provider: github
-    repo: vdaas/vald-client-java
+input:
+  job:
+    package-manager: github_actions
+    allowed-updates:
+      - update-type: all
+    dependency-groups:
+      - name: actions
+        rules:
+          patterns:
+            - "*"
+    source:
+      directory: "/"
+      provider: github
+      repo: vdaas/vald-ci-labs
+
+# input:
+#   job:
+#     package-manager: npm_and_yarn
+#     allowed-updates:
+#       - update-type: all
+#     dependency-groups:
+#       - name: npm
+#         rules:
+#           patterns:
+#             - "*"
+#     source:
+#       directory: "/"
+#       provider: github
+#       repo: vdaas/vald-ci-labs
+
+# job:
+#   package-manager: npm_and_yarn
+#   allowed-updates:
+#     - update-type: all
+#   dependency-groups:
+#     - name: npm
+#       rules:
+#         patterns:
+#           - "*"
+#   source:
+#     directory: "/"
+#     provider: github
+#     repo: vdaas/vald-client-node

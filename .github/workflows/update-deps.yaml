@@ -13,18 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Update Gradle dependencies
+name: Update dependencies
 
 on:
+  pull_request:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "0 12 * * *"
+  schedule:
+    - cron: "0 12 * * *"
 jobs:
   update:
-    uses: vdaas/vald-client-ci/.github/workflows/_update-deps.yaml@feat/ci/backport-deps-update
+    # uses: vdaas/vald-client-ci/.github/workflows/_update-deps.yaml@main
+    uses: vdaas/vald-client-ci/.github/workflows/_update-deps.yaml@fix/add-directory-name
     with:
       config_file_path: .github/dependabot-cli.yaml
-      pr_branch_name: chore/update-gradle
+      pr_branch_name: chore/update-npm
     secrets:
       CI_USER: ${{ secrets.DISPATCH_USER }}
       CI_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
